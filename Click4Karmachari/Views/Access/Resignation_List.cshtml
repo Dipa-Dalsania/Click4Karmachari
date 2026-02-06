@@ -1,0 +1,288 @@
+﻿@using ClickKarmachari;
+@using ClickKarmachari.Models;
+@{
+    ViewBag.Title = "Resignation_List";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    CommonClasses util = new CommonClasses();
+    List<Resignation_Master> Reg = ViewBag.Resignation;
+    List<UserMaster> user = ViewBag.user;
+    List<UserMaster> user1 = ViewBag.user1;
+    List<UserMaster> user2 = ViewBag.user2;
+    List<Department_Master> dept = ViewBag.dept;
+    List<Designation_Master> desg = ViewBag.desg;
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    DateTime Date = Convert.ToDateTime(DateTime.Now);
+    string str1 = Date.ToString("dd MMMM yyyy");
+}
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Resignation</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list" onclick="myfunctionResignation()">
+                <button onclick="return Add_Resignation(0,'','','','','','','','','','@str1','@str1','@str1')" type="submit" class="btn btn-primary mr-3"><i class="feather feather-plus fs-15 my-auto mr-2"></i><strong>Add Resignation</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+<!-- Row -->
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable1" class="table table-striped table-bordered border-bottom table-hover">
+                        <thead>
+                            <tr>
+                                <th class="border-bottom-0">Employee Name</th>
+                                <th class="border-bottom-0">Department</th>
+                                <th class="border-bottom-0">Date Of Resignation</th>
+                                <th class="border-bottom-0">Reliving Date</th>
+                                <th class="border-bottom-0">Status</th>
+                                <th class="border-bottom-0">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Reg != null)
+                            {
+                                foreach (Resignation_Master p in Reg)
+                                {
+                                    <tr>
+                                        <td style="text-transform:capitalize">@p.UserMaster.User_Name </td>
+                                        <td style="text-transform:capitalize">@p.Department_Master.Department</td>
+                                        <td>@p.Date_Of_Resignation.Value.ToString("dd MMMM yyyy")</td>
+                                        <td>@p.Reliving_Date.Value.ToString("dd MMMM yyyy")</td>
+                                        <td>
+                                            @*@util._Status_ByNumber(p.Status)*@
+
+                                            @if (p.Status == 0)
+                                            {
+                                                <span class="badge badge-secondary-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else if (p.Status == 1)
+                                            {
+                                                <span class="badge badge-success">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else if (p.Status == 2)
+                                            {
+                                                <span class="badge badge-danger-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-primary-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                        </td>
+                                        <td class="asset-btn">
+                                            @using (Ajax.BeginForm("Resignation_Delete", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminRes" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form" }))
+                                            {
+                                                <input type="hidden" name="Resig_Id" id="Resig_Id" value="@p.Resignation_Id" />
+                                                <button class="btn btn-icon btn-primary" onclick="return Add_Resignation(@p.Resignation_Id,@p.Emp_Id,@p.Department,@p.Designation, '@p.Team_Name', @p.Reporting_Person, '@p.Reason_For_Exit', '@util.GetTextStringScript(p.Suggestion_For_Company)', '@util.GetTextStringScript(p.Remark_For_Resignation)',@p.HR_Authority, '@p.Reliving_Date.Value.ToString("dd MMMM yyyy")','@p.Date_Of_Join.Value.ToString("dd MMMM yyyy")','@p.Date_Of_Resignation.Value.ToString("yyyy-MM-dd")')" type="submit"><strong><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></strong></button>
+                                                <Button type="submit" id="deleteResignstion" name="Command" value="Delete" class="btn btn-danger btn-icon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="return confirm('Are you sure you want to Delete?')" ;><i class="feather feather-trash-2"></i></Button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Row-->
+<!-------------------Add Resignation------------------------------------------->
+<div class="modal fade" id="Model_Add_Resignation_M" tabindex="-1" role="dialog" aria-hidden="true">
+    @using (Ajax.BeginForm("Resignation_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminRes" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "submitresignation()" }))
+    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="col-md-12 p-3 card-left" style="display:none;text-align:center" id="msgdig">
+                    <div class="alert_R" style="border-radius: 5px; color: white;padding:inherit; background-color: #f91a1ab8 ">
+                        <span id="failuremsg"></span>
+                        <span class="closebtn " onclick="this.parentElement.style.display='none';" style="float:right">&times;</span>
+                    </div>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Resignation</h5>
+                    <button class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Resignation_Id" id="Resignation_Id" value="0">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="form-label">Employee <span class="text-red">*</span></label>
+                            <select name="Emp_Id" id="Emp_Id" onchange="getDetail()" class="form-control select2-show-search custom-select" required>
+                                <option value="">Select Employee</option>
+                                @foreach (UserMaster T in user)
+                                {
+                                    <option value=@T.User_ID>@T.User_Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">Date of Join</label>
+                            <input type="text" name="Date_Of_Join" id="Date_Of_Join" readonly class="form-control fc-datepicker" data-single-mode="true" placeholder="Date Of Join" required />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="form-label">Designation</label>
+                            <select name="Designation" id="Designation" class="form-control select2-show-search custom-select" required>
+                                <option value="">Select Designation</option>
+                                @foreach (Designation_Master T in desg)
+                                {
+                                    <option value=@T.Desg_Id>@T.Designation</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">Department</label>
+                            <select name="Department" id="Department" class="form-control select2-show-search custom-select" required>
+                                <option value="">Select Department</option>
+                                @foreach (Department_Master T in dept)
+                                {
+                                    <option value=@T.Dept_ID>@T.Department</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="form-label"> Team Name</label>
+                            <input type="text" name="Team_Name" readonly id="Team_Name" class="form-control" placeholder=" Enter Team Name" required>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">Reporting Manager</label>
+                            <select name="Reporting_Manager" id="Reporting_Manager" class="form-control select2-show-search custom-select" required>
+                                <option value="">Select Employee</option>
+                                @foreach (UserMaster T in user2)
+                                {
+                                    <option value=@T.User_ID>@T.User_Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="form-label">Relieving Date</label>
+                            <input type="text" name="Reliving_Date" id="Reliving_Date" class="form-control fc-datepicker" data-single-mode="true" min="@str1" placeholder="01 January 2001 " required />
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">Reason For Exit <span class="text-red">*</span></label>
+                            <input type="text" name="Reason_For_Exit" id="Reason_For_Exit" class="form-control" placeholder=" Reason For Exit" required>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="form-label">HR Authority <span class="text-red">*</span></label>
+                            <select name="HR_Authority" id="HR_Authority" class="form-control select2-show-search custom-select" required>
+                                <option value="">Select Employee</option>
+                                @foreach (UserMaster T in user1)
+                                {
+                                    <option value=@T.User_ID>@T.User_Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">Remark For Resignation <span class="text-red">*</span></label>
+                            <textarea name="Remark_For_Resignation" class="form-control" id="Remark_For_Resignation" rows="1" cols="20" placeholder="Remark for resignation" required></textarea>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="form-label">Suggestion For Company <span class="text-red">*</span></label>
+                            <textarea name="Suggestion_For_Company" class="form-control" id="Suggestion_For_Company" rows="1" cols="20" placeholder="Suggestion for the Company" required></textarea>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                <div class="col-lg-12">
+                    <div class="card-footer text-center card-new-footer">
+                        <button type="button" class="btn btn-light mb-2" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                        <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info mb-2"><i class="fa fa-save"></i>&ensp;Save</button>
+                        <button type="submit" id="approvebtn" name="Command" value="Approve" class="btn btn-success mb-2"><i class="fa fa-check"></i>&ensp;Approve</button>
+                        <button type="submit" id="rejectbtn" name="Command" value="Rejected" class="btn btn-danger mb-2"><i class="fa fa-remove"></i>&ensp;Rejected</button>
+                        <button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger mb-2"><i class="feather feather-trash"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+            }
+    </div>
+ 
+
+<script type="text/javascript">
+    function getDetail() {
+        var Emp_Id = document.getElementById("Emp_Id").value;
+
+        $.ajax({
+            type: "POST",
+            url: "/Access/GetEmp?Emp_Id=" + Emp_Id,
+            data: "{}",
+            success: function (data) {
+                var vDOJ = data.DOJ;
+                document.getElementById("Date_Of_Join").value = vDOJ;
+                var vteam_name = data.team_name;
+                document.getElementById("Team_Name").value = vteam_name;
+                var vReport_Person = data.Report_Person;
+                document.getElementById("Reporting_Manager").value = vReport_Person;
+                var vdesg = data.desg;
+                document.getElementById("Designation").value = vdesg;
+                var vdept = data.dept;
+                document.getElementById("Department").value = vdept;
+            },
+            error: function (errormessage) {
+                //alert("error...");
+                //alert(errormessage);
+            }
+        });
+    }
+    var isSubmitted = false;
+
+    function stopMultipleSubmitReg() {
+        if (!isSubmitted) {
+            $("#savebtn ").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#savebtn").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitresignation() {
+     
+        stopMultipleSubmitReg();
+ 
+        return isSubmitted;
+    }
+    function myfunctionResignation() {
+
+        document.getElementById("msgdig").style.display = "none";
+        $("#Model_Add_Resignation_M").modal('show');
+
+        document.getElementById("failuremsg").innerText = "";
+
+        document.getElementById("Remark_For_Resignation").value = "";
+        document.getElementById("Suggestion_For_Company").value = "";
+    }
+</script>
+

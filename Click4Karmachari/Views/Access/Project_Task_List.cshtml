@@ -1,0 +1,162 @@
+﻿@using ClickKarmachari;
+@using ClickKarmachari.Models;
+@{
+
+    ViewBag.Title = "Project_Task_List";
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<Project_Task_Master> task = ViewBag.task;
+    CommonClasses util = new CommonClasses();
+    List<UserMaster> u = ViewBag.user;
+    List<TaskType> t = ViewBag.t;
+    List<Project_Master> projects = ViewBag.Project;
+    List<Comment_Master> comment_Masters = ViewBag.comment_Masters;
+    DateTime Date = Convert.ToDateTime(DateTime.Now);
+    string str1 = Date.ToString("dd MMMM yyyy");
+    ViewBag.PageTitle = "All Project Task";
+}
+<style>
+    .member-initials {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        height: 32px;
+        left: 0;
+        line-height: 32px;
+        overflow: hidden;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100%;
+    }
+
+    .new-comment .member {
+        position: absolute;
+        left: -40px;
+    }
+
+    .member-no-menu {
+        cursor: default;
+    }
+
+    .new-comment {
+        position: relative;
+        margin: 0 0 8px 40px;
+    }
+
+    .member {
+        background-color: #dfe1e6;
+        border-radius: 25em;
+        color: #172b4d;
+        cursor: pointer;
+        display: block;
+        float: left;
+        height: 32px;
+        margin: 0 4px 4px 0;
+        overflow: visible;
+        position: relative;
+        width: 32px;
+        text-decoration: none;
+        -webkit-user-select: none;
+        user-select: none;
+        z-index: 0;
+    }
+</style>
+<script>
+    function getFocus() {
+        document.getElementById("Reply").focus();
+    }
+
+</script>
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Project Task</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="d-flex align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <a href="~/Access/Project_Task_Add?TaskID=0" class="btn btn-primary"><i class="feather feather-plus fs-15 my-auto mr-2"></i><b>Add Task</b></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+<!-- Row -->
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-vcenter text-nowrap table-bordered border-bottom" id="basic-datatable1">
+                        <thead>
+                            <tr>
+                                <th class="border-bottom-0 text-center">Employee Name</th>
+                                <th class="border-bottom-0">Project Name</th>
+                                <th class="border-bottom-0">Task Name</th>
+                                <th class="border-bottom-0">Task Type</th>
+                                <th class="border-bottom-0">Status</th>
+                                <th class="border-bottom-0">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (task != null)
+                            {
+                                foreach (Project_Task_Master p in task)
+                                {
+                                    <tr>
+                                        <td style="text-transform: capitalize">@p.UserMaster.User_Name</td>
+                                        <td style="text-transform: capitalize">@p.Project_Master.Project_Name</td>
+                                        <td style="text-transform: capitalize">@p.Task_Name</td>
+                                        <td style="text-transform: capitalize">@p.TaskType.TaskType_Name</td>
+                                        <td>
+                                         
+                                            @if (p.Status == 0)
+                                            {
+                                                <span class="badge badge-secondary-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else if (p.Status == 1)
+                                            {
+                                                <span class="badge badge-success">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else if (p.Status == 2)
+                                            {
+                                                <span class="badge badge-danger-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else if (p.Status == 7)
+                                            {
+                                                <span class="badge badge-info-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else if (p.Status == 9)
+                                            {
+                                                <span class="badge badge-primary-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @using (Ajax.BeginForm("Project_Task_Delete", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminProTask" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form" }))
+                                            {
+                                                <input type="hidden" name="Task_Id" id="Task_Id" value="@p.Task_Id" />
+                                                <a href="~/Access/Project_Task_Add?TaskID=@p.Task_Id" class="btn btn-icon btn-primary"><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></a>
+                                                <Button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger btn-icon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="return confirm('Are you sure you want to Delete?')" ;><i class="feather feather-trash-2"></i></Button>
+
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Row-->

@@ -1,0 +1,102 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    CommonClasses util = new CommonClasses();
+    ViewBag.Title = "City_List";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<City_Master> city = ViewBag.city;
+}
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All City</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <button class="btn btn-primary mr-3" onclick="return Add_City(0,'')" type="submit"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i>Add City</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable1" class="table table-striped table-bordered border-bottom table-hover">
+                        <thead>
+                            <tr>
+                                <th>City Name</th>
+                                <th>Operation</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (city != null)
+                            {
+                                foreach (City_Master _newobj in city)
+                                {
+                                    <tr>
+
+                                        <td style="text-transform: capitalize">@_newobj.CityName</td>
+                                        <td>
+                                            @using (Ajax.BeginForm("City_Delete", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateCity" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                                            {
+                                                <button class="btn btn-icon btn-primary" onclick="return Add_City(@_newobj.Cityid,'@_newobj.CityName')" type="submit"><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></button>
+                                                <input type="hidden" name="city_id" id="city_id" value="@_newobj.Cityid" />
+                                                <Button type="submit" id="deleteCity" name="Command" value="Delete" class="btn btn-danger btn-icon" data-toggle="tooltip" data-original-title="Delete" onclick="return confirm('Are you sure you want to Delete?')" ;><i class="feather feather-trash-2"></i></Button>
+                                            }
+
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-------------------Add City------------------------------------------->
+<div class="modal fade" id="Model_Add_City" tabindex="-1" role="dialog" aria-hidden="true">
+
+    @using (Ajax.BeginForm("City_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateCity" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+    {
+        <div class="modal-dialog">
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add City </h5>
+                    <button class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="Add_Cityid" id="Add_Cityid" value="0" />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">City Name <span class="text-red">*</span></label>
+                                <input type="text" name="Add_CityName" placeholder="Enter City Name" id="Add_CityName" class="form-control" required autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                        <div class="modal-footer modal-new-footer">
+                            <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                            <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info"><i class="feather feather-save"></i>&ensp;Save</button>
+                            <button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+                        </div>
+                    </div>
+
+                </div>
+    }
+</div>
+         

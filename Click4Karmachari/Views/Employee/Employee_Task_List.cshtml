@@ -1,0 +1,157 @@
+﻿@using ClickKarmachari;
+@using ClickKarmachari.Models;
+@{
+    ViewBag.Title = "Employee_Task_List";
+    Layout = "~/Views/Employee/Employee_Layout_new.cshtml";
+    int count = 1;
+    List<Employee_Task_Master> employee = ViewBag.em;
+    DateTime dtoday = DateTime.Now;
+    string st = dtoday.ToString("dd MMMM yyyy");
+    ViewBag.PageTitle = "Employee Daily Task List";
+    string ckstatus = "";
+
+}
+
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Employee Daily Task List</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <a href="~/Employee/Add_Employee_Task" class="btn btn-primary"><i class="feather feather-plus fs-15 my-auto mr-2"></i><strong> Add Task</strong></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+          
+
+                @using (Html.BeginForm("Get_Employee_Task_Details", "Employee", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+                {
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-label">Task Date <span class="text-danger">*</span></label>
+                            @if (employee.Count > 0)
+                            {
+                                DateTime dt = Convert.ToDateTime(employee.FirstOrDefault().Task_Date);
+                                string str = dt.ToString("dd MMMM yyyy");
+                                <input id="Task_date" type="text" name="Task_date" class="form-control fc-datepicker" autocomplete="off" value="@str" max="@st" placeholder="01 January 2022" required>
+                            }
+                            else
+                            {
+                                string str1 = "";
+                                if (ViewBag.taskdate != "")
+                                {
+                                    DateTime dt = Convert.ToDateTime(ViewBag.taskdate);
+                                    str1 = dt.ToString("dd MMMM yyyy");
+                                }
+                                <input id="Task_date" type="text" name="Task_date" class="form-control fc-datepicker" autocomplete="off" value="@str1" max="@st" placeholder="01 January 2022" required>
+                            }
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <input type="submit" value="Select" id="btnAdd" name="Command" class="btn btn-primary">
+                    </div>
+                }
+                <br/>
+                <div>
+                    @if (employee.Count > 0)
+                    {
+                        ckstatus = "true";
+                       <div class="col-sm-10 col-lg-12 col-md-12 col-12">
+                                         <div class="card">
+                                             <div class="card-header border-bottom-0">
+                                                 <h3 class="card-title"></h3>
+                                             </div>
+                                             <div class="card-body task-body">
+                                                @foreach (Employee_Task_Master em in employee)
+                                                {
+                                                    DateTime employee_date = Convert.ToDateTime(em.Task_Date);
+                                                    string st1 = employee_date.ToString("dd MMMM yyyy");
+                                                    string s = "collapse" + count;
+                                                
+                                                     @*<div class="panel-heading" role="tab" id="headingOne">
+                                                            <h4 class="panel-title">
+
+                                                                <a data-toggle="collapse" data-parent="#accordion" href="#@s" aria-expanded="true" aria-controls="collapseOne">
+                                                                    <span class="label h-bg-red" style="color:#ffffff;background:#337ab7;"><i aria-hidden="true">@count</i></span>
+
+                                                                    @em.Task_Detail
+                                                                </a>
+                                                                @if (st == st1)
+                                                                {
+                                                                    <span class="pull-right">
+
+                                                                        <a href="delete_task?taskdate=@em.Task_Date&emp_task_id=@em.Employee_Task_id" onclick="return confirm('Are you sure you want to Delete')">
+                                                                            <img src="~/Design/images/close_2.png" style="width:20px;height:20px;" />
+                                                                        </a>
+                                                                    </span>
+                                                                }
+
+                                                            </h4>
+                                                        </div>*@
+                                                    
+                                                     <ul class="list-group flex-wrap" >
+                                                         <li class="list-group-item">
+                                                             <a data-toggle="collapse" data-parent="#accordion" href="#@s" aria-expanded="true" aria-controls="collapseOne">
+                                                                 <div class="badgetext badge badge-info badge-pill pull-left number-btn m-0"> @count</div>&ensp;&ensp;
+                                                                 <strong class="task-details" style="font-size:16px;text-transform:capitalize">@em.Task_Detail</strong>
+                                                             </a>
+                                                             <span style="float:right">
+                                                                 <a href="delete_task?taskdate=@em.Task_Date&emp_task_id=@em.Employee_Task_id" onclick="return confirm('Are you sure you want to Delete')" data-toggle="tooltip" data-original-title="Delete">
+                                                                     <i class="fa fa-trash fa-2x delete-btn" style="color: #FF4433 " title="Delete"></i>
+                                                                 </a>
+                                                             </span>
+                                                         </li>
+                                                     </ul>
+                                                
+                                        count++;
+                                    }
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        ckstatus = "false";
+                    }
+                    @if (ckstatus == "false" && ViewBag.taskdate != "")
+                    {
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="hpanel" style="">
+
+                                    @*<div class="col-lg-4"></div>*@
+                                    <div class="col-lg-4" style="text-align:center;margin: 0 auto;">
+                                        <img src="~/AdminTemplate/assets/images/data_not_found.png" style="width:100%;height:100%;" />
+                                        @*<h4 style="text-align:center;">No Data Found</h4>*@
+                                    </div>
+                                    <div class="col-lg-4"></div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+
+                    }
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

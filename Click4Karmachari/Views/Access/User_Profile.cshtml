@@ -1,0 +1,269 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    ViewBag.Title = "User_Profile";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    CommonClasses util = new CommonClasses();
+    List<City_Master> u_city = ViewBag.City;
+    List<Religion_Master> religion = ViewBag.religion;
+    string s = @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+    UserMaster _LogedUser = ViewBag._LogedUser;
+}
+<div class="page-header d-lg-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Edit profile</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class=" btn-list">
+            <button class="btn btn-light" data-toggle="modal" data-target="#mailmodal" title="E-mail"> <i class="feather feather-mail"></i> </button>
+            <button class="btn btn-light" data-toggle="modal" data-target="#contactmodal" title="Contact"> <i class="feather feather-phone-call"></i> </button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#infomodal" title="Info"> <i class="feather feather-info"></i> </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Row -->
+<div class="row">
+    <div class="col-xl-4 col-lg-5">
+        <div class="card">
+            @using (Ajax.BeginForm("Change_Password", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminChangePswd" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+            {
+                <div class="card-header border-bottom-0">
+                    <div class="card-title">Edit Password</div>
+                </div>
+                @Html.AntiForgeryToken()
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">Current Password<span class="text-danger">&ensp;*</span></label>
+                        <input type="password" name="Old_Password" id="Old_Password" value="" class="form-control" required placeholder="Current Password">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">New Password<span class="text-danger">&ensp;*</span></label>
+                        <input type="password" name="New_Password" id="new_Password" value="" class="form-control" required placeholder="New Password">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password<span class="text-danger">&ensp;*</span></label>
+                        <input type="password" name="Confirm_password" id="confirm_password" value="" class="form-control" required placeholder="Confirm Password">
+                        <span id='message'></span>
+                    </div>
+                </div>
+                <div class="card-footer text-right">
+                    <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info"><i class="feather feather-save"></i>&ensp;Save changes</button>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-xl-8 col-lg-7">
+        @using (Ajax.BeginForm("User_Profile", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateprofile" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="card">
+                <div class="card-header border-bottom-0">
+                    <div class="card-title">Update Profile</div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                      
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">User Name</label>
+                                <input type="text" class="form-control" name="User_Name" id="User_Name" value="@_LogedUser.User_Name" pattern="[a-zA-Z][a-zA-Z0-9\s]*" placeholder="Enter User Name" required>
+                                <input type="hidden" name="User_ID" id="User_ID" value="@_LogedUser.User_ID">
+                            </div>
+                        </div>
+                      
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">User Email address <span class="text-danger">&ensp;*</span></label>
+                                <input type="text" name="User_Email" id="User_Email" class="form-control" value="@_LogedUser.User_Email" placeholder="Enter Email Id" pattern="@s" required>
+                            </div>
+                        </div>
+                    
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" name="User_Mobile" id="User_Mobile" class="form-control" value="@_LogedUser.User_Mobile" placeholder="Enter User Mobile" pattern="[6789][0-9]{9}" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Reference Phone Number</label>
+                                <input type="text" name="RefMobile" id="RefMobile" class="form-control" value="@_LogedUser.RefMobile" placeholder="Enter User Mobile" pattern="[6789][0-9]{9}">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">PAN Card No. <span class="text-danger">&ensp;*</span></label>
+                                <input type="text" name="PanCard_No" required id="PanCard_No" class="form-control" value="@_LogedUser.PanCard_No" placeholder="Enter PanCard No" pattern="[A-Z]{5}\d{4}[A-Z]{1}">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Aadhar Card No.<span class="text-danger">&ensp;*</span></label>
+                                <input type="text" name="Adharcard_No" required id="Adharcard_No" class="form-control" value="@_LogedUser.Adharcard_No" placeholder="Enter Adharcard No" pattern="^\d{12}$">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Religion <span class="text-danger">&ensp;*</span></label>
+                                <select name="Religion_name" id="Religion_name" class="form-control select2" required>
+                                    @if (_LogedUser.Religion_name != null)
+                                    {
+                                        <option value="@_LogedUser.Religion_name">@_LogedUser.Religion_name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="">Select Religion</option>
+                                    }
+                                    @foreach (Religion_Master _c in religion)
+                                    {
+                                        <option value=@_c.Religion_Name>@_c.Religion_Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">User Image</label>
+                               
+                                <div class="input-group file-browser">
+                                    <input type="text" class="form-control border-right-0 browse-file" placeholder="Browse File" readonly>
+                                    <label class="input-group-append mb-0">
+                                        <span class="btn ripple btn-primary">
+                                            Browse <input type="file" class="file-browserinput" name="file" id="file" value="@_LogedUser.image_name" style="display: none;" multiple>
+                                        </span>
+                                    </label>
+                                </div><span class="text-lightpink-red">[ Allow Only .jpg .png .jpeg (5MB) ]</span>
+                                @* <input type="file" name="file" id="file" class="form-control" value="@_LogedUser.image_name" placeholder="Select User Image">*@
+                            </div>
+                            <script type="text/javascript">
+                                $('#file').bind('change', function () {
+                                    if ((this.files[0].size / 1024 / 1024) > 5) {
+                                        alert('Sorry, Maximum File size : 5 MB Only ! ');
+                                        $('#file').val('');
+                                    }
+                                });
+                            </script>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">City <span class="text-danger">&ensp;*</span></label>
+                                <input type="text" value="@_LogedUser.City_Name" id="City_Name" name="City_Name"class="form-control"/>                               
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Address</label>
+                                <textarea rows="3" class="form-control" name="Company_Address" id="Company_Address">@_LogedUser.Company_Master.Company_Address</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer text-right">
+                    <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn btn-info"><i class="feather feather-save"></i>&ensp; Update</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!-- End Row-->
+<!--contact Modal -->
+<div class="modal fade" id="contactmodal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><span class="feather feather-phone-call  mr-1"></span>&nbsp;&nbsp;@_LogedUser.Company_Master.Contact_NO</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End contact Modal  -->
+<!--mail Modal -->
+<div class="modal fade" id="mailmodal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><span class="feather feather-mail  mr-1"></span>&nbsp;&nbsp;@_LogedUser.Company_Master.Company_Email</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End mail Modal  -->
+<!--infomodal Modal -->
+<div class="modal fade" id="infomodal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    @if (_LogedUser.Company_Master.Logo_URL == null || _LogedUser.Company_Master.Logo_URL == "")
+                    {
+                        <img src="~/Uploads/User_Image/buildings.png" alt="logo" class="avatar avatar-xxl bradius" height="80" width="80" />
+                    }
+                    else
+                    {
+                        <img src="~/Uploads/User_Image/@_LogedUser.Company_Master.Logo_URL" alt="logo" class="avatar avatar-xxl bradius" height="80" width="80" />
+                    }
+                </h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <table class="table mb-0 text-nowrap">
+                        <tbody>
+                            <tr>
+                                <td class="text-left"><b>Company Name:</b></td>
+                                <td class="text-left">@_LogedUser.Company_Master.Company_Name</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Admin Name:</b></td>
+                                <td class="text-left">@_LogedUser.User_Name</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Contact Number:</b></td>
+                                <td class="text-left">@_LogedUser.Company_Master.Contact_NO</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>E-Mail :</b></td>
+                                <td class="text-left">@_LogedUser.Company_Master.Company_Email</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Address:</b></td>
+                                <td class="text-left">@Html.Raw(util.GetTextStringTable(_LogedUser.Company_Master.Company_Address))</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End info Modal  -->
+
+<script type="text/javascript">
+    var password = document.getElementById("new_Password")
+        , confirm_password = document.getElementById("confirm_password");
+
+    function validatePassword() {
+        if (password.value != confirm_password.value) {
+            confirm_password.setCustomValidity("Passwords Don't Match");
+        } else {
+            confirm_password.setCustomValidity('');
+        }
+    }
+    password.onchange = validatePassword;
+    confirm_password.onkeyup = validatePassword;
+</script>
+

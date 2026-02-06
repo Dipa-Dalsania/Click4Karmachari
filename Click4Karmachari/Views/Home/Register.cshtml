@@ -1,0 +1,313 @@
+﻿@{
+    Layout = null;
+    string s = @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<!-- Mirrored from laravel.spruko.com/dayone/ltr/login3 by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 11 Dec 2021 09:34:15 GMT -->
+<!-- Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+
+    <!-- Meta data -->
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+    <meta content="Click4Karmachari - Monitoring employee works, project task & many more. This portal helps to save time,&track accurate attendance." name="description">
+    <meta content="MBH Technologies Private Limited" name="author">
+    <meta name="keywords" content="admin dashboard, dashboard ui, backend, admin panel, admin template, dashboard template, admin, bootstrap, laravel, laravel admin panel, php admin panel, php admin dashboard, laravel admin template, laravel dashboard, laravel admin panel" />
+
+    <!-- Title -->
+    <title> Click4Karmachari</title>
+
+    <!--Favicon -->
+    <link rel="icon" href="~/Design/fevicon.svg" type="image/x-icon" />
+
+    <!-- Bootstrap css -->
+    <link href="~/AdminTemplate/assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+
+    <!-- Style css -->
+    <link href="~/AdminTemplate/assets/css/style.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/css/dark.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/css/skin-modes.css" rel="stylesheet" />
+
+    <!-- Animate css -->
+    <link href="~/AdminTemplate/assets/plugins/animated/animated.css" rel="stylesheet" />
+
+    <!---Icons css-->
+    <link href="~/AdminTemplate/assets/plugins/icons/icons.css" rel="stylesheet" />
+
+    <!-- Select2 css -->
+    <link href="~/AdminTemplate/assets/plugins/select2/select2.min.css" rel="stylesheet" />
+
+    <link href="~/AdminTemplate/assets/plugins/p-scrollbar/p-scrollbar.css" rel="stylesheet" />
+
+
+
+    <!-- INTERNAL Switcher css -->
+    <link href="~/AdminTemplate/assets/switcher/css/switcher.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/switcher/demo.css" rel="stylesheet" />
+    <script src="~/AdminTemplate/assets/plugins/jquery/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <div class="page relative error-page3" style="background: linear-gradient(to top, #000000ba, #00000057),url(../AdminTemplate/images/team-work-process-young-business01.jpg); background-size: 100% 100%; ">
+        <div class="row no-gutters" style="display: flex; align-items: center;">
+            @*<div class="col-xl-6 col-lg-6 col-12 col-md-12 login-profile register-left-ig" style="text-align: right;">
+                    <div>
+
+                        <div class="cover-image" data-image-src="~/AdminTemplate/assets/images/Verify_login_dashboard_illustration.5f4585b4.svg">
+                        </div>
+
+                        <div class="container">
+                            <div class="customlogin-imgcontent register-img" style=" text-align: right !important;">
+                                <img src="~/AdminTemplate/images/register5.png"/>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="container">
+                    <div class="customlogin-content register-from">
+                        <div class="pt-4 pb-2">
+                            <a class="header-brand">
+                                <img src="~/Design/logo.svg" class="header-brand-img custom-logo" alt="Click4Karmacharilog" style="width:170px;height:70px">
+                                <img src="~/AdminTemplate/assets/images/brand/logo-white.png" class="header-brand-img custom-logo-dark" alt="Click4Karmacharilog" style="width:200px;height:90px">
+                            </a>
+                        </div>
+                        <div style="">
+                            <h1 class="mb-2" style="font-size:30px;  font-weight: 700; color: #012e58 !important;">Register</h1>
+                            @*<h4 class="mb-3 fs-25 text-white">Welcome To Click4Karmachari</h4>*@
+                            <p class="" style="font-weight: 700; letter-spacing: 0.03em; color: #012e58 ;margin-bottom:0px !important;">Click4Karmachari - Monitoring employee works, project task & many more. <br />This portal helps to save time,& track accurate attendance</p>
+                        </div>
+                        
+                        &ensp;
+                        @using (Ajax.BeginForm("Registration", "Home", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAfterRegistersuccessR" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                        {
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label text-left">Company Name <span class="text-red">*</span></label>
+                                        <input class="form-control" style="border: 1px solid #012e58; box-shadow: 0 3px 10px 0 rgb(214 71 71 / 16%);" type="text" name="Company_Name" id="Company_Name" @*pattern="[a-zA-Z][a-zA-Z\s]*"*@ placeholder="Enter Company Name" required autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label text-left">Administrator Name <span class="text-red">*</span></label>
+                                        <input class="form-control" style="border: 1px solid #012e58; box-shadow: 0 3px 10px 0 rgb(214 71 71 / 16%);" type="text" name="Admin_Name" id="Admin_Name" pattern="[a-zA-Z][a-zA-Z\s]*" placeholder="Enter Administrator Name" required autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label text-left">Company E-Mail <span class="text-red">*</span></label>
+                                        <input class="form-control" style="border: 1px solid #012e58; box-shadow: 0 3px 10px 0 rgb(214 71 71 / 16%);" type="email" name="Company_Email" id="Company_Email" placeholder="Enter Email" required autocomplete="off" pattern="@s">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label text-left">Mobile Number <span class="text-red">*</span></label>
+                                        <input class="form-control" style="border: 1px solid #012e58; box-shadow: 0 3px 10px 0 rgb(214 71 71 / 16%);" type="text" name="Company_Mobile" id="Company_Mobile" pattern="[6789][0-9]{9}" placeholder="Enter Mobile Number" required autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label text-left">Password <span class="text-red">*</span></label>
+                                        <input class="form-control" style="border: 1px solid #012e58; box-shadow: 0 3px 10px 0 rgb(214 71 71 / 16%);" type="password" name="Company_Pass" id="Company_Pass" placeholder="Enter password" required autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label text-left">Company Address <span class="text-red">*</span> </label>
+                                        <textarea class="form-control" style="border: 1px solid #012e58; box-shadow: 0 3px 10px 0 rgb(214 71 71 / 16%);" name="Company_Address" id="Company_Address" placeholder="Enter Company Address" rows="1" value="" required autocomplete="off"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-start">
+                                <div class="form-group m-0 ml-3">
+                                    <label class="custom-control custom-checkbox m-0">
+                                        <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" required>
+                                        <span class="custom-control-label">
+                                            <small class="font-weight-bold">
+                                                I agree to the
+                                                <a class="footer-hover" href="~/Home/Termsconditions" target="_blank">Terms & Conditions</a>
+                                            </small>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="submit mt-2">
+                                        <button type="submit" class="btn btn-block" style="background: #012e58; border: 1px solid #012e58; color:#fff;">Create Account</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-2">
+                                <p class="text-dark mb-0">
+                                    <small class="font-weight-bold">
+                                        Already have an account?
+                                    </small>
+                                    <a class="ml-1 fs-14 footer-hover"  href="Login"><b>Login</b></a>
+                                </p>
+                            </div>
+
+                        }
+
+                        <div class="card-body border-top-0 pb-6 pt-2">
+                            <div class="social-media text-center">
+                                <a href="https://www.facebook.com/mbhtechnologiespvtltd" target="_blank"><span class="avatar brround mr-3 bg-primary-transparent" style="color: #012e58;"> <i class="ri-facebook-line"></i></span></a>
+                                <a href="https://www.instagram.com/mbh_technologies" target="_blank"><span class="avatar brround mr-3 bg-primary-transparent" style="color: #012e58;"> <i class="ri-instagram-line"></i></span></a>
+                                <a href="https://twitter.com/MbhPvt" target="_blank"><span class="avatar brround mr-3 bg-primary-transparent" style="color: #012e58;"><i class="ri-twitter-line"></i></span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Jquery js-->
+    <script src="~/AdminTemplate/assets/plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap4 js-->
+    <script src="~/AdminTemplate/assets/plugins/bootstrap/popper.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/MasterV1.js"></script>
+    @*<script src="~/Scripts/jquery-3.3.1.min.js"></script>*@
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    @*<script src="~/Design/js/bootstrap.min.js"></script>*@
+    @*<script src="~/Design/js/jquery.min.js"></script>*@
+
+
+
+    <!-- Select2 js -->
+    <script src="~/AdminTemplate/assets/plugins/select2/select2.full.min.js"></script>
+
+    <!-- P-scroll js-->
+    <script src="~/AdminTemplate/assets/plugins/p-scrollbar/p-scrollbar.js"></script>
+
+    <!-- Custom js-->
+    <script src="~/AdminTemplate/assets/js/custom.js"></script>
+
+    <!-- Switcher js -->
+    <script src="~/AdminTemplate/assets/switcher/js/switcher.js"></script>
+    <script src="~/AdminTemplate/assets/js/script.js"></script>
+    <script src="~/AdminTemplate/assets/js/notify/bootstrap-notify.min.js"></script>
+    <script src="~/AdminTemplate/assets/js/notify/notify-script.js"></script>
+    <script src="~/AdminTemplate/assets/js/dashboard/default.js"></script>
+    <script src="~/AdminTemplate/assets/js/bootstrap-notify.min.js"></script>
+
+
+
+    @if (TempData["Notification"] != null)
+    {
+        <input type="hidden" id="PassingToJavaScript1" value="@TempData["Notification"]">
+        <script type="text/javascript">
+            var p1 = document.getElementById('PassingToJavaScript1').value;
+            toastr.info(p1);
+        </script>
+    }
+    @if (TempData["Result"] != null)
+    {
+        <input type="hidden" id="PassingToJavaScript1" value="@TempData["Result"]">
+        <script type="text/javascript">
+            var p1 = document.getElementById('PassingToJavaScript1').value;
+            toastr.success(p1);
+        </script>
+    }
+    @if (TempData["Failure"] != null)
+    {
+        <input type="hidden" id="PassingToJavaScript1" value="@TempData["Failure"]">
+        <script type="text/javascript">
+            var p1 = document.getElementById('PassingToJavaScript1').value;
+            toastr.error(p1);
+        </script>
+    }
+
+    <script>
+        function change() {
+            $('#loginpagediv').show();
+            $('#OTPpagediv').hide();
+        };
+        $(document).on('click', '.toggle-password', function () {
+
+            $(this).toggleClass("fa-eye fa-eye-slash");
+
+            var input = $("#User_Password");
+            input.attr('type') === 'password' ? input.attr('type', 'text') : input.attr('type', 'password')
+        });
+        $('#OTPpagediv').hide();
+        $('#request-otp').on('click', function () {
+            $('#loginpagediv').hide();
+            $('#OTPpagediv').show();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            document.getElementById('OTPpagediv').style.display = "none";
+        });
+        var OnAjaxcallbackPage = function (result) {
+
+            if (result.EnableError) {
+                addProductNotice(result.ToastMsgFail, '', '', 'failure');
+                $('#mobile').val(m);
+                document.getElementById('altmsgfailure').style.display = "block";
+                document.getElementById('msgsfailure').html = result.ToastMsgFail;
+            }
+            else {
+                addProductNotice(result.ToastMsgSuc, '', '', 'success');
+                document.getElementById('loginpagediv').style.display = "none";
+                document.getElementById('OTPpagediv').style.display = "block";
+                $('#mobileotp11').val(result.mobile);
+                document.getElementById("mobileset").innerText = result.mobile;
+                document.getElementById('altmsgsuccess').style.display = "block";
+                $("#msgsuccess").html(result.ToastMsgSuc);
+            }
+        }
+
+        var OnAjaxcallbackOTPPage = function (result) {
+            // alert("call..");
+            if (result.EnableError) {
+                addProductNotice(result.ToastMsgFail, '', '', 'failure');
+            }
+            else {
+                window.location = result.Refresh;
+            }
+        }
+
+        function OnAfterRegistersuccessR(data) {
+
+            if (data.ErrorTitle == "S") {
+                addProductNotice(data.ToastMsgSuc, '', '', 'success');
+                //alert(data.ToastMsgSuc);
+            }
+            if (data.ErrorTitle == "F") {
+                addProductNotice(data.ToastMsgFail, '', '', 'failure');
+            }
+            if (data.Refresh == "Default") {
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            }
+            else if (data.Refresh != null) {
+                window.location.href = data.Refresh;
+            }
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>

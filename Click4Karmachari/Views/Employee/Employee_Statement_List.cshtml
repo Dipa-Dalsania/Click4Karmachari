@@ -1,0 +1,78 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "Employee_Statement_List";
+    Layout = "~/Views/Employee/Employee_Layout_new.cshtml";
+    List<Transaction_Master> Emp_trans = ViewBag.Emp_trans;
+}
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Employee Statement</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title text-muted mb-0 fs-14">Please Note: + (Credit) and - (Debit) </h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable" class="table table-striped table-bordered border-bottom table-hover">
+                        <thead>
+                            <tr>
+                                <th class="border-bottom-0">Transaction Date</th>
+                                <th class="border-bottom-0">Amount</th>
+                                <th class="border-bottom-0">Transaction Type</th>
+                                <th class="border-bottom-0">Voucher No</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Emp_trans != null)
+                            {
+                                foreach (Transaction_Master _newobj in Emp_trans)
+                                {
+                                    <tr>
+                                        <td class="border">@_newobj.Trans_Date.ToString("dd MMMM yyyy")</td>
+                                        @if (_newobj.Type_id == 1)
+                                        {
+                                            <td><span class="badge badge-success"><i class="fa fa-plus"></i>&ensp;<b>@_newobj.Amount</b></span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="badge badge-danger-light">@_newobj.Amount</span></td>
+                                        }
+
+                                        @if (_newobj.Type_id == 1)
+                                        {
+                                            <td style="text-transform:capitalize"><span class="badge badge-info">Credit</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td style="text-transform: capitalize"><span class="badge badge-danger-light">Debit</span></td>
+
+                                        }
+                                        <td style="text-transform: capitalize">@_newobj.Ref_Id</td>
+                                    </tr>
+                                }
+
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

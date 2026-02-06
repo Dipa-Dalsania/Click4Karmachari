@@ -1,0 +1,228 @@
+﻿@{
+    Layout = null;
+    string s = @"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$";
+}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta content='width=device-width, initial-scale=1.0, user-scalable=0' name='viewport'>
+    <meta content="Satyam Group - Administrator Portal - Monitoring employee works, project task & many more. This portal helps to save time,&track accurate attendance." name="description">
+    <meta content="Satyam Group - Administrator Portal" name="author">
+    <meta content="Satyam Group - Administrator Portal" name="keywords" />
+    <title>Click4Karmachari  - Administrator Portal</title>
+    <link rel="icon" href="~/Design/fevicon.svg" type="image/x-icon" />
+    <link href="~/AdminTemplate/assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/css/style.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/css/dark.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/css/skin-modes.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/animated/animated.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/icons/icons.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/select2/select2.min.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/p-scrollbar/p-scrollbar.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/switcher/css/switcher.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/switcher/demo.css" rel="stylesheet" />
+    <script src="~/AdminTemplate/assets/plugins/jquery/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="page relative error-page3" style="background: linear-gradient(to top, #000000ba, #00000057),url(../AdminTemplate/images/team-work-process-young-business01.jpg); background-size: 100% 100%; ">
+        <div class="row no-gutters">
+            <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                <div class="container login-page">
+                    <div class="customlogin-content" id="loginpagediv" style="">
+                        <div class="pt-4 pb-2">
+                            <a class="header-brand">
+                                
+                                <img src="~/AdminTemplate/images/logo.svg" class="header-brand-img custom-logo" alt="Satyam Group Log" style="width:180px;height:60px">
+                                <img src="~/AdminTemplate/assets/images/brand/logo-white.png" class="header-brand-img custom-logo-dark" alt="SatyamGroup" style="width:200px;height:90px">
+                            </a>
+                        </div>
+                        <div class="pt-3 pr-3 pl-3 pb-5 ">
+                            <h1 class="mb-2" style="font-size: 30px; font-weight: 700; color: #6f453e !important;">Login</h1>
+                            <p class="" style="font-weight: 700; letter-spacing: 0.03em; color: #6f453e; margin-bottom: 0px !important;">Satyam Group - Monitoring employee works, project task & many more.<br /> This portal helps to save time & track accurate attendance</p>
+                        </div>
+
+
+                        @using (Ajax.BeginForm("Login", "Home", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAfterloginsuccess" }, new { @id = "loginForm", @enctype = "multipart/form-data", role = "loginForm" }))
+                        {
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label class="form-label text-left">Mobile Number <span class="text-red">*</span></label>
+                                        <input class="form-control" style="border: 1px solid #012e58; box-shadow: 0 3px 10px 0 rgb(214 71 71 / 16%);" type="text" name="User_Mobile" id="User_Mobile" pattern="[6789][0-9]{9}" placeholder="Enter Mobile Number" value="" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label class="form-label text-left">Password <span class="text-red">*</span></label>
+                                        <input class="form-control" style="border: 1px solid #012e58; box-shadow: 0 3px 10px 0 rgb(214 71 71 / 16%); position: relative; " type="password" name="User_Password" id="User_Password" placeholder="Enter password" value="" autocomplete="on" required>
+                                        <span toggle="#password-field" class="fa  fa-eye-slash field_icon toggle-password form-control-pwd" style="position: absolute; top: 39px; right: 40px; color: #012e58;"></span>
+                                    </div>
+
+                                    <div class="row justify-content-end mt-3">
+                                        <div class="col-lg-8">
+                                            <small class="font-weight-bold text-right">
+                                                <p class="text-dark mb-1">
+                                                    <a href="~/Home/Forgot_password" @*onclick="Forgot_Pass()" id="request-otp"*@ class="ml-1 footer-hover"><b>Forgot Password?</b></a>
+                                                </p>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="submit mt-2">
+                                        <button type="submit" class="btn btn-block" style="background: #6f453e; color: #fff;">Login</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="mt-3 company-reg">
+                                        <p class="text-dark mb-0">
+                                            <small class="font-weight-bold ">
+                                                Don't have an account?
+                                                <a class="ml-1 footer-hover" style="font-weight:900;font-size:14px;" href="/Home/Register">Company Register</a>
+                                            </small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="submit mt-2">
+                                        <a href="~/Uploads/Satyam_Userapp.apk" target="_blank" class="btn btn-block" style="background: #6f453e; color: #fff;">Download Application</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                        &ensp;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/AdminTemplate/assets/plugins/jquery/jquery.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/bootstrap/popper.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/MasterV1.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/select2/select2.full.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/p-scrollbar/p-scrollbar.js"></script>
+    <script src="~/AdminTemplate/assets/js/custom.js"></script>
+    <script src="~/AdminTemplate/assets/switcher/js/switcher.js"></script>
+    <script src="~/AdminTemplate/assets/js/script.js"></script>
+    <script src="~/AdminTemplate/assets/js/notify/bootstrap-notify.min.js"></script>
+    <script src="~/AdminTemplate/assets/js/notify/notify-script.js"></script>
+    <script src="~/AdminTemplate/assets/js/dashboard/default.js"></script>
+    <script src="~/AdminTemplate/assets/js/bootstrap-notify.min.js"></script>
+
+    @if (TempData["Notification"] != null)
+    {
+        <input type="hidden" id="PassingToJavaScript1" value="@TempData["Notification"]">
+        <script type="text/javascript">
+            var p1 = document.getElementById('PassingToJavaScript1').value;
+            toastr.info(p1);
+        </script>
+    }
+    @if (TempData["Result"] != null)
+    {
+        <input type="hidden" id="PassingToJavaScript1" value="@TempData["Result"]">
+        <script type="text/javascript">
+            var p1 = document.getElementById('PassingToJavaScript1').value;
+            toastr.success(p1);
+        </script>
+    }
+    @if (TempData["Failure"] != null)
+    {
+        <input type="hidden" id="PassingToJavaScript1" value="@TempData["Failure"]">
+        <script type="text/javascript">
+           
+            var p1 = document.getElementById('PassingToJavaScript1').value;
+            toastr.error(p1);
+        </script>
+    }
+
+    <script>
+        function change() {
+            $('#loginpagediv').show();
+            $('#OTPpagediv').hide();
+        };
+        $(document).on('click', '.toggle-password', function () {
+
+            $(this).toggleClass("fa-eye fa-eye-slash");
+
+            var input = $("#User_Password");
+            input.attr('type') === 'password' ? input.attr('type', 'text') : input.attr('type', 'password')
+        });
+        $('#OTPpagediv').hide();
+        $('#request-otp').on('click', function () {
+            $('#loginpagediv').hide();
+            $('#OTPpagediv').show();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            document.getElementById('OTPpagediv').style.display = "none";
+           
+           // document.getElementById('User_Mobile').value = "";
+        });
+        
+
+        var OnAjaxcallbackPage = function (result) {
+            
+            if (result.EnableError) {
+                addProductNotice(result.ToastMsgFail, '', '', 'failure');
+                $('#mobile').val(m);
+                document.getElementById('altmsgfailure').style.display = "block";
+                document.getElementById('msgsfailure').html = result.ToastMsgFail;
+            }
+            else {
+                addProductNotice(result.ToastMsgSuc, '', '', 'success');
+                document.getElementById('loginpagediv').style.display = "none";
+                document.getElementById('OTPpagediv').style.display = "block";
+                $('#mobileotp11').val(result.mobile);
+                document.getElementById("mobileset").innerText = result.mobile;
+                document.getElementById('altmsgsuccess').style.display = "block";
+                $("#msgsuccess").html(result.ToastMsgSuc);
+            }
+        }
+        var OnAjaxcallbackOTPPage = function (result) {
+            // alert("call..");
+            if (result.EnableError) {
+                addProductNotice(result.ToastMsgFail, '', '', 'failure');
+            }
+            else {
+                window.location = result.Refresh;
+            }
+        }
+        function OnAfterloginsuccess(data) {
+           
+           
+            if (data.ErrorTitle == "S") {
+                addProductNotice(data.ToastMsgSuc, '', '', 'success');
+                //alert(data.ToastMsgSuc);
+            }
+            if (data.ErrorTitle == "F") {
+                addProductNotice(data.ToastMsgFail, '', '', 'failure');
+            }
+            if (data.Refresh == "Default") {
+                location.reload();
+            }
+            else if (data.Refresh != null) {
+                window.location.href = data.Refresh;
+            }
+        }
+    </script>
+
+</body>
+
+</html>

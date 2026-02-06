@@ -1,0 +1,185 @@
+﻿@using ClickKarmachari;
+@using ClickKarmachari.Models;
+@{
+
+    int count = 1;
+    string td = ViewBag.taskdate, sd = "";
+    DateTime d = DateTime.Now;
+    if (td != "")
+    {
+        d = Convert.ToDateTime(td);
+        sd = d.ToString("dd MMMM yyyy");
+    }
+    List<Employee_Task_Master> employee = ViewBag.em;
+    List<UserMaster> um = ViewBag.User;
+    DateTime dtoday = DateTime.Now;
+    DateTime d1 = ViewBag.date1;
+    DateTime d2 = ViewBag.date2;
+    string st = dtoday.ToString("dd MMMM yyyy");
+    string ckstatus = "";
+    string strmsg = ViewBag.str;
+    List<long> user_id = new List<long>();
+    List<string> alldt = new List<string>();
+}
+<br />
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+            
+            </div>
+            <div class="card-body">
+                @if (strmsg == "one")
+                {
+                    if (employee.Count > 0)
+                    {
+                        ckstatus = "true";
+
+                        <!-- Row-->
+                        <div class="col-md-12 col-lg-12">
+                            <div class="card">
+                                <div class="card-header border-bottom-0">
+                                    <h3 class="card-title ">Employee Task Details</h3>
+                                </div>
+                                <div class="card-body task-body">
+
+                                    @foreach (Employee_Task_Master etm in employee)
+                                    {
+                                        <br />
+                                        DateTime dt = Convert.ToDateTime(etm.Task_Date);
+                                        string td1 = dt.ToString("dd MMMM yyyy");
+                                        if (alldt.Contains(td1))
+                                        {
+                                            count++;
+                                        }
+
+                                        else
+                                        {
+                                            <h3>@etm.Task_Date.Value.ToString("dd MMMM yyyy")</h3>
+                                            alldt.Add(td1);
+                                            count = 1;
+                                        }
+
+                                <ul class="list-group">
+                                    <li class="list-group-item justify-content-between" style="text-transform:capitalize">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#" aria-expanded="true" aria-controls="collapseOne">
+                                            <div class="badgetext badge badge-info badge-pill pull-left number-btn m-0"> @count</div>&ensp;&ensp;
+                                            <strong class="task-details" style="font-size:14px;text-transform:capitalize">@etm.Task_Detail</strong>
+                                        </a>
+                                        <span style="float:right">
+                                            <a href="delete_task?taskdate=@etm.Task_Date&emp_task_id=@etm.Employee_Task_id" onclick="return confirm('Are you sure you want to Delete')">
+                                                <i class="fa fa-trash fa-2x delete-btn" style="color: #FF4433 " title="Delete"></i>
+                                            </a>
+                                        </span>
+
+                                    </li>
+
+
+                                </ul>
+                                    }
+                                    <br />
+                                </div>
+                            </div>
+
+                    </div>
+                   
+                        <!-- End Row-->
+
+                    }
+                    else
+                    {
+                        ckstatus = "false";
+                    }
+                }
+                @if (strmsg == "all")
+                {
+                    if (employee.Count > 0)
+                    {
+                       
+                        ckstatus = "true";
+                     
+                        <div class="card">
+                             <div class="card-header border-bottom-0">
+                                 <h3 class="card-title ">All Employee Task Details</h3>
+                             </div>
+
+                                    <div class="card-body">
+                                        <div aria-multiselectable="true" class="accordion" id="accordion" role="tablist">
+                                            @foreach (Employee_Task_Master em in employee)
+                                            {
+                                                if (user_id.Contains(Convert.ToInt64(em.User_id)))
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    user_id.Add(Convert.ToInt64(em.User_id));
+                                                    string s = "collapse" + count;
+                                            <div class="acc-card mb-4">
+                                                <div class="acc-header" id="headingOne" role="tab" style="text-transform:capitalize">
+                                                    <h5 class="mb-0">
+
+                                                        <a aria-controls="collapseOne" aria-expanded="true" href="#@s" data-toggle="collapse">
+                                                            <span class="badgetext badge badge-info badge-pill pull-left"> @count</span>&ensp;&ensp;
+                                                            @em.UserMaster.User_Name
+                                                            <span class="float-right"><i class="fe fe-chevron-right"></i></span>
+                                                        </a>
+
+                                                    </h5>
+                                                </div>
+                                                <div aria-labelledby="headingOne" class="collapse" data-parent="#accordion" id="@s" role="tabpanel" style="text-transform:capitalize">
+
+                                                    @foreach (Employee_Task_Master em1 in employee.Where(x => x.User_id == em.User_id).ToList())
+                                                    {
+
+                                                        <div class="acc-body">
+                                                            <span class="feather feather-check text-success icon-style-circle bg-success-transparent" ></span>&ensp;&ensp;@em1.Task_Detail
+                                                        </div>
+
+                                                    }
+
+                                                </div>
+
+                                            </div>
+                                                    count++;
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                    }
+                    else
+                    {
+                        ckstatus = "false";
+                    }
+
+                }
+                @if (ckstatus == "false" && ViewBag.taskdate != "")
+                {
+                    <div class="row" style="text-align:center;margin: 0 auto;">
+                        <div class="col-lg-12">
+                            <div class="hpanel" style="">
+                                <div class="col-lg-4"></div>
+                                <div class="col-lg-8" style="text-align:center;margin: 0 auto;">
+                                    <img src="~/AdminTemplate/assets/images/data_not_found.png" />
+                                </div>
+                                <div class="col-lg-4"></div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+
+                }
+            </div>
+        </div>
+     </div>
+</div>
+
+
+
+
+

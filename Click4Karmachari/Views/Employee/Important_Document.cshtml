@@ -1,0 +1,61 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "Important_Document";
+    Layout = "~/Views/Employee/Employee_Layout_new.cshtml";
+    ViewBag.Title = "Employee Documents";
+    List<Document_Master> _impdoc = ViewBag._impdoc;
+}
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Important Document</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+          
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable" class="table table-striped table-bordered border-bottom table-hover">
+                        <thead>
+                            <tr>
+                                <th class="border-bottom-0">Document Name</th>
+                                <th class="border-bottom-0">View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (_impdoc != null)
+                            {
+                                foreach (Document_Master _newobj in _impdoc)
+                                {
+                            <tr>
+                                <td style="text-transform:capitalize">@_newobj.Doc_Name</td>
+                               
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <a href="\Uploads\User_Document\@_newobj.Doc_Type" target="_blank" data-toggle="tooltip" data-placement="top" title="View"><div><i class="fa fa-eye fa-2x text-info"></i></div></a> &ensp;&ensp;
+                                        <a href="\Uploads\User_Document\@_newobj.Doc_Type" download>
+                                            <i style="color:#F49917;" class="fa fa-download fa-2x"  data-toggle="tooltip" data-original-title="Download"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

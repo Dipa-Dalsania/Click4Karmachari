@@ -1,0 +1,405 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    ViewBag.Title = "Employee_All";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<UserMaster> user = ViewBag.user;
+    List<UserType> u_type = ViewBag.U_Type;
+    List<ProjectSalaryGroup> Heads = ViewBag.Heads;
+    int d = 0, m = 0, y = 0, cnt = 1;
+    string s = @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+    string imagepath = "";
+    string imagerootpath = ViewBag.ImagekitDisplayURL;
+}
+
+
+<link href="~/AdminTemplate/assets/css/toastr.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/toastr.min.js"></script>
+
+
+
+
+
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Employees</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <button class="btn btn-primary mr-3" onclick=" $('#Model_AddEmployee').modal('show');" type="submit"><i class="feather feather-plus fs-15 my-auto mr-2"></i><strong>Add Employee</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+<!-- Row -->
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+
+                <!-- Filters Form -->
+                @{
+                    var statuses = new[] {
+        new { Value = 99, Text = "All" },
+        new { Value = 0, Text = "Active" },
+        new { Value = 1, Text = "Deactive" },
+        new { Value = 2, Text = "Under Verification" },
+        new { Value = 6, Text = "Deleted" }
+    };
+                }
+
+                <form action="/Access/Employee_All" method="get" class="row g-3 align-items-end">
+
+                    <!-- Status -->
+                    <div class="col-12 col-md-2">
+                        <label for="Sts" class="form-label">Select Status</label>
+                        <select id="Sts" name="Sts" class="form-control select2">
+                            @foreach (var status in statuses)
+                            {
+                                <option value="@status.Value" @(ViewBag.Sts == status.Value ? "selected" : "")>@status.Text</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Employee Type -->
+                    <div class="col-12 col-md-2">
+                        <label for="Usertype_id" class="form-label">Select Employee Type</label>
+                        <select id="Usertype_id" name="Usertype_id" class="form-control select2">
+                            <option value="99" @(ViewBag.Usertype_id == 99 ? "selected" : "")>All</option>
+                            @foreach (var status in u_type)
+                            {
+                                <option value="@status.Usertype_id" @(ViewBag.Usertype_id == status.Usertype_id ? "selected" : "")>@status.Usertype_name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Salary Group -->
+                    <div class="col-12 col-md-2">
+                        <label for="head_id" class="form-label">Select Salary Group</label>
+                        <select id="head_id" name="head_id" class="form-control select2">
+                            <option value="99" @(ViewBag.head_id == 99 ? "selected" : "")>All</option>
+                            @foreach (ProjectSalaryGroup group in Heads)
+                            {
+                                <option value="@group.Project_SalaryGroupID" @(ViewBag.head_id == group.Project_SalaryGroupID ? "selected" : "")>@group.Project_Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Employee Name -->
+                    <div class="col-12 col-md-3">
+                        <label for="searchname" class="form-label">Employee Name</label>
+                        <input type="text" id="searchname" name="searchname" value="@ViewBag.searchname" class="form-control" placeholder="Employee Name to Search" />
+                    </div>
+
+                    <!-- Search / Download / Clear Buttons -->
+                    <div class="col-12 col-md-3 d-flex gap-2">
+                        <button type="submit" name="actionType" value="search" class="btn btn-primary">Search</button> &nbsp;
+                        <button type="submit" name="actionType" value="download" class="btn btn-primary">Download</button> &nbsp;
+                        <a href="/Access/Employee_All" class="btn btn-danger">Clear</a>
+                    </div>
+
+                </form>
+
+
+
+                <div class="row g-3 align-items-end mt-3">
+                    <!-- Upload Employees Form -->
+                    @using (Html.BeginForm("UploadEmployee", "Access", FormMethod.Post, new { @class = "d-flex align-items-end", style = "gap: 0.75rem;", enctype = "multipart/form-data" }))
+                    {
+                        @*@using (Ajax.BeginForm("UploadEmployee", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUploadUser" }, new { @class = "d-flex align-items-end", style = "gap: 0.75rem;", @enctype = "multipart/form-data" }))
+                            {*@
+                        <div class="col-auto d-flex align-items-end">
+
+                            <div class="input-group file-browser">
+                                <input type="text" class="form-control border-right-0 browse-file" placeholder="Browse File" readonly>
+                                <label class="input-group-append mb-0">
+                                    <span class="btn btn-info">
+                                        Browse <input type="file" class="file-browserinput" name="file" id="file" style="display: none;" multiple>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-info">Upload Employees</button>
+                        </div>
+                    }
+                </div>
+
+                <br /><br />
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-vcenter text-nowrap table-bordered border-bottom" id="basic-datatable">
+                            <thead>
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>Employee Name</th>
+                                    <th>User Type</th>
+                                    <th>Join Date</th>
+                                    <th>At work</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (user != null)
+                                {
+                                    foreach (var _newobj in user)
+                                    {
+                                        var doj = Convert.ToDateTime(_newobj.Date_of_join);
+                                        var totalDays = (DateTime.Now - doj).TotalDays;
+                                        var y1 = (int)(totalDays / 365);
+                                        var m1 = (int)((totalDays % 365) / 30);
+                                        var d1 = (int)(totalDays % 30);
+                                        <tr>
+                                            <td>@_newobj.EmployeeID</td>
+                                            <td style="text-transform: capitalize">
+                                                <div class="d-flex">
+                                                    
+                                                    
+                                                    @if (_newobj.image_name == null)
+                                                    {
+                                                        imagepath = "~/Uploads/User_Image/profile.jpg";
+                                                    }
+                                                    else
+                                                    {
+                                                        imagepath = imagerootpath + "/User_Image/"+_newobj.image_name;
+                                                    }
+                                                    <img src="@imagepath"
+                                                         onerror="this.src='@Url.Content("~/Uploads/User_Image/profile.jpg")';"
+                                                         class="avatar avatar-md brround me-3" />
+
+                                                    <div class="me-3 mt-0 mt-sm-1">
+                                                        <a href="@Url.Action("Employee_Update", "Access", new { User_id = _newobj.User_ID })" style="color: #0452c9">
+                                                            <h6 class="mb-1 fs-14">@_newobj.User_Name</h6>
+                                                        </a>
+                                                        <p class="text-muted mb-0 fs-12" style="text-transform:lowercase">@_newobj.User_Email</p>
+                                                        <p class="text-muted mb-0 fs-12">Contact Number: @_newobj.User_Mobile</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td>@(_newobj.UserType != null ? _newobj.UserType.Usertype_name : "")</td>
+
+                                            <td>@doj.ToString("dd MMMM yyyy")</td>
+
+                                            <td>
+                                                @if (totalDays < 30)
+                                                {
+                                                    @(string.Format("{0} Days", d1))
+                                                }
+                                                else if (totalDays < 365)
+                                                {
+                                                    @(string.Format("{0} Months", m1))
+                                                }
+                                                else
+                                                {
+                                                    @(string.Format("{0} Years", y1))
+                                                }
+                                            </td>
+
+                                            <td>
+                                                @if (_newobj.status == 0)
+                                                {
+                                                    <span class="badge badge-success"><b>Active</b></span>
+                                                }
+                                                else if (_newobj.status == 2)
+                                                {
+                                                    <span class="badge badge-orange-light"><b>Under Verification</b></span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-danger-light"><b>Deactive</b></span>
+                                                }
+                                            </td>
+
+                                            <td>
+                                                @using (Ajax.BeginForm("Employee_Delete", "Access",
+                                                    new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateUserDelete" },
+                                                    new { @enctype = "multipart/form-data", role = "form" }))
+                                                {
+                                                    @Html.Hidden("User_Id", _newobj.User_ID)
+
+                                                    <a href="@Url.Action("Employee_Update", "Access", new { User_id = _newobj.User_ID })"
+                                                       class="btn btn-primary btn-icon" data-toggle="tooltip" title="View/Edit">
+                                                        <i class="feather feather-edit"></i>
+                                                    </a>
+
+                                                    <button type="submit" class="btn btn-danger btn-icon"
+                                                            data-toggle="tooltip" title="Delete"
+                                                            onclick="return confirm('Are you sure you want to Delete?');">
+                                                        <i class="feather feather-trash-2"></i>
+                                                    </button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="Model_AddEmployee">
+        <div class="modal-dialog">
+            @using (Ajax.BeginForm("Employee_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminEmp" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "submitemp()" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-content">
+                    <div class="col-md-12 p-3 card-left" style="display:none;text-align:center" id="msgdig">
+                        <div class="alert_R" style="border-radius: 5px; color: white;padding:inherit; background-color: #f91a1ab8 ">
+                            <span id="failuremsg"></span>
+                            <span class="closebtn " onclick="this.parentElement.style.display='none';" style="float:right">&times;</span>
+                        </div>
+                    </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title">New Employee Registration</h5>
+                        <button class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Employee Name  <span class="text-red">*</span></label>
+                                    <input type="hidden" name="User_ID" id="User_ID" value="0">
+                                    <input type="text" placeholder="Enter Your Full Name" pattern="[a-zA-Z][a-zA-Z\s]*" name="User_Name" id="User_Name" value="" class="form-control" required autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Mobile Number <span class="text-red">*</span></label>
+                                    <input type="tel" pattern="[6789][0-9]{9}" maxlength="10"
+                                           minlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                           name="User_Mobile" placeholder="Enter Mobile Number" id="User_Mobile" value="" required class="form-control" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Email </label>
+                                    <input type="email" name="User_Email" pattern="@s" id="User_Email" class="form-control" placeholder="Enter email">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Password </label>
+                                    <input type="password" name="User_Password" id="User_Password" placeholder="Password" class="form-control" autocomplete="new-password">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Employee Type </label>
+                                    <select name="user_Type" id="user_Type" class="form-control custom-select select2" autocomplete="off" style="text-transform: capitalize">
+                                        <option value="0">Select Employee Type</option>
+                                        @foreach (UserType _u in u_type)
+                                        {
+                                            <option value="@_u.Usertype_id">@_u.Usertype_name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                        <button type="submit" id="Command" name="Command" value="Save" class="btn btn-primary"><i class="fa fa-save"></i>&ensp;Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script>
+   $(document).ready(function () {
+        // toastr options
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "timeOut": "3000",       // 3 seconds
+            "extendedTimeOut": "1000",
+            "positionClass": "toast-top-right" // you can change position
+        };
+
+         var result = '@ViewBag.Result';
+         if (result != "") {
+             var message = '@ViewBag.Result';
+             var type = 'success';
+         }
+
+          var failure = '@ViewBag.Failure';
+         if (failure != "") {
+            var message = '@ViewBag.Failure';
+             var type = 'error';
+         }
+
+
+        if (message) {
+            switch (type) {
+                case "success": toastr.success(message); break;
+                case "error": toastr.error(message); break;
+                case "warning": toastr.warning(message); break;
+                default: toastr.info(message); break;
+            }
+        }
+    });
+        @*var result = '@ViewBag.Result';
+    if (result != "") {
+         alert(result);
+    }
+    var failure = '@ViewBag.Failure';
+    if (failure != "") {
+        alert(failure);
+    }*@
+
+
+
+    var isSubmitted = false;
+        function stopMultipleSubmitEmp() {
+        if (!isSubmitted) {
+        $("#Command").prop('disabled', true);
+        isSubmitted=true;
+        return true;
+        }
+        else {
+        $("#Command").prop('disabled', false);
+        isSubmitted=false;
+        return false;
+        }
+        }
+        function submitemp() {
+        stopMultipleSubmitEmp();
+        return isSubmitted;
+        }
+        $("#btnsearch").click(function (e) {
+        alert($("#projectcat").val());
+        });
+
+
+
+
+
+</script>

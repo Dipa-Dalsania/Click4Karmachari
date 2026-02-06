@@ -1,0 +1,99 @@
+﻿@using ClickKarmachari;
+@using ClickKarmachari.Models;
+@{
+    ViewBag.Title = "Project_Task_List";
+    Layout = "~/Views/Employee/Employee_Layout_new.cshtml";
+    List<Project_Task_Master> task = ViewBag.task;
+    CommonClasses util = new CommonClasses();
+    List<TaskType> t = ViewBag.t;
+    List<Project_Assign_Master> projects = ViewBag.Project;
+    DateTime Date = Convert.ToDateTime(DateTime.Now);
+    string str1 = Date.ToString("yyyy-MM-dd");
+    ViewBag.PageTitle = "All Project Task";
+}
+
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Project Task</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <a href="~/Employee/Project_Task_Add?TaskID=0" class="btn btn-primary"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i> Add Task</strong></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable" class="table table-striped table-bordered border-bottom table-hover">
+                        <thead>
+                            <tr>
+                                <th class="border-bottom-0">Project Name</th>
+                                <th class="border-bottom-0">Task Name</th>
+                                <th class="border-bottom-0">Task Type</th>
+                                <th class="border-bottom-0">Status</th>
+                                <th class="border-bottom-0">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (task != null)
+                            {
+                                foreach (Project_Task_Master p in task)
+                                {
+                                    <tr>
+                                        <td style="text-transform:capitalize">@p.Project_Master.Project_Name</td>
+                                        <td style="text-transform:capitalize">@p.Task_Name</td>
+                                        <td style="text-transform:capitalize">@p.TaskType.TaskType_Name</td>
+                                        <td>
+                                            @*@util._Status_ByNumber(p.Status)*@
+                                            @if (p.Status == 0)
+                                            {
+                                                <span class="badge badge-secondary-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else if (p.Status == 1)
+                                            {
+                                                <span class="badge badge-success-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else if (p.Status == 2)
+                                            {
+                                                <span class="badge badge-danger-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else if (p.Status == 7)
+                                            {
+                                                <span class="badge badge-info-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else if (p.Status == 9)
+                                            {
+                                                <span class="badge badge-primary-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+
+                                        </td>
+                                        <td>
+                                            <a href="~/Employee/Project_Task_Add?TaskID=@p.Task_Id" class="btn btn-icon btn-primary"> <strong><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></strong></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

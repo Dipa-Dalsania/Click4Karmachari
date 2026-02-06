@@ -1,0 +1,31 @@
+﻿
+
+#arow {
+    bottom: 15%;
+    width:20%;
+    color:red;
+    color:red;
+    display: block;
+    position: absolute;
+    animation: linear infinite alternate;
+    animation-name: run;
+    animation-duration: 1s;
+}
+
+@-webkit-keyframes run {
+    0%
+
+{
+    left: 0;
+    transform: translateX(0);
+}
+
+100% {
+    left: 100%;
+    transform: translateX(-100%);
+}
+}
+.modal-content {
+    
+   
+}

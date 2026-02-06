@@ -1,0 +1,241 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    ViewBag.Title = "User_Profile";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    ProjectSalaryHead objProjectSalaryHead = ViewBag.ProjectSalaryHead;
+}
+
+<div class="page-header d-lg-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Update Designation</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3 col-lg-3">
+        <div class="card">
+         
+                <div class="card-header border-bottom-0">
+                    <div class="card-title">Parameters for Formula</div>
+                </div>
+                <ul class="list-style-cricle">
+                    <li>BASIC</li>
+                    <li>HRA</li>
+                    <li>DA</li>
+                    <li>TA</li>
+                    <li>BONUS</li>
+                    <li>LEAVE</li>
+                    <li>OTRate</li>
+                    <li>PH</li>
+                    <li>SPECIALALLOWANCE</li>
+                    <li>OTHERALLOWANCE</li>
+                    <li>PF</li>
+                    <li>PT</li>
+                    <li>ESIC</li>
+                    <li>CANTEEN</li>
+                    <li>HRA_DEDUCT</li>
+                    <li>TRAVEL</li>
+                    <li>ADVANCE</li>
+                    <li>Uniform</li>
+                    <li>Welfare</li>
+                    <li>Other</li>
+                    <li>NoOfDays</li>
+                    <li>NoOfPH</li>
+                    <li>NoOfOTShift</li>
+                    <li>NoOfOTHors</li>
+                    <li>ShiftHours</li>
+                    <li>Wages</li>
+                    <li>GrossIncome</li>
+                    <li>GrossDeduction</li>
+                </ul>
+               
+           
+        </div>
+    </div>
+    <div class="col-xl-9 col-lg-9">
+        @using (Ajax.BeginForm("ProjectSalaryHead_Add", "Access", new AjaxOptions
+        {
+            HttpMethod = "POST",
+            OnBegin = "OnFormBegin", // ✅ New line added
+            OnSuccess = "OnUpdateprofile"
+        }, new { @id = "allfieldform", @enctype = "multipart/form-data", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="card">
+                <div class="card-header border-bottom-0">
+                    <div class="card-title">Update Designation</div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        @* Project Basic Details *@
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Designation</label>
+                                <input type="text" class="form-control" name="Designation" id="Designation"  value="@objProjectSalaryHead.ProjectName" required />
+                                <input type="hidden" name="ProjectSalaryHeadID" id="ProjectSalaryHeadID" value="@objProjectSalaryHead.ProjectSalaryHeadID" />
+                            </div>
+                        </div>
+
+                        @* Wages Section *@
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Wage Skilled</label>
+                                <input type="number" step="0.01" name="WageSkilled" id="WageSkilled" class="form-control" value="@objProjectSalaryHead.WageSkilled" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Wage Unskilled</label>
+                                <input type="number" step="0.01" name="WageUnSkilled" id="WageUnSkilled" class="form-control" value="@objProjectSalaryHead.WageUnSkilled" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Wage Semi-Skilled</label>
+                                <input type="number" step="0.01" name="WageSemiSkilled" id="WageSemiSkilled" class="form-control" value="@objProjectSalaryHead.WageSemiSkilled" />
+                            </div>
+                        </div>
+
+                        @* Salary Breakdown *@
+                        @{
+                            var salaryFields = new Dictionary<string, string> {
+                                { "BASIC", "Basic Salary" },
+                                { "HRA", "House Rent Allowance" },
+                                { "DA", "Dearness Allowance" },
+                                { "TA", "Travel Allowance" },
+                                { "BONUS", "Bonus" },
+                                { "LEAVE", "Leave" },
+                                { "OTRate", "OT Rate" },
+                                { "PH", "PH Rate" },
+                                { "SPECIALALLOWANCE", "Special Allowance" },
+                                { "OTHERALLOWANCE", "Other Allowance" },
+                                { "PF", "Provident Fund" },
+                                { "PT", "Professional Tax" },
+                                { "ESIC", "ESIC" },
+                                { "CANTEEN", "Canteen Deduction" },
+                                { "HRA_DEDUCT", "HRA Deduction" },
+                                { "TRAVEL", "Travel Expenses" },
+                                { "ADVANCE", "Advance" },
+                                { "Uniform", "Uniform" },
+                                { "Welfare", "Welfare" },
+                                { "Other", "Other Deductions" }
+                            };
+
+                            var formulaFields = new List<string> { "BASIC", "HRA", "TA", "DA", "BONUS", "LEAVE" };
+                            int col = 0;
+
+                            foreach (var field in salaryFields)
+                            {
+                                if (col % 3 == 0)
+                                {
+                                    @:<div class="w-100 d-none d-md-block"></div>
+                                }
+
+                                var cssClass = formulaFields.Contains(field.Key) ? "form-control formula-check" : "form-control";
+                                var fieldValue = objProjectSalaryHead.GetType().GetProperty(field.Key).GetValue(objProjectSalaryHead, null);
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label">@field.Value</label>
+                                        <input type="text" name="@field.Key" id="@field.Key" class="@cssClass" value="@fieldValue"  />
+                                    </div>
+                                </div>
+                                col++;
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="card-footer text-right">
+                    <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info">
+                        <i class="feather feather-save"></i>&ensp; Update
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .is-invalid {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
+    }
+</style>
+
+<script>
+    function isSafeFormula(formula, allowedVariables) {
+        if (!formula) return false;
+
+        formula = formula.trim();
+
+        // Basic safety pattern
+        const allowedPattern = /^[0-9a-zA-Z\s\+\-\*\/\.\(\)]+$/;
+        if (!allowedPattern.test(formula)) return false;
+
+        // Work with lowercase versions
+        let formulaCopy = formula.toLowerCase();
+        const allowedLower = allowedVariables.map(v => v.toLowerCase());
+
+        // Replace allowed variables with dummy values
+        allowedLower.forEach(variable => {
+            const regex = new RegExp('\\b' + variable + '\\b', 'gi'); // case-insensitive
+            formulaCopy = formulaCopy.replace(regex, '1');
+        });
+        if (/[a-z]/.test(formulaCopy)) return false;
+        try {
+            const result = new Function(`return (${formulaCopy});`)();
+            return !isNaN(result);
+        } catch {
+            return false;
+        }
+    }
+    function OnFormBegin() {
+        const formulaFields = [
+            "BASIC", "HRA", "DA", "TA", "BONUS", "LEAVE",
+            "OTRate",  "PH", "SPECIALALLOWANCE", "OTHERALLOWANCE",
+            "PF", "PT", "ESIC", "CANTEEN", "HRA_DEDUCT", "TRAVEL", "ADVANCE",
+            "Uniform", "Welfare", "Other", "NoOfDays", "NoOfPH", "NoOfOTShift", "NoOfOTHors", "ShiftHours", "Wages", "GrossIncome", "GrossDeduction"
+        ];
+        const allowedVars = formulaFields;
+        const requiredFields = ["Designation", "WageSkilled", "WageUnSkilled", "WageSemiSkilled",
+            "BASIC", "HRA", "DA", "TA", "BONUS", "LEAVE",
+            "OTRate", "PH", "SPECIALALLOWANCE", "OTHERALLOWANCE",
+            "PF", "PT", "ESIC", "CANTEEN", "HRA_DEDUCT", "TRAVEL", "ADVANCE",
+            "Uniform", "Welfare", "Other", "NoOfDays", "NoOfPH", "NoOfOTShift", "NoOfOTHors", "ShiftHours", "Wages", "GrossIncome", "GrossDeduction"];
+
+        let valid = true;
+
+        $('input').removeClass('is-invalid');
+
+        // Required fields
+        requiredFields.forEach(function (fieldId) {
+            const $field = $('#' + fieldId);
+            const val = $field.val();
+            if (!val || val.trim() === "") {
+                $field.addClass('is-invalid');
+                valid = false;
+            }
+        });
+
+        // Formula field validation
+        $('input[type="text"]').each(function () {
+            const $field = $(this);
+            const fieldName = $field.attr('name');
+            const val = $field.val();
+            if (val && val.trim() !== "" && formulaFields.includes(fieldName)) {
+                if (!isSafeFormula(val, allowedVars)) {
+                    $field.addClass('is-invalid');
+                    valid = false;
+                }
+            }
+        });
+
+        if (!valid) {
+            alert('Some fields are empty or have invalid formulas.');
+        }
+
+        return valid; // Returning false cancels submission
+    }
+</script>

@@ -1,0 +1,309 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "Employee_Visit_List";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<User_Visits> visit = ViewBag.v;
+    List<UserMaster> user = ViewBag.user;
+
+    DateTime dt = DateTime.Now;
+    List<string> vstr = ViewBag.Visited_Str;
+    string visited_dt = dt.ToString("dd MMMM yyyy");
+    string name = ViewBag.u_name;
+    string visited = ViewBag.Visited_Str1;
+}
+@*AIzaSyDyQus3O5qcFbJMPPScNtdmUglz9X2-XrA*@
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Visit</h4>
+    </div>
+</div>
+<!--End Page header-->
+
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title">@*Visit List*@</h4>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xl-10 col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Select Employee<span class="text-danger">&ensp;*</span></label>
+                                    <select name="Emp_Id" id="Emp_Id" class="form-control select2-show-search custom-select"  data-placeholder="Select Employee" required>
+                                        @*<option value="@ViewBag.user_id">@ViewBag.u_name</option>*@
+                                        @if (name == "" || name == null)
+                                        {
+                                            @*<option selected value="">Select Employee</option>*@
+                                            foreach (UserMaster _c in user)
+                                            {
+                                                <option value=@_c.User_ID>@_c.User_Name</option>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @*<option value="">Select Employee</option>*@
+                                            foreach (UserMaster _c in user)
+                                            {
+                                                if (name == _c.User_Name)
+                                                {
+                                                    <option selected value=@_c.User_ID>@_c.User_Name</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value=@_c.User_ID> @_c.User_Name </option>
+
+                                                }
+                                            }
+                                        }
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Select Date Visited<span class="text-danger">&ensp;*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" name="Date" id="Date" class="form-control fc-datepicker" value="@visited_dt" max="@visited_dt" data-single-mode="true" placeholder="01 January 2022" required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div>
+                            <button class="btn btn btn-primary" onclick="get_data();"><strong>Submit</strong></button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="visit_data" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Punch Name</th>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>LocationName</th>
+                                <th>IP Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @*@foreach (User_Visits _newobj in visit)
+                    {
+
+                        <tr>
+                            <td>@_newobj.Punch_Type.Puch_Name</td>
+                            <td>@_newobj.Time.ToString("dd/MM/yyyy hh:mm tt")</td>
+                            <td>@_newobj.Location</td>
+                            <td>@_newobj.LocationName</td>
+                            <td>@_newobj.IP_Address</td>
+                        </tr>
+                    }*@
+                        </tbody>
+                    </table>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div id="divMap" style="width:100%;height:400px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function demo(lat, lon, title, desc) {
+        var lat = lat;
+        var lon = lon;
+        var tit = title;
+        var des = desc;
+        var markers = [];
+        for (i = 0; i < lat.length; i++) {
+            var str1 = "'";
+            var str2 = tit[i];
+            var res = str1.concat(str2);
+            var res1 = res.concat(str1);
+
+            var strd1 = "'";
+            var strd2 = des[i];
+            var resd = strd1.concat(strd2);
+            var resd1 = resd.concat(strd1);
+
+
+            markers.push({ title: res1, lat: lat[i], lng: lon[i], description: resd1 });
+
+        }
+
+        var mapOptions = {
+            center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
+            zoom: 10,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+            //  marker:true
+        };
+
+        var infoWindow = new google.maps.InfoWindow();
+        var map = new google.maps.Map(document.getElementById("divMap"), mapOptions);
+        for (i = 0; i < markers.length; i++) {
+            var data = markers[i]
+
+            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: data.title
+            });
+            (function (marker, data) {
+
+
+
+                // Attaching a click event to the current marker
+                google.maps.event.addListener(marker, "click", function (e) {
+                    infoWindow.setContent(data.description);
+                    infoWindow.open(map, marker);
+                });
+            })(marker, data);
+        }
+    }
+
+
+    function showMap() {
+        var markers = [];
+
+        var Emp_Id = document.getElementById("Emp_Id").value;
+        var Date = document.getElementById("Date").value;
+        $.ajax({
+            type: "POST",
+            url: "/Access/GetMap?Emp_Id=" + Emp_Id + "&date=" + Date,
+            data: "{}",
+            success: function (data) {
+                //alert("Get :" + markers);
+
+            },
+            error: function (errormessage) {
+                alert("invalid input...");
+            }
+        });
+
+    }
+
+
+    function googleMap(mark) {
+        var markers = mark;
+        var mapOptions = {
+            center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
+            zoom: 8,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+
+        var infoWindow = new google.maps.InfoWindow();
+        var map = new google.maps.Map(document.getElementById("divMap"), mapOptions);
+        for (i = 0; i < markers.length; i++) {
+            var data = markers[i];
+            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: data.title
+            });
+            (function (marker, data) {
+                // Attaching a click event to the current marker
+                google.maps.event.addListener(marker, "click", function (e) {
+                    infoWindow.setContent(data.description);
+                    infoWindow.open(map, marker);
+                });
+            })(marker, data);
+        }
+    }
+
+    //function myMap() {
+    //    var markers = document.getElementById("str").value;
+
+    //    const uluru = { lat: 21.7155054, lng: 73.0019352 };
+    //    // The map, centered at Uluru
+    //    const map = new google.maps.Map(document.getElementById("divMap"), {
+    //        zoom: 4,
+    //        center: uluru,
+    //    });
+    //    // The marker, positioned at Uluru
+    //    const marker = new google.maps.Marker({
+    //        position: uluru,
+    //        map: map,
+    //    });
+    //}
+
+</script>
+<script>
+    //window.onload = function () {
+
+    //    demo();
+    //}
+    function get_data() {
+        var eid = document.getElementById("Emp_Id").value;
+        var dt = document.getElementById("Date").value;
+        $.ajax({
+            type: "POST",
+            url: "/Access/Get_map_data?eid=" + eid + "&dt=" + dt,
+            data: "{}",
+            success: function (data) {
+                $("#visit_data tbody").empty();
+                content = '';
+                if (data.ErrorTitle == "S") {
+                    content = '';
+                    var lat = data.lati;
+                    var lon = data.longi;
+                    var pname = data.punchname;
+                    var location = data.desc;
+                    var locationname = data.tit;
+                    var ipaddress = data.ipadd;
+                    var dt = data.visitdt;
+                    for (i = 0; i < lat.length; i++) {
+
+                        content += '<tr>';
+                        content += '<td>' + pname[i] + '</td>';
+                        content += '<td>' + dt[i] + '</td>';
+                        content += '<td>' + location[i] + '</td>';
+                        content += '<td>' + locationname[i] + '</td>';
+                        content += '<td>' + ipaddress[i] + '</td>';
+                        content += '</tr>';
+                    }
+
+                    $("#visit_data tbody").append(content);
+
+                    demo(data.lati, data.longi, data.tit, data.desc);
+
+
+                }
+
+
+
+
+            },
+            error: function () {
+                //alert("failure");
+            }
+        });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6v5-2uaq_wusHDktM9ILcqIrlPtnZgEk&sensor&callback=googleMap"></script>
+
+
+
+

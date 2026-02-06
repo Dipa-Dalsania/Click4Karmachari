@@ -1,0 +1,65 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    CommonClasses util = new CommonClasses();
+    ViewBag.Title = "CustomDocument_List";
+    Layout = "~/Views/Employee/Employee_Layout_new.cshtml";
+    List<Generated_Documents> c = ViewBag.c;
+}
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Custom Document</h4>
+    </div>
+    @*<div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <a href="~/Access/CustomDocument_Add?Cust_Id=0" class="btn btn-primary mr-3"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i>Add CustomDocument</strong></a>
+            </div>
+        </div>
+    </div>*@
+</div>
+<!--End Page header-->
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable1" class="table table-striped table-bordered border-bottom table-hover">
+                        <thead>
+                            <tr>
+                                <th>Doc Id. </th>
+                                <th>Doc No.</th>
+                                <th>Doc Name</th>
+                                <th>Operation</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (c != null)
+                            {
+                                foreach (Generated_Documents _newobj in c)
+                                {
+                                    <tr>
+
+                                        <td style="text-transform: capitalize">@_newobj.Gen_doc_id</td>
+                                        <td style="text-transform: capitalize">@_newobj.Gen_doc_no</td>
+                                        <td style="text-transform: capitalize">@_newobj.Gen_doc_Title</td>
+                                        <td><a class="btn btn-info btn-sm" href="PrintEmpDocument?Gen_doc_id=@_newobj.Gen_doc_id" target="_blank" data-toggle="tooltip" data-original-title="Print"><i class="feather feather-printer fa-2x" aria-hidden="true"></i></a></td>
+
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+          

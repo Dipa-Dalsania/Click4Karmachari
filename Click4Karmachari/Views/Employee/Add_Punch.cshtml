@@ -1,0 +1,137 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "Add_Punch";
+    Layout = "~/Views/Employee/Employee_Layout.cshtml";
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    User_Punch punch_detail = ViewBag.punch_detail;
+    //if(punch_detail != null)
+    //{
+    //    var Today_date = punch_detail.Time.Date;
+    //    DateTime d1 = DateTime.Parse(Today_date.ToString()).Date;
+    //}
+
+    //var d = punch_detail.PunchType_Id;
+}
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDV2_xy58r15K6TskZy4KWMuhUDVq67jqM"></script>
+<script type="text/javascript">
+    var x = document.getElementById("demo");
+    var addition = "DEFAULT LOCATION";
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+    };
+
+    if (navigator.geolocation)
+    {
+        navigator.geolocation.getCurrentPosition(success, error, options);
+    } else
+    {
+        alert("geolocation not supported");
+    }
+
+    function success(position) {
+        var lat = position.coords.latitude;
+        var log = position.coords.longitude;
+        document.getElementById("log").value = log;
+        document.getElementById("lat").value = lat;
+        var navigator_info = window.navigator;
+        var screen_info = window.screen;
+        var uid = navigator_info.mimeTypes.length;
+        uid += navigator_info.userAgent.replace(/\D+/g, '');
+        uid += navigator_info.plugins.length;
+        uid += screen_info.height || '';
+        uid += screen_info.width || '';
+        uid += screen_info.pixelDepth || '';
+        document.getElementById("uid").value = uid;
+        
+      
+    }
+   
+    function error(err) {
+        alert(err.message);
+    }
+
+  
+ 
+</script>
+
+<script>
+    window.onload = function () {
+        getLocation();
+    }
+</script>
+
+
+<div class="panel-body">
+    <div class="modal-content">
+        <div class="color-line"></div>
+        <div class="modal-header " style="padding: 30px 25px;">
+            <div class="panel-body">
+                <h3 class="modal-title text-center"> Add Punch</h3>
+                <p id="demo"></p>
+            </div>
+            <br />
+            @using (Ajax.BeginForm("Add_Punch", "Employee", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateUser" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <input type="hidden" id="log" name="log" />
+                        <input type="hidden" id="lat" name="lat" />
+                        <input type="hidden" id="uid" name="uid" />
+                        <input type="hidden" name="User_ID" id="User_ID" value="@_LogedUser.User_ID">
+                        @if (ViewBag.p == "New_Punch")
+                        {
+
+                            <div class="form-group">
+                                <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="1"><div>Check In</div></Button>
+                            </div>
+                        }
+                        @if (punch_detail != null)
+                        {
+                            if (punch_detail.Time.Date != DateTime.Now.Date)
+                            {
+                                <div class="form-group">
+                                    <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="1"><div>Check In</div></Button>
+                                </div>
+                            }
+                            if (punch_detail.Time.Date == DateTime.Now.Date && punch_detail.PunchType_Id == 2)
+                            {
+                                <div class="form-group">
+                                    <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="1"><div>Check In</div></Button>
+                                </div>
+                            }
+                            if (punch_detail.Time.Date == DateTime.Now.Date && punch_detail.PunchType_Id == 1)
+                            {
+                                <div class="form-group">
+                                    <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="3"><div>Lunch In</div></Button>
+                                </div>
+                                <div class="form-group">
+                                    <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="2"><div>Check Out</div></Button>
+                                </div>
+                            }
+                            if (punch_detail.Time.Date == DateTime.Now.Date && punch_detail.PunchType_Id == 3)
+                            {
+                                <div class="form-group">
+                                    <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="4"><div>Lunch Out</div></Button>
+                                </div>
+                            }
+                            if (punch_detail.Time.Date == DateTime.Now.Date && punch_detail.PunchType_Id == 4)
+                            {
+                                <div class="form-group">
+                                    <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="2"><div>Check Out</div></Button>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+

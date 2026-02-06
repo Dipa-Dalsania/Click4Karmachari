@@ -1,0 +1,300 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "GenerateDocbyemp";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    UserMaster user = ViewBag.user;
+    Custom_Document document = ViewBag.document;
+    string str = document.Doc_Disc;
+
+
+
+    str = str.ToString().Replace("/NAME/", user.User_Name).ToString();
+    str = str.ToString().Replace("/COMPANY/", user.Company_Master.Company_Name).ToString();
+    if (user.Reporting_Person != null)
+    {
+        str = str.ToString().Replace("/REPORTPERSON/", user.UserMaster2.User_Name).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/REPORTPERSON/", "-").ToString();
+    }
+
+    if (user.Date_of_join != null)
+    {
+        str = str.ToString().Replace("/DOJ/", Convert.ToDateTime(user.Date_of_join).ToString("dd/MM/yyyy"));
+    }
+    else
+    {
+        str = str.ToString().Replace("/DOJ/", "-").ToString();
+    }
+
+    if (user.Depart_id != null)
+    {
+        str = str.ToString().Replace("/DEPARTMENT/", user.Department_Master.Department).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/DEPARTMENT/", "-").ToString();
+
+    }
+    if (user.Depart_id != null)
+    {
+        str = str.ToString().Replace("/DESG/", user.Designation_Master.Designation).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/DESG/", "-").ToString();
+    }
+    if (user.Address_Master.FirstOrDefault() != null)
+    {
+        str = str.ToString().Replace("/Address/", user.Address_Master.FirstOrDefault().Add_Address).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/Address/", "-").ToString();
+
+    }
+    if (user.City_Name != null)
+    {
+        str = str.ToString().Replace("/CITY/", user.City_Name.ToString());
+    }
+    else
+    {
+        str = str.ToString().Replace("/CITY/", "-");
+    }
+    if (user.User_Mobile != null)
+    {
+        str = str.ToString().Replace("/MOBILE/", Convert.ToInt64(user.User_Mobile).ToString());
+    }
+    else
+    {
+        str = str.ToString().Replace("/MOBILE/", "-");
+    }
+    if (user.DOB != null)
+    {
+        str = str.ToString().Replace("/DOB/", Convert.ToDateTime(user.DOB).ToString("dd/MM/yyyy"));
+    }
+    else
+    {
+        str = str.ToString().Replace("/DOB/", "-");
+    }
+    if (user.Team_name != null)
+    {
+        str = str.ToString().Replace("/TEAMNAME/", user.Team_name).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/TEAMNAME/", "-");
+    }
+    if (user.Team_name != null)
+    {
+        str = str.ToString().Replace("/COMPANYEMAIL/", user.Company_Email).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/COMPANYEMAIL/", "-");
+    }
+    if (user.Posted_At != null)
+    {
+        str = str.ToString().Replace("/POSTEDAT/", user.Posted_At).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/POSTEDAT/", "-");
+    }
+
+    str = str.ToString().Replace("/TodayDate/", DateTime.Now.ToString("dd-MM-yyyy")).ToString();
+    decimal totalmt = 0;
+    decimal totalan = 0;
+    if (user.ProjectSalaryHeads.Count != 0)
+    {
+        if (user.ProjectSalaryHeads.FirstOrDefault().BASIC == "" || user.ProjectSalaryHeads.FirstOrDefault().BASIC == null)
+        {
+
+
+            str = str.ToString().Replace("/basicmt/", "-");
+            str = str.ToString().Replace("/basican/", "-");
+        }
+        else
+        {
+            decimal basicmt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().BASIC) * 26;
+            decimal basican = basicmt * 12;
+            str = str.ToString().Replace("/basicmt/", basicmt.ToString()).ToString();
+            str = str.ToString().Replace("/basican/", basican.ToString()).ToString();
+            totalmt = totalmt + basicmt;
+            totalan = totalan + basican;
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().HRA == "" || user.ProjectSalaryHeads.FirstOrDefault().HRA == null)
+        {
+            str = str.ToString().Replace("/hramt/", "-");
+            str = str.ToString().Replace("/hraan/", "-");
+        }
+        else
+        {
+            decimal hramt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().HRA) * 26;
+            decimal hraan = hramt * 12;
+            str = str.ToString().Replace("/hramt/", hramt.ToString()).ToString();
+            str = str.ToString().Replace("/hraan/", hraan.ToString()).ToString();
+            totalmt = totalmt + hramt;
+            totalan = totalan + hraan;
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().SPECIALALLOWANCE == null || user.ProjectSalaryHeads.FirstOrDefault().SPECIALALLOWANCE == "")
+        {
+
+
+            str = str.ToString().Replace("/samt/", "-");
+            str = str.ToString().Replace("/saan/", "-");
+        }
+        else
+        {
+            decimal samt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().SPECIALALLOWANCE) * 26;
+            decimal saan = samt * 12;
+            str = str.ToString().Replace("/samt/", samt.ToString()).ToString();
+            str = str.ToString().Replace("/saan/", saan.ToString()).ToString();
+            totalmt = totalmt + samt;
+            totalan = totalan + saan;
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().OTHERALLOWANCE == null || user.ProjectSalaryHeads.FirstOrDefault().OTHERALLOWANCE == "")
+        {
+
+            str = str.ToString().Replace("/oamt/", "-");
+            str = str.ToString().Replace("/oaan/", "-");
+        }
+        else
+        {
+            decimal oamt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().OTHERALLOWANCE) * 26;
+            decimal oaan = oamt * 12;
+            str = str.ToString().Replace("/oamt/", oamt.ToString()).ToString();
+            str = str.ToString().Replace("/oaan/", oaan.ToString()).ToString();
+            totalmt = totalmt + oamt;
+            totalan = totalan + oaan;
+
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().ESIC == null || user.ProjectSalaryHeads.FirstOrDefault().ESIC == "")
+        {
+
+            str = str.ToString().Replace("/medicalmt/", "-");
+            str = str.ToString().Replace("/medicalan/", "-");
+        }
+        else
+        {
+            decimal medicalmt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().ESIC) * 26;
+            decimal medicalan = medicalmt * 12;
+            str = str.ToString().Replace("/medicalmt/", medicalmt.ToString()).ToString();
+            str = str.ToString().Replace("/medicalan/", medicalan.ToString()).ToString();
+            totalmt = totalmt + medicalmt;
+            totalan = totalan + medicalan;
+
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().LEAVE == null || user.ProjectSalaryHeads.FirstOrDefault().LEAVE == "")
+        {
+
+
+            str = str.ToString().Replace("/leavemt/", "-");
+            str = str.ToString().Replace("/leavean/", "-");
+        }
+        else
+        {
+            decimal leavemt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().LEAVE) * 26;
+            decimal leavean = leavemt * 12;
+            str = str.ToString().Replace("/leavemt/", leavemt.ToString()).ToString();
+            str = str.ToString().Replace("/leavean/", leavean.ToString()).ToString();
+            totalmt = totalmt + leavemt;
+            totalan = totalan + leavean;
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().PF == null || user.ProjectSalaryHeads.FirstOrDefault().PF == "")
+        {
+
+
+            str = str.ToString().Replace("/pfmt/", "-");
+            str = str.ToString().Replace("/pfan/", "-");
+        }
+        else
+        {
+            decimal pfmt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().PF) * 26;
+            decimal pfan = pfmt * 12;
+            str = str.ToString().Replace("/pfmt/", pfmt.ToString()).ToString();
+            str = str.ToString().Replace("/pfan/", pfan.ToString()).ToString();
+            totalmt = totalmt + pfmt;
+            totalan = totalan + pfan;
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().BONUS == null || user.ProjectSalaryHeads.FirstOrDefault().BONUS == "")
+        {
+
+
+            str = str.ToString().Replace("/bonusmt/", "-");
+            str = str.ToString().Replace("/bonusan/", "-");
+        }
+        else
+        {
+            decimal bonusmt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().BONUS) * 26;
+            decimal bonusan = bonusmt * 12;
+            str = str.ToString().Replace("/bonusmt/", bonusmt.ToString()).ToString();
+            str = str.ToString().Replace("/bonusan/", bonusan.ToString()).ToString();
+            totalmt = totalmt + bonusmt;
+            totalan = totalan + bonusan;
+        }
+        str = str.ToString().Replace("/totalmt/", totalmt.ToString()).ToString();
+        str = str.ToString().Replace("/totalan/", totalan.ToString()).ToString();
+        str = str.ToString().Replace("/ctc/", totalan.ToString()).ToString();
+    }
+}
+<br/><br />
+<!-- Row -->
+<div class="row
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title">Generate Document</h4>
+            </div>
+            <br/>
+            <div class="card-body">
+                @using (Html.BeginForm("GenerateDocbyemp", "Access", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="Gen_doc_id" name="Gen_doc_id" value="0" />
+                    <input type="hidden" name="Gen_doc_empid" id="Gen_doc_empid" class="input w-full border mt-2" value="@user.User_ID" required />
+                    <input type="hidden" name="Gen_doc_title" id="Gen_doc_title" class="input w-full border mt-2" value="@document.Doc_Name" required />
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="form-group">
+                                <label class="form-label">Generated Document </label>
+                                <textarea id="doc_desc" class="content" style="visibility:hidden" name="doc_desc">@document.Doc_Disc</textarea>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <br />
+                                /NAME/ = Employee Name<br />
+                                /DESG/ = Designation<br />
+                                /DOJ/ = Date Of Joining<br />
+                                /REPORTPERSON/ = Reporting Person<br />
+                                /COMPANY/ = Company Name<br />
+                                /DEPARTMENT/ =Department<br />
+                                /POSTEDAT/ = Posted Date<br />
+                                /COMPANYEMAIL/ = Company Email<br />
+                                /DEPARTMENT/ = Department<br />
+                                /TEAMNAME/ = TeamName<br />
+                                /DOB/ = Employee Date Of Birthday<br />
+                                /MOBILE/ = Employee Mobile<br />
+                                /CITY/ = Employee City<br />
+                                /Address/ = Employee Address<br />
+                                /TodayDate/ = Today Date
+                            </div>
+                        </div>
+                    </div>
+                        <br /> <br />
+                               <div class="row">
+                                   <div class="col-lg-12">
+                                       <div class="card-footer pl-0">
+                                           <button type="submit" id="savebtn" formtarget="_blank" name="Command" value="Save" class="btn btn-primary"><i class="fa fa-save"></i>&ensp;Save</button>
+                                       </div>
+                                   </div>
+                               </div>
+                        }
+                    </div>
+                </div>
+    </div>
+</div>
+<!-- End Row-->

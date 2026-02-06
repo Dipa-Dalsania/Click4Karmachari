@@ -1,0 +1,101 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "Employee_AssetMovement_List";
+    Layout = "~/Views/Employee/Employee_Layout_new.cshtml";
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    List<Asset_Movement> movment = ViewBag.movment;
+    List<Asset_Movement> astm;
+    List<Asset_Master> assts = ViewBag.assts;
+}
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Employee Asset Movement</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable" class="table  table-bordered border-bottom table-hover">
+                        <thead>
+                            <tr>
+                                <th class="border-bottom-0">Asset Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (assts != null)
+                            {
+                                foreach (Asset_Master _newobj in assts)
+                                {
+                                    astm = movment.Where(y => y.Asset_id == _newobj.Asset_id).OrderByDescending(y => y.Movement_id).ToList();
+                                    if (astm.Count != 0)
+                                    {
+                                        if (astm.FirstOrDefault().To_id == _LogedUser.User_ID)
+                                        {
+                                            <tr>
+                                                <td style="text-transform:capitalize">@_newobj.Asset_Name-@_newobj.Serial_Number</td>
+                                            </tr>
+                                        }
+                                    }
+
+                                }
+
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td> No User Found</td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                    <br />  <br />  <br />
+                    <table id="basic-datatable2" class="table table-striped table-bordered border-bottom table-hover">
+                        <thead>
+                            <tr>
+                                <th class="border-bottom-0">Asset Name</th>
+                                <th class="border-bottom-0">From User </th>
+                                <th class="border-bottom-0">To user </th>
+                                <th class="border-bottom-0">Movement Date</th>
+                                <th class="border-bottom-0">Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (movment != null)
+                            {
+                                foreach (Asset_Movement _newobj in movment)
+                                {
+                                    <tr>
+                                        <td style="text-transform:capitalize">@_newobj.Asset_Master.Asset_Name-@_newobj.Asset_Master.Serial_Number</td>
+                                        <td style="text-transform: capitalize">@_newobj.UserMaster.User_Name</td>
+                                        <td style="text-transform: capitalize">@_newobj.UserMaster1.User_Name</td>
+                                        <td style="text-transform: capitalize">@_newobj.Movement_Date.ToString("dd MMMM yyyy")</td>
+                                        <td style="text-transform: capitalize">@_newobj.Detail</td>
+                                    </tr>
+
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

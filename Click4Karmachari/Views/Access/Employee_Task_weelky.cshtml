@@ -1,0 +1,214 @@
+﻿
+@using ClickKarmachari;
+@using ClickKarmachari.Models;
+@{
+    ViewBag.Title = "Employee_Task_weelky";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    string td = ViewBag.taskdate, sd = "";
+    DateTime d = DateTime.Now;
+    string s = d.ToString("dd MMMM yyyy");
+    if (td != "")
+    {
+        d = Convert.ToDateTime(td);
+        sd = d.ToString("dd MMMM yyyy");
+    }
+    List<Employee_Task_Master>
+    employee = ViewBag.em;
+    List<UserMaster> um = ViewBag.User;
+    DateTime dtoday = DateTime.Now;
+    string st = dtoday.ToString("dd MMMM yyyy");
+    string strmsg = ViewBag.str;
+    List<long> user_id = new List<long>();
+}
+
+
+<script src="~/AdminTemplate/assets/js/jquery.min.js"></script>
+<script src="~/AdminTemplate/assets/js/moment.min.js"></script>
+<script src="~/AdminTemplate/assets/js/daterangepicker.min.js"></script>
+<link href="~/AdminTemplate/assets/css/daterangepicker.css" rel="stylesheet" />
+
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Employee Task Weekly</h4>
+    </div>
+</div>
+
+<!-- Row -->
+<div class="container">
+    <div class="row">
+        <div class="col-xl-12 col-md-12 col-lg-12">
+            <div class="card">
+                <div class="card-header  border-0">
+                    <h4 class="card-title"></h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 col-xl-10">
+                            <div class="row">
+                                @if (sd != "")
+                                {
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="form-label">Select Date  &ensp;<span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <div id="reportrange" class="form-control" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 70%">
+                                                    <i class="fa fa-calendar"></i>&nbsp;
+                                                    <span></span> <i class="fa fa-caret-down"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Employee &ensp;<span class="text-danger">*</span></label>
+                                            @if (employee != null)
+                                            {
+
+                                                <select id="user_id1" name="user_id1" class="form-control select2-show-search custom-select" data-placeholder="Select Employee" required>
+                                                    <option value="-1" selected>All</option>
+                                                    @foreach (UserMaster user in um)
+                                                    {
+
+                                                        if (user.User_ID == ViewBag.userid)
+                                                        {
+                                                            <option value="@user.User_ID" selected>@user.User_Name</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@user.User_ID">@user.User_Name</option>
+                                                        }
+
+                                                    }
+                                                </select>
+                                            }
+                                            else
+                                            {
+
+                                                <select id="user_id1" name="user_id1" class="form-control select2-show-search custom-select" data-placeholder="Select Employee" required>
+
+                                                    <option value="-1" selected>All</option>
+                                                    @foreach (UserMaster user in um)
+                                                    {
+                                                        if (user.User_ID == ViewBag.userid)
+                                                        {
+                                                            <option value="@user.User_ID" selected>@user.User_Name</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@user.User_ID">@user.User_Name</option>
+                                                        }
+
+                                                    }
+                                                </select>
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+
+                                }
+                                else
+                                {
+                                    <input id="Task_date" type="date" name="Task_date" class="form-control date" @*max="@st"*@ placeholder="dd MMMM yyyy - dd MMMM yyyy" required>
+                                }
+                            </div>
+                        </div>
+              
+                        <br />
+                        <br />
+                        <div class="col-lg-12">
+
+                            <input type="submit" onclick="myfunctiontask()" value="Select" id="btnAdd" name="Command" class="btn btn-primary">
+
+                        </div>
+
+                        <div id="getMemberData" style="width:100%">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- End Row-->
+
+<script>
+    //$(document).ready(function () {
+    //    $("#btnAdd").click(function () {
+    //        var res = $('#reportrange').text();
+    //        alert(res);
+    //    });
+    //});
+    /*simple*/
+    //$(function () {
+    //    $('input[name="daterange"]').daterangepicker({
+    //        opens: 'left'
+    //    }, function (start, end, label) {
+    //        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    //    });
+    //});
+
+    /*full details*/
+    $(function () {
+
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY'));
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+    });
+
+    function myfunctiontask() {
+     
+        var user_id = document.getElementById("user_id1").value;
+        var start_to_end_date = $('#reportrange').text();
+        var dt=start_to_end_date.trim();
+        let text = dt.toString();
+
+          $.ajax({
+                type: 'POST',
+                url: "/Access/Employee_Task_weelky_Partial",
+                data: { start_to_end_date: text, user_id:user_id},
+                success: function (data)
+                {
+                    $('#getMemberData').html(data);
+
+                },
+                error: function (ex)
+                {
+                    //alert("ex"+ex);
+                }
+            });
+    }
+
+    //$(function () {
+    //    $('input[name="daterange"]').daterangepicker({
+    //        opens: 'left'
+    //    }, function (start, end, label) {
+    //        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    //    });
+    //});
+</script>
+
+

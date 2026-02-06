@@ -1,0 +1,326 @@
+﻿@using ClickKarmachari;
+@using ClickKarmachari.Models;
+@{
+    ViewBag.Title = "Leave_List";
+    Layout = "~/Views/Employee/Employee_Layout_new.cshtml";
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    CommonClasses util = new CommonClasses();
+    List<Leave_Master> leaves = ViewBag.leaves;
+    DateTime Date = Convert.ToDateTime(DateTime.Now);
+    string str1 = Date.ToString("dd MMMM yyyy");
+    UserMaster _user = ViewBag._user;
+    string r = "", rem = "";
+    int a = 0;
+
+}
+<br/><br/>
+@if (_user != null)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header  border-0">
+                    <h4 class="card-title">Leave Request</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table  table-vcenter text-nowrap table-bordered border-bottom" id="basic-datatable2">
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom-0">Total PL</th>
+                                    <th class="border-bottom-0">Total CL</th>
+                                    <th class="border-bottom-0">Total EL</th>
+                                    <th class="border-bottom-0">Total Leave</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-transform: capitalize">@_user.Total_PL</td>
+                                    <td style="text-transform: capitalize">@_user.Total_CL</td>
+                                    <td style="text-transform: capitalize">@_user.Total_EL</td>
+                                    <td style="text-transform: capitalize">@_user.Total_Leave</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="page-header d-xl-flex d-block">
+        <div class="page-leftheader">
+            <h4 class="page-title">All Leave Request</h4>
+        </div>
+        <div class="page-rightheader ml-md-auto">
+            <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+                <div class="btn-list" onclick="myfunctionLeave()">
+                    <button class="btn btn-primary" onclick="return Emp_Leave_Add(0,0,'@str1','@str1','','','',0,0,0)" type="submit"><i class="feather feather-plus fs-15 my-auto mr-2"></i><strong>Add Leave</strong></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header  border-0">
+                    <h4 class="card-title"></h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table  table-hover table-vcenter text-nowrap table-bordered border-bottom" id="basic-datatable1">
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom-0" style="padding-right:10px !important;">Request Date</th>
+                                    <th class="border-bottom-0">Leave days</th>
+                                    <th class="border-bottom-0">Leave type</th>
+                                    <th class="border-bottom-0">From Date</th>
+                                    <th class="border-bottom-0">To Date</th>
+                                    <th style="display:none">Reason</th>
+                                    <th class="border-bottom-0">Status</th>
+                                    <th class="border-bottom-0">Approved By</th>
+                                    <th class="border-bottom-0">Operation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (leaves != null)
+                                {
+                                    foreach (Leave_Master p in leaves)
+                                    {
+
+                                        r = p.Reason;
+                                        r = r.Replace("\r\n", "&#13;&#10;");
+                                        rem = r.Replace("&#13;&#10;", "<br/>");
+                                <tr>
+                                    <td style="text-transform:capitalize">@p.ReqDate.ToString("dd MMMM yyyy")</td>
+                                    <td style="text-transform:capitalize">@p.leave_days</td>
+                                    <td style="text-transform:capitalize">@p.Leave_Type</td>
+                                    <td>@p.From_Date.ToString("dd MMMM yyyy")</td>
+                                    <td>@p.To_Date.ToString("dd MMMM yyyy")</td>
+                                    <td style="display:none">@Html.Raw(rem)</td>
+                                    <td>
+
+                                        @if (p.Status == 0)
+                                        {
+                                            <span class="badge badge-secondary-light"><b>@util._Status_ByNumber(p.Status)</b></span>
+                                        }
+                                        else if (p.Status == 1)
+                                        {
+                                            <span class="badge badge-success">@util._Status_ByNumber(p.Status)</span>
+                                        }
+                                        else if (p.Status == 2)
+                                        {
+                                            <span class="badge badge-danger-light">@util._Status_ByNumber(p.Status)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-primary-light">@util._Status_ByNumber(p.Status)</span>
+                                        }
+                                    </td>
+                                    @if (p.Approved_By != null)
+                                    {
+                                        <td style="text-transform: capitalize">@p.UserMaster2.User_Name</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    <td>
+                                        <button class="btn btn-icon  btn-primary" onclick="return Emp_Leave_Add(@p.leave_Id,@p.leave_days,'@p.From_Date.ToString("dd MMMM yyyy")','@p.To_Date.ToString("dd MMMM yyyy")','@p.Leave_Type','@r','@util.GetTextStringScript(p.Remark)',@p.F_Date,@p.T_Date,@p.Status)" type="submit"><strong><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></strong></button>
+                                    </td>
+                                </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<!-------------------Add Asset------------------------------------------->
+<div class="modal fade" id="Model_Add_Leave_M" tabindex="-1" role="dialog" aria-hidden="true">
+  
+    @using (Ajax.BeginForm("Leave_Add", "Employee", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateUserELeave" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "return submitLeave();" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog">
+            <div class="modal-content">
+                  <div class="col-md-12 p-3 card-left" style="display:none;text-align:center" id="msgdig">
+                        <div class="alert_R" style="border-radius: 5px; color: white;padding:inherit; background-color: #f91a1ab8 ">
+                            <span id="failuremsg"></span>
+                            <span class="closebtn " onclick="this.parentElement.style.display='none';" style="float:right">&times;</span>
+                        </div>
+                    </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Leave</h5>
+                    <button class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="leave_Id" id="leave_Id" value="0">
+                    <input type="hidden" name="F_Date_Ch" id="F_Date_Ch" value="0">
+                    <input type="hidden" name="T_Date_Ch" id="T_Date_Ch" value="0">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Start Date</label>
+                                <input type="text" name="From_Date" id="From_Date" class="form-control fc-datepicker" placeholder="Enter From Date" required  autocomplete="off"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label"> End Date</label>
+                                <input type="text" name="To_Date" id="To_Date" class="form-control fc-datepicker" placeholder="Enter To Date" required autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Reason <span class="text-red">*</span></label>
+                                <textarea name="reason" id="Reason" class="form-control" rows="1" cols="10" required placeholder="Reason" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Leave Type <span class="text-red">*</span></label>
+                                <select class="form-control" name="Leave_Type" id="Leave_Type" data-placeholder="Choose Leave Type" required>
+                                    <option value=""> Select Leave Type</option>
+                                    <option value="LWPS">LWPS</option>
+                                    <option value="PL">PL</option>
+                                    <option value="CL">CL</option>
+                                    <option value="EL">EL</option>
+                                    <option value="SL">SL</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Half Day-Start Date</label>
+                                <input type="checkbox" name="F_Date" id="F_Date" value="1" style="width: 35px; height: 20px;" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Half Day-End Date</label>
+                                <input type="checkbox" name="T_Date" id="T_Date" value="1" style="width: 35px; height: 20px; " />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Remark By Admin</label>
+                                <textarea name="Remark" id="Remark" class="form-control" rows="1" cols="10" placeholder="Remark"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-12">
+                    <table id="basic-datatable1" class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Total PL</th>
+                                <th>Total CL</th>
+                                <th>Total EL</th>
+                                <th>Total Leave</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (_LogedUser != null)
+                            {
+                                <tr>
+                                    <td>@_LogedUser.Total_PL</td>
+                                    <td>@_LogedUser.Total_CL</td>
+                                    <td>@_LogedUser.Total_EL</td>
+                                    <td>@_LogedUser.Total_Leave</td>
+                                </tr>
+
+                            }
+
+                        </tbody>
+                    </table>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                        <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info"><i class="feather feather-save"></i>&ensp;Save</button>
+                        <button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
+<script type="text/javascript">
+    function getEmpHalfLeave() {
+        var S_Date = document.getElementById('F_Date_Ch').value;
+        var E_Date = document.getElementById('T_Date_Ch').value;
+        if (S_Date == 1) {
+
+            document.getElementById("F_Date").checked = true;
+        }
+        if (S_Date != 1) {
+            document.getElementById("F_Date").checked = false;
+        }
+        if (E_Date == 1) {
+            document.getElementById("T_Date").checked = true;
+        }
+        if (E_Date != 1) {
+            document.getElementById("T_Date").checked = false;
+        }
+    }
+
+    var isSubmitted = false;
+
+    function stopMultipleSubmitLeave() {
+        if (!isSubmitted) {
+            $("#savebtn").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#savebtn").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitLeave() {
+        //    var Address_Value = $("#Address_address").val();
+        //if (Address_Value == "") {
+        //}
+        //    else {
+        stopMultipleSubmitLeave();
+        /*}*/
+
+        return isSubmitted;
+    }
+    function myfunctionLeave() {
+
+        document.getElementById("msgdig").style.display = "none";
+        $("#Model_Add_Leave_M").modal('show');
+
+        document.getElementById("failuremsg").innerText = "";
+       
+        document.getElementById("Reason").value = "";
+    }
+</script>
+
+
+
+

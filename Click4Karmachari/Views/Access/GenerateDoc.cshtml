@@ -1,0 +1,67 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "GenerateDoc";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<UserMaster> user = ViewBag.user;
+    List<Custom_Document> cust = ViewBag.custom_s;
+}
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Generate Document</h4>
+    </div>
+</div>
+<!--End Page header-->
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <br />
+            <div class="card-body">
+                @using (Html.BeginForm("GenerateDocbyemp", "Access", FormMethod.Get, new { @enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Employee Name <span class="text-red">*</span></label>
+                                <select name="empid" id="empid" required class="form-control select2-show-search custom-select"  data-placeholder="Select Employee">
+                                    <option value="">Select Employee</option>
+                                    @foreach (UserMaster _c in user)
+                                    {
+
+                                        <option value=@_c.User_ID>@_c.User_Name</option>
+
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label"> Document Name <span class="text-red">*</span></label>
+                                <select name="docid" id="docid" required class="form-control select2-show-search custom-select" data-placeholder="Select Document Name">
+                                    <option value="">Select Document</option>
+                                    @foreach (Custom_Document _c in cust)
+                                    {
+                                        <option value=@_c.Cust_Id>@_c.Doc_Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <button type="submit" id="savebtn" target="_blank" name="Command" value="Generate" class="btn btn-primary" @*onclick="window.open('http://localhost:56995/')"*@>Generate</button>
+
+                        </div>
+                    </div>
+                        }
+                    </div>
+                </div>
+     </div>
+</div>
+

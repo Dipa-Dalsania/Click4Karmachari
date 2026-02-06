@@ -1,0 +1,107 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    CommonClasses util = new CommonClasses();
+    ViewBag.Title = "Head_List";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<Company_Doc_Heads2> doc_Head2s = ViewBag.doc_Head2s;
+}
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Head2</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <button class="btn btn-primary mr-3" onclick="return Add_Head2(0,'')" type="submit"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i>Add Head</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable1" class="table table-striped table-bordered border-bottom table-hover">
+                        <thead>
+                            <tr>
+                                <th>Head Name</th>
+                                <th>Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (doc_Head2s != null)
+                            {
+                                foreach (Company_Doc_Heads2 _newobj in doc_Head2s)
+                                {
+                                    <tr>
+                                        <td style="text-transform: capitalize">@_newobj.HeadName</td>
+                                        <td>
+                                            @using (Ajax.BeginForm("Head2_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateHead" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                                            {
+                                                <button class="btn btn-icon btn-primary" onclick="return Add_Head2(@_newobj.Document_Head2Id,'@_newobj.HeadName')" type="submit"><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></button>
+                                                <input type="hidden" name="Head2Id" id="del_Head2Id" value="@_newobj.Document_Head2Id" />
+                                                <Button type="submit" id="deleteHead" name="Command" value="Delete" data-toggle="tooltip" data-original-title="Delete" class="btn btn-danger btn-icon" onclick="return confirm('Are you sure you want to Delete?')" ;><i class="feather feather-trash-2"></i></Button>
+
+                                             }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-------------------Add Head------------------------------------------->
+<div class="modal fade" id="Model_Add_Head" tabindex="-1" role="dialog" aria-hidden="true">
+  
+        @using (Ajax.BeginForm("Head2_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateHead" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+        {
+            <div class="modal-dialog">
+                @Html.AntiForgeryToken()
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="model_header">Add Head2 </h5>
+                        <button class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <input type="hidden" name="Command" id="Command" value="">
+                                    <input type="hidden" name="HeadId" id="HeadId" value="@ViewBag.HeadId " />
+                                    <input type="hidden" name="Head2Id" id="Head2Id" value="0" />
+                                    <label class="form-label">Head Name <span class="text-red">*</span></label>
+                                    <input type="text" placeholder="Enter Head Name" name="HeadName2" id="HeadName2" class="form-control" required autocomplete="off" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-new-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                        <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info"><i class="feather feather-save"></i>&ensp;Save</button>
+                        <button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+
+

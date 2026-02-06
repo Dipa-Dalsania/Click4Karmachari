@@ -1,0 +1,126 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    CommonClasses util = new CommonClasses();
+    ViewBag.Title = "All_Leave";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<Leave_Master> leaves = ViewBag.leaves;
+    List<UserMaster> user = ViewBag.user;
+    DateTime Date = Convert.ToDateTime(DateTime.Now);
+    //int x = 0;
+    string str1 = Date.ToString("yyyy-MM-dd"), r = "", rem = "", r1 = "";
+}
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Leave Applications</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <button class="btn btn-light" data-toggle="modal" data-target="#mailmodal" title="E-mail"> <i class="feather feather-mail"></i> </button>
+                <button class="btn btn-light" data-toggle="modal" data-target="#contactmodal" title="Contact"> <i class="feather feather-phone-call"></i> </button>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#infomodal" title="Info"> <i class="feather feather-info"></i> </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+<!-- Row -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header border-bottom-0">
+                <h4 class="card-title">Recent Leave Applications</h4>
+            </div>
+           
+                    <div class="card-body">
+                        <div class="row">
+                            
+                                @if (leaves != null)
+                                {
+                                    foreach (Leave_Master p in leaves)
+                                    {
+                                        r1 = util.GetTextStringScript(p.Remark);
+                                        rem = util.GetTextStringTable(p.Reason);
+                                        r = util.GetTextStringScript(p.Reason);
+                                        var x = p.From_Date - p.ReqDate;
+                            <div class="col-xl-3 col-lg-6 col-md-12">
+                                <div class="card border p-0 shadow-none">
+                                    <div class="card-header border-0">
+                                        <h3 class="card-title">@p.Leave_Type</h3>
+                                        <div class="ml-auto">
+                                            <span class="badge badge-md badge-warning-light">@((p.From_Date-DateTime.Now).Days) days left</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex p-4">
+                                        <div>
+                                            @if (p.UserMaster.image_name == null)
+                                            {
+                                                <img src="~/Uploads/User_Image/profile.png" target="_blank" class="avatar avatar-lg brround d-block cover-image" style="cursor: default;">
+                                            }
+                                            else
+                                            {
+                                            <img src="~/Uploads/User_Image/@p.UserMaster.image_name" onerror="this.src='~/Uploads/User_Image/profile.jpg';" target="_blank" class="avatar avatar-lg brround d-block cover-image" style="cursor: default;">
+                                            }
+                                        </div>
+                                        <div class="pl-3">
+                                            <h5 class="mb-0 mt-2 text-dark fs-18">@p.UserMaster.User_Name</h5>
+                                            <p class="text-muted fs-12 mt-1 mb-0">@p.UserMaster.Department_Master.Department <span class="my-auto fs-9 font-weight-normal  ml-1 mr-1 text-black-20">/</span> @p.UserMaster.Designation_Master.Designation</p>
+                                        </div>
+                                    </div>
+                                    <div class="card-body pt-2 bg-light">
+                                        <div class="mt-3 mb-3" >
+                                            <div class="h5 mb-1">
+                                                @if (p.From_Date == p.To_Date)
+                                                {
+                                                    <span class="feather feather-calendar"><label class="h5 mb-1"> : @p.From_Date.ToString("dd-MM-yyyy") </label></span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="feather feather-calendar"><label class="h5 mb-1"> : @p.From_Date.ToString("dd-MM-yyyy") </label></span><span class="text-muted leave-to"> To </span><label class="h5 mb-1">@p.To_Date.ToString("dd-MM-yyyy") </label>
+
+                                                }
+                                                @if (p.leave_days == 1)
+                                                {
+                                                    <span class="badge badge-md badge-primary-light ml-1">@Convert.ToInt32(p.leave_days) day</span>
+                                                }
+                                                else if (p.leave_days > 1)
+                                                {
+                                                    <span class="badge badge-md badge-primary-light ml-1">@Convert.ToInt32(p.leave_days) days</span>
+                                                                            }
+                                            </div>
+                                            <small class="text-muted fs-11">Applied On: @p.ReqDate.ToString("dd-MM-yyyy") On<span class="font-weight-semibold"> @(x.Days/7) weeks ago</span></small>
+                                        </div>
+                                        <div class="progress progress-sm mb-2">
+                                            <div class="progress-bar bg-success w-@Convert.ToInt32(p.leave_days * 10)"></div>
+                                        </div>
+                                        <div class="d-flex align-items-end justify-content-between mb-0">
+                                            <h6 class="fs-12 mb-0">Remaining Leaves</h6>
+                                            <h6 class="font-weight-bold fs-12 mb-0">@Convert.ToInt32(12 - @p.leave_days)</h6>
+                                        </div>
+                                    </div>
+                                    <div class="p-4">
+                                        <label class="form-label">Reason:</label>
+                                        <p class="text-muted leave-text">@Html.Raw(rem)</p>
+                                    </div>
+                                    <div class="card-footer p-0 border-top-0">
+                                        <div class="btn-group w-100 leaves-btns">
+                                            <a href="#" class="btn btn-lg btn-outline-light w-50 text-success">Accept</a>
+                                            <a href="#" class="btn btn-lg btn-outline-light w-55 text-danger">Reject</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                }
+                                }
+                            
+                        </div>
+                    </div>
+
+                </div>
+    </div>
+</div>
+<!-- End Row -->

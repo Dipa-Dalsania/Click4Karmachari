@@ -1,0 +1,135 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "Attendance_history";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<DateTime> AllDates = ViewBag.AllDates;
+    List<DateTime> Sundates = ViewBag.Sundates;
+    List<Attendance_Master> _atdn = ViewBag.attendance;
+    List<Leave_Master> _leave = ViewBag.leave;
+    List<Holiday_Master> _holiday = ViewBag._holiday;
+    var holidaydates = new List<DateTime>();
+}
+
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Attendance History</h4>
+    </div>
+</div>
+<!--End Page header-->
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <table id="basic-datatable1" class="table table-striped table-bordered border-bottom table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Attendance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (AllDates != null)
+                        {
+                            foreach (DateTime _all in AllDates)
+                            {
+                                foreach (Attendance_Master _A in _atdn)
+                                {
+                                    if (_all.Date == _A.Punch_Date)
+                                    {
+                                        if (_A.Attendance == Convert.ToDecimal(0.5) || _A.Attendance == Convert.ToDecimal(1.0))
+                                        {
+                                            <tr>
+                                                <td>@_all.Date.ToString("dd MMMM yyyy")</td>
+                                                @if (_A.Attendance == Convert.ToDecimal(0.5))
+                                                {
+                                                    <td style="text-transform: capitalize">Present(Half Day)</td>
+                                                }
+                                                else if (_A.Attendance == Convert.ToDecimal(1.0))
+                                                {
+                                                    <td style="text-transform: capitalize">Present(Full Day)</td>
+                                                }
+                                            </tr>
+                                        }
+
+                                    }
+                                }
+
+                                foreach (Holiday_Master _h in _holiday)
+                                {
+                                    if (_all.Date == _h.Holiday_Date)
+                                    {
+                                        holidaydates.Add(_all.Date);
+                                        <tr>
+                                            <td>@_all.Date.ToString("dd MMMM yyyy")</td>
+                                            <td style="text-transform: capitalize">Holiday</td>
+                                        </tr>
+                                    }
+                                }
+                                bool _found = false;
+                                foreach (DateTime d in holidaydates)
+                                {
+                                    if (d.Date == _all.Date)
+                                    {
+                                        _found = true;
+                                    }
+                                }
+                                if (_found == false)
+                                {
+                                    if (_all.Date.DayOfWeek == DayOfWeek.Sunday)
+                                    {
+                                        <tr>
+                                            <td>@_all.Date.ToString("dd MMMM yyyy")</td>
+                                            <td style="text-transform: capitalize">Sunday</td>
+                                        </tr>
+                                    }
+
+                                }
+
+                                foreach (Leave_Master _l in _leave)
+                                {
+                                    if (_l.From_Date == _l.To_Date)
+                                    {
+                                        if (_all.Date == _l.From_Date)
+                                        {
+                                            <tr>
+                                                <td>@_all.Date.ToString("dd MMMM yyyy")</td>
+                                                <td>@_l.Leave_Type - @_l.leave_days</td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        int days = (_l.To_Date - _l.From_Date).Days;
+                                        var dates = new List<DateTime>();
+                                        for (var dt = _l.From_Date; dt <= _l.To_Date; dt = dt.AddDays(1))
+                                        {
+                                            dates.Add(dt);
+                                        }
+                                        foreach (DateTime d in dates)
+                                        {
+                                            if (_all.Date == d.Date)
+                                            {
+                                                <tr>
+                                                    <td>@_all.Date.ToString("dd MMMM yyyy")</td>
+                                                    <td>@_l.Leave_Type</td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

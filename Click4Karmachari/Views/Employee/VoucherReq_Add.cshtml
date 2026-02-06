@@ -1,0 +1,696 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "VoucherReq_Add";
+    Layout = "~/Views/Employee/Employee_Layout_new.cshtml";
+    Voucher_Master v = ViewBag.v;
+
+    List<Request_Master> Req = ViewBag.req;
+
+    List<UserMaster> user = ViewBag.user;
+    List<Voucher_Master> voucher = ViewBag.voucher;
+    List<Project_Master> projects = ViewBag.Project;
+    DateTime Today = Convert.ToDateTime(DateTime.Now);
+    string str1 = Today.ToString("dd MMMM yyyy");
+    List<Request_Master> _notincdlued = new List<Request_Master>();
+    foreach (Request_Master R in Req)
+    {
+        bool _found = false;
+        foreach (Voucher_Master _v in voucher)
+        {
+            if (_v.Req_Id == R.Req_Id)
+            {
+                _found = true;
+            }
+        }
+        if (_found == false)
+        {
+            _notincdlued.Add(R);
+        }
+    }
+    List<long> pid = new List<long>();
+}
+<br />
+<br />
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xl-12">
+        <div class="card">
+            <div class="card-header border-bottom-0">
+                <h3 class="card-title">Add Voucher</h3>
+            </div>
+            <div class="card-body">
+                @using (Ajax.BeginForm("VoucherReq_Add", "Employee", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateUserEVoureq" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "submitvoureq()" }))
+                {
+                    @Html.AntiForgeryToken()
+                    if (v != null)
+                    {
+                        if (v.Req_Id != null)
+                        {
+                            Request_Master rm = Req.Where(x => x.Req_Id == v.Req_Id).FirstOrDefault();
+                            <input type="hidden" name="Voucher_Id" id="Voucher_Id" value="@v.Voucher_Id">
+                            <div class="row">
+                                <div class="col-lg-4">
+
+                                    <input type="hidden" name="Granted_Amount" value="@rm.Granted_Amount" id="Granted_Amount" class="form-control" placeholder="Enter place" />
+                                    @if (v.Req_Id != null)
+                                    {
+
+                                        <div class="form-group">
+                                            <label class="form-label">Request No</label>
+                                            <select class="form-control selectform-control select2-show-search custom-select" name="Req_Id" id="Req_Id" onchange="getPlace()" data-placeholder="Choose Request">
+                                                <option value="@v.Req_Id">Amount-@v.Request_Master.Granted_Amount</option>
+                                                @foreach (Request_Master _r in _notincdlued.Where(x => x.User_Id == v.User_Id).ToList())
+                                                {
+                                                    <option value="@_r.Req_Id">Amount-@_r.Granted_Amount</option>
+
+                                                }
+                                            </select>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group" id="demo">
+                                        <label class="form-label">Parent Type <span class="text-red">*</span></label>
+                                        <select onchange="getparent();" name="Parent_Type" id="Parent_Type" class="form-control" required>
+                                            <option value="@v.Parent_Type">@v.Parent_Type</option>
+                                            <option value="Project">Project</option>
+                                            <option value="Opportunity">Opportunity</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    @if (v.Project_Id != null)
+                                    {
+                                        <div class="form-group">
+                                            <label class="form-label">Project Name</label>
+                                            <select class="form-control select2-show-search custom-select" name="Project_Id" id="Project_Id" data-placeholder="Choose Project">
+                                                <option value="@v.Project_Id">@v.Project_Master.Project_Name</option>
+                                                @foreach (Project_Master _r in projects)
+                                                {
+                                                    <option value="@_r.Project_Id">@_r.Project_Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Visiting Company <span class="text-red">*</span></label>
+                                        <input type="text" name="Place" required id="Place" value="@v.Place" style="margin:auto;" class="form-control" placeholder="Enter place" />
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Voucher Date</label>
+                                        <input type="text" name="Voucher_Date" value="@v.Voucher_Date.ToString("dd MMMM yyyy")" id="Voucher_Date" class="form-control fc-datepicker" data-single-mode="true" placeholder="Enter Voucher Date" value="@str1" />
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Petrol <span class="text-red">*</span></label>
+                                        <input type="text" name="Petrol" required onkeyup="sum();" value="@v.Petrol" id="Petrol" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Mobile Charges <span class="text-red">*</span></label>
+                                        <input type="text" name="Mobile" required onkeyup="sum();" value="@v.Mobile" id="Mobile" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label"> Travelling <span class="text-red">*</span></label>
+                                        <input type="text" name="Travelling" required onkeyup="sum();" value="@v.Travelling" id="Travelling" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Conveyance <span class="text-red">*</span></label>
+                                        <input type="text" name="Conveyance" onkeyup="sum()" required value="@v.Conveyance" id="Conveyance" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Total Amount <span class="text-red">*</span></label>
+                                        <input type="text" name="Total_Amount" required readonly value="@v.Total_Amount" id="Total_Amount" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Deduction Amount </label>
+                                        <input type="text" name="Deduction_Amount" value="@v.Deduction_Amount" onkeyup="sub();" id="Deduction_Amount" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Payable/Receivable <span class="text-red">*</span></label>
+                                        <input type="text" name="Payable_Amount" required readonly value="@v.Payable_Amount" id="Payable_Amount" class="form-control" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Transaction Type</label>
+                                        <input type="hidden" name="Trans_Type" id="Trans_Type" class="form-control" value="@v.Trans_Type" />
+                                        @if (v.Trans_Type == 1)
+                                        {
+                                            <input type="text" name="Trans_Type_Name" value="Credit" id="Trans_Type_Name" class="form-control" readonly />
+                                        }
+                                        @if (v.Trans_Type == 2)
+                                        {
+                                            <input type="text" name="Trans_Type_Name" value="Debit" id="Trans_Type_Name" class="form-control" readonly />
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Choose File</label>
+                                        @*<input type="file" name="file" class="form-control" id="file" />*@
+                                        <div class="custom-file">
+                                            <input type="file" name="file" id="file" class="custom-file-input" @*required*@>
+                                            <label class="custom-file-label">Choose file</label>
+                                        </div><span class="text-lightpink-red">[ Allow Only .jpg .png .jpeg .pdf (5MB) ]</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Remark</label>
+                                        <textarea name="Remark" id="Remark" class="form-control" rows="2" cols="20" placeholder="Enter Remark">@v.Remark</textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label"> Remark By Admin</label>
+                                        <textarea name="RemarkByAdmin" id="RemarkByAdmin" class="form-control" rows="2" cols="20" placeholder="Enter Remark">@v.Remark_For_Administrator</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Description</label>
+                                        <textarea name="Description" id="Description" class="form-control" rows="2" cols="20" placeholder="Enter Remark">@v.Description</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <input type="hidden" name="Voucher_Id" id="Voucher_Id" value="@v.Voucher_Id">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    @if (v.Req_Id != null)
+                                    {
+                                        <div class="form-group">
+                                            <label class="form-label">Request No</label>
+                                            <select class="form-control select" name="Req_Id" id="Req_Id" onchange="getPlace()" data-placeholder="Choose Request">
+                                                @foreach (Request_Master _r in _notincdlued.Where(x => x.User_Id == v.User_Id).ToList())
+                                                {
+                                                    if (v.Req_Id == _r.Req_Id)
+                                                    {
+                                                        <option value="@v.Req_Id" selected>@v.Project_Master.Project_Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@_r.Req_Id">Amount-@_r.Granted_Amount</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group" id="demo">
+                                        <label class="form-label">Parent Type <span class="text-red">*</span></label>
+                                        <select onchange="getparent();" name="Parent_Type" id="Parent_Type" class="form-control" required>
+                                            <option value="@v.Parent_Type">@v.Parent_Type</option>
+                                            <option value="Project">Project</option>
+                                            <option value="Opportunity">Opportunity</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    @if (v.Project_Id != null)
+                                    {
+                                        <div class="form-group">
+                                            <label class="form-label">Project Name</label>
+                                            <select class="form-control select" name="Project_Id" id="Project_Id" data-placeholder="Choose Project">
+                                                @foreach (Project_Master _r in projects)
+                                                {
+                                                    if (v.Project_Id == _r.Project_Id)
+                                                    {
+                                                        <option value="@v.Project_Id" selected>@v.Project_Master.Project_Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@_r.Project_Id">@_r.Project_Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Visiting Company <span class="text-red">*</span></label>
+                                        <input type="text" name="Place" required id="Place" value="@v.Place" style="margin:auto;" class="form-control" placeholder="Enter place" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Voucher Date</label>
+                                        <input type="text" name="Voucher_Date" value="@v.Voucher_Date.ToString("dd MMMM yyyy")" id="Voucher_Date" class="form-control fc-datepicker" data-single-mode="true" placeholder="Enter Voucher Date" value="@str1" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Petrol <span class="text-red">*</span></label>
+                                        <input type="text" name="Petrol" required onkeyup="sum();" value="@v.Petrol" id="Petrol" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Mobile Charges <span class="text-red">*</span></label>
+                                        <input type="text" name="Mobile" required onkeyup="sum();" value="@v.Mobile" id="Mobile" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label"> Travelling</label>
+                                        <input type="text" name="Travelling" required onkeyup="sum();" value="@v.Travelling" id="Travelling" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Conveyance <span class="text-red">*</span></label>
+                                        <input type="text" name="Conveyance" onkeyup="sum()" required value="@v.Conveyance" id="Conveyance" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Total Amount <span class="text-red">*</span></label>
+                                        <input type="text" name="Total_Amount" required readonly value="@v.Total_Amount" id="Total_Amount" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Deduction Amount</label>
+                                        <input type="text" name="Deduction_Amount" value="@v.Deduction_Amount" onkeyup="sub();" id="Deduction_Amount" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Payable/Receivable <span class="text-red">*</span></label>
+                                        <input type="text" name="Payable_Amount" required readonly value="@v.Payable_Amount" id="Payable_Amount" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Transaction Type</label>
+                                        <input type="hidden" name="Trans_Type" id="Trans_Type" class="form-control" value="@v.Trans_Type" />
+                                        @if (v.Trans_Type == 1)
+                                        {
+                                            <input type="text" name="Trans_Type_Name" value="Credit" id="Trans_Type_Name" class="form-control" readonly />
+                                        }
+                                        else if (v.Trans_Type == 2)
+                                        {
+                                            <input type="text" name="Trans_Type_Name" value="Debit" id="Trans_Type_Name" class="form-control" readonly />
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Choose File</label>
+                                        @*<input type="file" name="file" class="form-control" id="file" />*@
+                                        <div class="custom-file">
+                                            <input type="file" name="file" id="file" class="custom-file-input" @*required*@>
+                                            <label class="custom-file-label">Choose file</label>
+                                        </div><span class="text-lightpink-red">[ Allow Only .jpg .png .jpeg .pdf (5MB) ]</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Remark</label>
+                                        <textarea name="Remark" id="Remark" class="form-control" rows="2" cols="20" placeholder="Enter Remark">@v.Remark</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label"> Remark By Admin</label>
+                                        <textarea name="RemarkByAdmin" id="RemarkByAdmin" class="form-control" rows="2" cols="20" placeholder="Enter Remark">@v.Remark_For_Administrator</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Description</label>
+                                        <textarea name="Description" id="Description" class="form-control" rows="2" cols="20" placeholder="Enter Remark">@v.Description</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <input type="hidden" name="Voucher_Id" id="Voucher_Id" value="0">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <input type="hidden" name="Granted_Amount" value="0" id="Granted_Amount" class="form-control" placeholder="Enter place" />
+                                <div class="form-group">
+                                    <label class="form-label">Request No</label>
+                                    <select class="form-control select" name="Req_Id" id="Req_Id" onchange="getPlace()" data-placeholder="Choose Request">
+                                        <option value="">Select Req No</option>
+                                        @foreach (Request_Master _r in _notincdlued)
+                                        {
+                                            <option value="@_r.Req_Id">Amount-@_r.Granted_Amount</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Parent Type <span class="text-red">*</span></label>
+                                    <select onchange="getparent();" name="Parent_Type" id="Parent_Type1" class="form-control" required>
+                                        <option value="">Select below option</option>
+                                        <option value="Project">Project</option>
+                                        <option value="Opportunity">Opportunity</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group" id="demo">
+                                    <label class="form-label">Project Name</label>
+                                    <select class="form-control select" name="Project_Id" id="Project_Id" data-placeholder="Choose Project">
+                                        <option value="">Select Project</option>
+                                        @foreach (Project_Master _r in projects)
+                                        {
+                                            <option value="@_r.Project_Id">@_r.Project_Name</option>
+
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Visiting Company <span class="text-red">*</span></label>
+                                    <input type="text" name="Place" required id="Place1" style="margin:auto;" class="form-control" placeholder="Enter place" />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Voucher Date</label>
+                                    <input type="text" name="Voucher_Date" id="Voucher_Date" class="form-control fc-datepicker" data-single-mode="true" placeholder="Enter Voucher Date" value="@str1" />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Petrol <span class="text-red">*</span></label>
+                                    <input type="text" name="Petrol" onkeyup="sum();" value="0" id="Petrol" required class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Mobile Charges <span class="text-red">*</span></label>
+                                    <input type="text" name="Mobile" onkeyup="sum();" value="0" id="Mobile" required class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label"> Travelling <span class="text-red">*</span></label>
+                                    <input type="text" name="Travelling" onkeyup="sum();" value="0" id="Travelling" required class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Conveyance <span class="text-red">*</span></label>
+                                    <input type="text" name="Conveyance" onkeyup="sum();" value="0" id="Conveyance" required class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Total Amount <span class="text-red">*</span></label>
+                                    <input type="text" name="Total_Amount" readonly value="0" id="Total_Amount" required class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Deduction Amount</label>
+                                    <input type="text" name="Deduction_Amount" value="0" onkeyup="sub();" id="Deduction_Amount" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Payable/Receivable <span class="text-red">*</span></label>
+                                    <input type="text" name="Payable_Amount" required readonly id="Payable_Amount" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Transaction Type</label>
+                                    <input type="hidden" name="Trans_Type" id="Trans_Type" class="form-control" />
+                                    <input type="text" name="Trans_Type_Name" id="Trans_Type_Name" required class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Choose File</label>
+                                    @*<input type="file" name="file" class="form-control" id="file" />*@
+                                    <div class="custom-file">
+                                        <input type="file" name="file" id="file" class="custom-file-input" @*required*@>
+                                        <label class="custom-file-label">Choose file</label>
+                                    </div><span class="text-lightpink-red">[ Allow Only .jpg .png .jpeg .pdf (5MB) ]</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Remark</label>
+                                    <textarea name="Remark" id="Remark" class="form-control" rows="2" cols="20" placeholder="Enter Remark"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label"> Remark By Admin</label>
+                                    <textarea name="RemarkByAdmin" id="RemarkByAdmin" class="form-control" rows="2" cols="20" placeholder="Enter Remark"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <textarea name="Description" id="Description" class="form-control" rows="2" cols="20" placeholder="Enter Remark"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    if (v != null)
+                    {
+                        <div class="col-lg-12">
+                            <div class="card-footer right">
+                                <a href="~/Employee/VoucherReq_List?status=101" class="btn btn-info"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
+                                <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info"><i class="fa fa-save"></i>&ensp;Save</button>
+                                <button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-lg-12">
+                            <div>
+                                <a href="~/Employee/VoucherReq_List?status=101" class="btn btn-info"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
+                                <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-primary"><i class="fa fa-save"></i>&ensp;Save</button>
+                            </div>
+                        </div>
+                    }
+
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function getparent() {
+        var Parent_Type = document.getElementById('Parent_Type').value;
+
+        if (Parent_Type == "Opportunity") {
+            document.getElementById("demo").hidden = true;
+        }
+        else {
+            document.getElementById("demo").hidden = false;
+        }
+    }
+
+    function sub() {
+        var Deduction_Amount = document.getElementById('Deduction_Amount').value;
+        if (Deduction_Amount == null || Deduction_Amount == "" || Deduction_Amount == 0) {
+            document.getElementById('Deduction_Amount').value = 0;
+            var Final_Amt = document.getElementById('Total_Amount').value;
+            document.getElementById('Payable_Amount').value = Final_Amt;
+        }
+        var Total_Amount = document.getElementById('Total_Amount').value;
+        var Payable_Amount = parseInt(Total_Amount) - parseInt(Deduction_Amount);
+
+
+        var Grant_Amt = document.getElementById('Granted_Amount').value;
+
+        if (Grant_Amt == null || Grant_Amt == "") {
+            Grant_Amt = 0;
+        }
+        if (Grant_Amt > Payable_Amount) {
+            var Final_Amt = Grant_Amt - Payable_Amount;
+            document.getElementById('Payable_Amount').value = "-" + Final_Amt;
+            document.getElementById('Trans_Type').value = 2;
+            document.getElementById('Trans_Type_Name').value = "Debit";
+
+        }
+        if (Grant_Amt < Payable_Amount) {
+            var Final_Amt = Payable_Amount - Grant_Amt;
+            document.getElementById('Payable_Amount').value = "+" + Final_Amt;
+            document.getElementById('Trans_Type').value = 1;
+            document.getElementById('Trans_Type_Name').value = "Credit";
+
+        }
+        if (Grant_Amt == Total_Amount) {
+
+            document.getElementById('Payable_Amount').value = 0;
+        }
+    }
+
+    function sum() {
+
+        var Petrol = document.getElementById('Petrol').value;
+
+        if (Petrol == null || Petrol == "") {
+            Petrol = 0;
+        }
+        var Mobile = document.getElementById('Mobile').value;
+        if (Mobile == null || Mobile == "") {
+            Mobile = 0;
+        }
+        var Travelling = document.getElementById('Travelling').value;
+        if (Travelling == null || Travelling == "") {
+            Travelling = 0;
+        }
+        var Conveyance = document.getElementById('Conveyance').value;
+        if (Conveyance == null || Conveyance == "") {
+            Conveyance = 0;
+        }
+
+        var Total_Amount = parseInt(Petrol) + parseInt(Mobile) + parseInt(Travelling) + parseInt(Conveyance);
+        document.getElementById('Total_Amount').value = Total_Amount;
+
+        var Deduction_Amount = document.getElementById('Deduction_Amount').value;
+        if (Deduction_Amount == null || Deduction_Amount == "" || Deduction_Amount == 0) {
+            document.getElementById('Deduction_Amount').value = 0;
+            var Final_Amt = document.getElementById('Total_Amount').value;
+            document.getElementById('Payable_Amount').value = Final_Amt;
+        }
+        var Total_Amount = document.getElementById('Total_Amount').value;
+        var Payable_Amount = parseInt(Total_Amount) - parseInt(Deduction_Amount);
+
+
+        var Grant_Amt = document.getElementById('Granted_Amount').value;
+        if (Grant_Amt == null || Grant_Amt == "") {
+            Grant_Amt = 0;
+        }
+        if (Grant_Amt > Payable_Amount) {
+            var Final_Amt = Grant_Amt - Payable_Amount;
+            document.getElementById('Payable_Amount').value = "-" + Final_Amt;
+            document.getElementById('Trans_Type').value = 2;
+            document.getElementById('Trans_Type_Name').value = "Debit";
+        }
+        if (Grant_Amt < Payable_Amount) {
+            var Final_Amt = Payable_Amount - Grant_Amt;
+            document.getElementById('Payable_Amount').value = "+" + Final_Amt;
+            document.getElementById('Trans_Type').value = 1;
+            document.getElementById('Trans_Type_Name').value = "Credit";
+        }
+        if (Grant_Amt == Total_Amount) {
+
+            document.getElementById('Payable_Amount').value = 0;
+        }
+    }
+    function getPlace() {
+        var Req_No = document.getElementById("Req_Id").value;
+
+        $.ajax({
+            type: "POST",
+            url: "/Employee/GetReq?Req_No=" + Req_No,
+            data: "{}",
+            success: function (data) {
+                var pGranted_Amount = data.Granted_Amount;
+                document.getElementById("Granted_Amount").value = pGranted_Amount;
+                document.getElementById("Parent_Type1").value = data.Type;
+                document.getElementById("Project_Id").value = data.Project_Id;
+                var str = '<option value="' + data.Project_Id + '">' + data.Project + '</option>';
+                document.getElementById("Place1").value = data.Place;
+                $("#Project_Id").html(str);
+            },
+            error: function (errormessage) {
+                //alert("error...");
+                //alert(errormessage);
+            }
+        });
+    }
+    var isSubmitted = false;
+
+    function stopMultipleSubmitVReq() {
+        if (!isSubmitted) {
+            $("#savebtn").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#savebtn").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitvoureq() {
+        //    var Address_Value = $("#Address_address").val();
+        //if (Address_Value == "") {
+        //}
+        //    else {
+        stopMultipleSubmitVReq();
+        /*}*/
+
+        return isSubmitted;
+    }
+</script>

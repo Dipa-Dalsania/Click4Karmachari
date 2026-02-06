@@ -1,0 +1,255 @@
+﻿@using ClickKarmachari;
+@using ClickKarmachari.Models;
+@{
+    SalarySlipDetail_Result Model = ViewBag.salary;
+}
+@model YourNamespace.Models.SalarySlipModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Salary Slip</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+        }
+
+        .salary-slip {
+            border: 1px solid #000;
+            padding: 20px;
+            width: 700px;
+            margin: auto;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .info-table, .salary-table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+
+            .info-table td {
+                padding: 4px 8px;
+            }
+
+            .salary-table th, .salary-table td {
+                border: 1px solid #000;
+                padding: 6px;
+                text-align: left;
+            }
+
+            .salary-table th {
+                background-color: #f0f0f0;
+            }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        .totals {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="salary-slip">
+        <h2>SALARY SLIP FOR THE MONTH OF @Model.SalaryMonth.ToString("MMMM-yyyy")</h2>
+
+        <table class="info-table">
+            <tr>
+                <td><strong>Name:</strong> @Model.User_Name</td>
+                <td><strong>Days in Month:</strong> @Model.TotalDays</td>
+            </tr>
+            <tr>
+                <td><strong>Department:</strong> @Model.Department</td>
+                <td><strong>Days Present:</strong> @Model.DaysPresent</td>
+            </tr>
+            <tr>
+                <td><strong>PAN Number:</strong> @Model.PAN</td>
+                <td><strong>Leave Without Pay:</strong> @Model.LWP</td>
+            </tr>
+            <tr>
+                <td><strong>Aadhar Number:</strong> @Model.Adhar</td>
+                <td><strong>Leave Balance:</strong> @Model.LeaveBalance</td>
+            </tr>
+            <tr>
+                <td><strong>Bank Account:</strong> @Model.BankAccount</td>
+                <td><strong>IFSC:</strong> @Model.IFSC</td>
+            </tr>
+        </table>
+
+        <table class="salary-table">
+            <thead>
+                <tr>
+                    <th>Earnings</th>
+                    <th>Amount</th>
+                    <th>Deductions</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Basic</td><td>@Model.Basic</td><td>PF</td><td>@Model.PF</td></tr>
+                <tr><td>HRA</td><td>@Model.HRA</td><td>PT</td><td>@Model.PT</td></tr>
+                <tr><td>Site Allowance</td><td>@Model.SiteAllowance</td><td>ESIC</td><td>@Model.ESIC</td></tr>
+                <tr><td>Conveyance</td><td>@Model.Conveyance</td><td>SD</td><td>@Model.SD</td></tr>
+                <tr><td>Transport</td><td>@Model.Transport</td><td>MOB</td><td>@Model.MOB</td></tr>
+                <tr><td>Children Allowance</td><td>@Model.ChildrenAllowance</td><td>Advance</td><td>@Model.Advance</td></tr>
+                <tr><td>Performance Incentive</td><td>@Model.Incentive</td><td>TDS</td><td>@Model.TDS</td></tr>
+                <tr><td>Other Earning</td><td>@Model.OtherEarning</td><td>Other Deduction</td><td>@Model.OtherDeduction</td></tr>
+
+                <tr class="totals">
+                    <td>Total Gross Earning</td>
+                    <td>@Model.GrossEarning</td>
+                    <td>Total Deduction</td>
+                    <td>@Model.TotalDeduction</td>
+                </tr>
+                <tr class="totals">
+                    <td colspan="2">Net Payable Monthly</td>
+                    <td colspan="2">@Model.NetPay</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            This is an auto generated salary slip<br />
+            <strong>MBH Technologies Pvt Ltd</strong><br />
+            607, Floor - 6, 7x Business Hub, Opp K J Polytechnic College, Bholav, Bharuch - 392001
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+@*<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Salary Slip</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <style>
+            body {
+                margin: 30px;
+                font-family: 'Segoe UI', sans-serif;
+            }
+
+            .slip-container {
+                border: 1px solid #ccc;
+                padding: 30px;
+                border-radius: 10px;
+                max-width: 800px;
+                margin: auto;
+                background-color: #f9f9f9;
+            }
+
+            .section-title {
+                font-weight: 600;
+                font-size: 1.2rem;
+                border-bottom: 2px solid #007bff;
+                padding-bottom: 5px;
+                margin-bottom: 15px;
+                color: #6f453e;
+            }
+
+            .table td {
+                padding: 0.3rem;
+            }
+
+            .table th {
+                background-color: #f0f0f0;
+            }
+
+            .net-income {
+                font-weight: bold;
+                font-size: 1.2rem;
+                color: green;
+            }
+            .btn-primary {
+                background-color: #6f453e;
+                border-color: #6f453e;
+                color: #fff !important;
+            }
+            .text-primary {
+                color: #6f453e !important;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="text-end mt-4">
+            <a href="~/Access/DownloadSalarySlipAsPdf?salaryid=@Model.ProjectSalaryID" class="btn btn-primary">
+                <i class="fa fa-download"></i>
+                <span class="ms-2">Save as PDF</span>
+            </a>
+        </div>
+
+
+        <div class="slip-container">
+            <h3 class="text-center text-primary mb-4">Salary Slip</h3>
+
+            <div class="mb-4">
+                <p><strong>Name:</strong> @Model.User_Name</p>
+                <p><strong>Designation:</strong> @Model.Designation</p>
+                <p><strong>Department:</strong> @Model.Department</p>
+                <p><strong>Month:</strong> @Model.SalaryMonth.ToString("MMMM yyyy")</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="section-title">Earnings</div>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr><td>BASIC</td><td>@Model.BASIC.ToString()</td></tr>
+                            <tr><td>HRA</td><td>@Model.HRA.ToString()</td></tr>
+                            <tr><td>DA</td><td>@Model.DA.ToString()</td></tr>
+                            <tr><td>LEAVE</td><td>@Model.LEAVE.ToString()</td></tr>
+                            <tr><td>BONUS</td><td>@Model.BONUS.ToString()</td></tr>
+                            <tr><td>TA</td><td>@Model.TA.ToString()</td></tr>
+                            <tr><td>PH</td><td>@Model.PH.ToString()</td></tr>
+                            <tr><td>OT PAYMENT</td><td>@Model.OTPAYMENT.ToString()</td></tr>
+                            <tr><td>SPECIAL ALLOWANCE</td><td>@Model.SPECIALALLOWANCE.ToString()</td></tr>
+                            <tr><td>OTHER ALLOWANCE</td><td>@Model.OTHERALLOWANCE.ToString()</td></tr>
+                            <tr class="table-primary"><td><strong>GROSS INCOME</strong></td><td><strong>@Model.GROSS_INCOME.ToString()</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="section-title">Deductions</div>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr><td>PF</td><td>@Model.PF.ToString()</td></tr>
+                            <tr><td>PT</td><td>@Model.PT.ToString()</td></tr>
+                            <tr><td>ESIC</td><td>@Model.ESIC.ToString()</td></tr>
+                            <tr><td>CANTEEN</td><td>@Model.CANTEEN.ToString()</td></tr>
+                            <tr><td>HRA DEDUCT</td><td>@Model.HRA_DEDUCT.ToString()</td></tr>
+                            <tr><td>TRAVEL</td><td>@Model.TRAVEL.ToString()</td></tr>
+                            <tr><td>ADVANCE</td><td>@Model.ADVANCE.ToString()</td></tr>
+                            <tr><td>Uniform</td><td>@Model.Uniform.ToString()</td></tr>
+                            <tr><td>Welfare</td><td>@Model.Welfare.ToString()</td></tr>
+                            <tr><td>Other</td><td>@Model.Other.ToString()</td></tr>
+                            <tr class="table-danger"><td><strong>GROSS DEDUCTION</strong></td><td><strong>@Model.GROSS_DEDUCTION.ToString()</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="text-end mt-4 net-income">
+                Net Income: ₹@Model.NET_INCOME.ToString()
+            </div>
+        </div>
+    </body>
+    </html>*@
+

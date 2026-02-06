@@ -1,0 +1,1769 @@
+﻿@using ClickKarmachari;
+@using ClickKarmachari.Models;
+@{
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    UserMaster user = ViewBag._user;
+    Company_Menu_Rights MenuRights = ViewBag.MenuRights;
+    List<UserType> u_type = ViewBag.U_Type;
+    List<Designation_Master> Desg = ViewBag.Desg;
+    List<Department_Master> Dept = ViewBag.Dept;
+    List<Religion_Master> religion = ViewBag.religion;
+    List<UserMaster> user_detail = ViewBag.user_detail;
+    List<ProjectSalaryGroup> AllSalaryGroups = ViewBag.AllSalaryGroups;
+    User_Menu_Rights rights = ViewBag.rights;
+    ProjectSalaryHead objProjectSalaryHead = ViewBag.projectSalaryHead;
+    List<City_Master> city = ViewBag.city;
+}
+
+<style>
+    .ui-datepicker .ui-datepicker-prev .ui-icon {
+        background-image: none !important;
+    }
+
+    .ui-datepicker .ui-datepicker-next .ui-icon {
+        background-image: none !important;
+    }
+
+    .ui-datepicker .ui-datepicker-prev .ui-icon:before {
+        content: "<";
+    }
+
+    .ui-datepicker .ui-datepicker-next .ui-icon:before {
+        content: ">";
+    }
+</style>
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Update Employee</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="tab-menu-heading hremp-tabs p-0 ">
+            <div class="tabs-menu1">
+                <!-- Tabs -->
+                <ul class="nav panel-tabs">
+                    <li class="ml-4"><a href="#tab5" class="active" data-toggle="tab">Personal Details</a></li>
+                    <li><a href="#tab6" data-toggle="tab">Company Details</a></li>
+                    <li><a href="#tab7" data-toggle="tab">Bank Details</a></li>
+                    <li><a href="#tab8" data-toggle="tab">Salary Designation Details</a></li>
+                    <li><a href="#tab11" data-toggle="tab">Documents</a></li>
+                    <li><a href="#tab12" data-toggle="tab">Other Details</a></li>
+                    <li><a href="#tab251" data-toggle="tab">Change Password</a></li>
+                    <li><a href="#tablUsrRight" data-toggle="tab">User Right</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body tabs-menu-body hremp-tabs1 p-0">
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab5">
+                    @using (Ajax.BeginForm("PersonalDetail_Add", "Access",
+                        new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAdminUserUpdate" },
+                        new { id = "form", enctype = "multipart/form-data", role = "form", onsubmit = "return submitEmpUpdate()" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="card-body">
+                            <input type="hidden" id="User_ID" name="User_ID" value="@user.User_ID" />
+
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="mb-3">Personal Information</h5>
+                                </div>
+
+                                <!-- Full Name -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" name="User_Name" id="User_Name" pattern="[a-zA-Z][a-zA-Z\s]*"
+                                           value="@user.User_Name" class="form-control" required style="text-transform: capitalize" />
+                                </div>
+
+                                <!-- Contact Number -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Contact Number</label>
+                                    <input type="tel" name="Mobile" id="Mobile" value="@user.User_Mobile"
+                                           pattern="[6789][0-9]{9}" maxlength="10" minlength="10"
+                                           oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                           class="form-control" required autocomplete="off" placeholder="Enter Mobile Number" />
+                                </div>
+
+                                <!-- Emergency Contact -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Emergency Contact Number</label>
+                                    <input type="tel" name="RefMobile" id="RefMobile" value="@user.RefMobile"
+                                           pattern="[6789][0-9]{9}" maxlength="10" minlength="10"
+                                           oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                           class="form-control" autocomplete="off" placeholder="Emergency Contact Number" />
+                                </div>
+
+                                <!-- Email -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" name="User_Email" id="User_Email" value="@user.User_Email" class="form-control" />
+                                </div>
+
+                                <!-- Date of Birth -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Date Of Birth</label>
+                                    <input type="text" name="DOB" id="DOB" value="@user.DOB.ToString("dd MMMM yyyy")"
+                                           class="form-control fc-datepicker" placeholder="01 January 2001" required autocomplete="off" />
+                                </div>
+
+                                <!-- Blood Group -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Blood Group</label>
+                                    <select name="Blood_group" id="Blood_group" class="form-control select2-show-search custom-select" data-placeholder="Select Group">
+                                        <option label="Select Group"></option>
+                                        @foreach (var bloodGroup in new[] { "A+", "B+", "O+", "AB+", "A-", "B-", "O-", "AB-" })
+                                        {
+                                            <option value="@bloodGroup" @(user.Blood_group == bloodGroup ? "selected" : "")>@bloodGroup</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <!-- Aadhar Card -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Aadhar Card Number<span class="text-red">*</span></label>
+                                    <input type="text" name="Adharcard_No" id="Adharcard_No" value="@user.Adharcard_No"
+                                           pattern="[2-9]{1}[0-9]{11}" maxlength="12" minlength="12"
+                                           oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                           class="form-control" placeholder="Aadhar Card Number" onblur="AadharValidate();" required/>
+                                </div>
+
+                                <!-- PAN Card -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">PAN Card Number</label>
+                                    <input type="text" name="PanCard_No" id="PanCard_No" value="@user.PanCard_No"
+                                           pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" maxlength="10" minlength="10"
+                                           class="form-control" placeholder="PAN Card Number" onblur="PancardValidate();" />
+                                </div>
+
+                                <!-- City -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">City </label>
+                                    @*<input type="text" name="City_Name" id="City_Name" value="@user.City_Name"
+                            class="form-control" placeholder="Enter City" />*@
+                                    <select name="City_Name" id="City_Name" class="form-control select2-show-search custom-select"  data-placeholder="Select Employee Religion">
+                                        <option label="Select Employee City"></option>
+                                        @foreach (var ct in city.OrderBy(x => x.CityName))
+                                        {
+                                            <option value="@ct.CityName" @(user.City_Name == ct.CityName ? "selected" : "")>@ct.CityName</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <!-- Religion -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Religion </label>
+                                    <select name="Religion_name" id="Religion_name" class="form-control select2-show-search custom-select"  data-placeholder="Select Employee Religion">
+                                        <option label="Select Employee Religion"></option>
+                                        @foreach (var rel in religion.OrderBy(x => x.Religion_Name))
+                                        {
+                                            <option value="@rel.Religion_Name" @(user.Religion_name == rel.Religion_Name ? "selected" : "")>@rel.Religion_Name</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <!-- Upload Photo -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Upload Photo <small class="text-muted">[ Allow only .jpg, .png, .jpeg, .pdf (max 5MB) ]</small></label>
+                                    <div class="input-group file-browser">
+                                        <input type="text" class="form-control border-right-0 browse-file" placeholder="Browse File" readonly />
+                                        <label class="input-group-append mb-0">
+                                            <span class="btn btn-primary">
+                                                Browse
+                                                <input type="file" name="file" id="file" class="file-browserinput" style="display: none;" multiple />
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <script>
+                                        $('#file').on('change', function () {
+                                            if ((this.files[0].size / 1024 / 1024) > 5) {
+                                                alert('Sorry, maximum file size: 5 MB only!');
+                                                $('#file').val('');
+                                            }
+                                        });
+                                    </script>
+                                </div>
+
+                                <!-- Status -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select name="Status" id="Status" class="form-control select2">
+                                        <option value="0" @(user.status == 0 ? "selected" : "")>Active</option>
+                                        <option value="1" @(user.status == 1 ? "selected" : "")>Deactive</option>
+                                        <option value="2" @(user.status == 2 ? "selected" : "")>Under Verification</option>
+                                        <option value="6" @(user.status == 6 ? "selected" : "")>Deleted</option>
+                                    </select>
+                                </div>
+
+                                <!-- Profile Lock -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Profile Lock</label>
+                                    <select name="Profile_Lock" id="Profile_Lock" class="form-control select2">
+                                        <option value="0" @(user.Profile_Lock == false ? "selected" : "")>UnLock</option>
+                                        <option value="1" @(user.Profile_Lock == true ? "selected" : "")>Lock</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="row">
+                                <div class="col-12 text-end">
+                                    <button type="submit" class="btn btn-info">
+                                        <i class="fa fa-save"></i>&ensp;Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="tab-pane" id="tab6">
+                    @using (Ajax.BeginForm("CompanyDetail_Add", "Access",
+                        new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAdminUserUpdate" },
+                        new { id = "form", enctype = "multipart/form-data", role = "form", onsubmit = "return submitEmpUpdate()" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="card-body">
+                            <input type="hidden" id="User_ID" name="User_ID" value="@user.User_ID" />
+
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="mb-3">Basic Details</h5>
+                                </div>
+
+                                <!-- Employee ID -->
+                                @*<div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">Employee ID</label>
+                                    <input type="text" name="EmployeeID" id="EmployeeID" value="@user.EmployeeID" class="form-control" />
+                                </div>*@
+
+                                <!-- Employee Type -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">Employee Type</label>
+                                    <select name="user_Type" id="user_Type" class="form-control select2-show-search custom-select" required>
+                                        <option value="">Select Employee Type</option>
+                                        @foreach (var type in u_type)
+                                        {
+                                            <option value="@type.Usertype_id" @(type.Usertype_id == user.User_type ? "selected" : "")>@type.Usertype_name</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <!-- Skilled Type -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">Skilled Type </label>
+                                    <select name="SkilledType" id="SkilledType" class="form-control select2-show-search custom-select" >
+                                        <option value="0">Skilled Type</option>
+                                        <option value="1" @(user.SkilledType == 1 ? "selected" : "")>Skilled</option>
+                                        <option value="2" @(user.SkilledType == 2 ? "selected" : "")>Unskilled</option>
+                                        <option value="3" @(user.SkilledType == 3 ? "selected" : "")>Semi Skilled</option>
+                                    </select>
+                                </div>
+
+                                <!-- Department -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">Department </label>
+                                    <select name="Department" id="Department" class="form-control select2-show-search custom-select">
+                                        <option value="">Select Department</option>
+                                        @foreach (var dept in Dept)
+                                        {
+                                            <option value="@dept.Dept_ID" @(dept.Dept_ID == user.Depart_id ? "selected" : "")>@dept.Department</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <!-- Designation -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">Designation </label>
+                                    <select name="Designation" id="Designation" class="form-control select2-show-search custom-select" >
+                                        <option value="">Select Designation</option>
+                                        @foreach (var desg in Desg)
+                                        {
+                                            <option value="@desg.Desg_Id" @(desg.Desg_Id == user.Desig_id ? "selected" : "")>@desg.Designation</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <!-- Salary Group -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">Salary Group <span class="text-red">*</span></label>
+                                    <select name="Project_SalaryGroupID" id="Project_SalaryGroupID" class="form-control select2-show-search custom-select" required>
+                                        <option value="">Select Salary Group</option>
+                                        @foreach (var group in AllSalaryGroups)
+                                        {
+                                            <option value="@group.Project_SalaryGroupID" @(group.Project_SalaryGroupID == user.Project_SalaryGroupID ? "selected" : "")>@group.Project_Name</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <!-- Date of Joining -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">Date Of Joining</label>
+                                    <input type="text" class="form-control fc-datepicker" name="Date_of_join" id="Date_of_join"
+                                           placeholder="01 January 2022" value="@user.Date_of_join.ToString("dd MMMM yyyy")" required autocomplete="off" />
+                                </div>
+
+                                <!-- Reporting Person -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">Reporting Person </label>
+                                    <select name="Reporting_Person" id="Reporting_Person" class="form-control select2-show-search custom-select" >
+                                        <option value="0">Select Reporting Person</option>
+                                        @foreach (var emp in user_detail)
+                                        {
+                                            <option value="@emp.User_ID" @(emp.User_ID == user.Reporting_Person ? "selected" : "")>@emp.User_Name</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <!-- Company Email -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">Company Email</label>
+                                    <input type="email" name="Company_Email" id="Company_Email" value="@user.Company_Master.Company_Email" class="form-control" />
+                                </div>
+
+                                <!-- Team Name -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">Team Name</label>
+                                    <input type="text" name="Team_name" id="Team_name" value="@user.Team_name" class="form-control" />
+                                </div>
+
+                                <!-- Posted At -->
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label class="form-label">Posted At</label>
+                                    <input type="text" name="Posted_At" id="Posted_At" value="@user.Posted_At" class="form-control" />
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="row">
+                                <div class="col-12 text-end">
+                                    <button type="submit" class="btn btn-info">
+                                        <i class="fa fa-save"></i>&ensp;Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="tab-pane" id="tab7">
+                    @using (Ajax.BeginForm("BankDetail_Add", "Access",
+                        new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAdminUserUpdate" },
+                        new { id = "form", enctype = "multipart/form-data", role = "form", onsubmit = "return submitEmpUpdate()" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="card-body">
+                            <input type="hidden" id="User_ID" name="User_ID" value="@user.User_ID" />
+
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="mb-3">Bank Details</h5>
+                                </div>
+
+                                <!-- Account Holder Name -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Account Holder<span class="text-red">*</span></label>
+                                    <input type="text" name="User_Name1" id="User_Name1"
+                                           pattern="[a-zA-Z][a-zA-Z\s]*" required
+                                           value="@user.User_Name"
+                                           class="form-control" style="text-transform: capitalize" />
+                                </div>
+
+                                <!-- Account Number -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Account Number<span class="text-red">*</span></label>
+                                    <input type="text" name="Bank_Acc_No" id="Bank_Acc_No"
+                                           pattern="[0-9]{9,18}" minlength="9" maxlength="18"
+                                           value="@user.Bank_Acc_No"
+                                           class="form-control"
+                                           oninput="this.value = this.value.replace(/[^0-9]/g, '')" required/>
+                                </div>
+
+                                <!-- Bank Name -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Bank Name<span class="text-red">*</span></label>
+                                    <input type="text" name="Bank_Name" id="Bank_Name"
+                                           value="@user.Bank_Name"
+                                           class="form-control" style="text-transform: capitalize" required/>
+                                </div>
+
+                                <!-- IFSC Code -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Bank Code (IFSC)<span class="text-red">*</span></label>
+                                    <input type="text" name="IFSC_No" id="IFSC_No"
+                                           pattern="^[A-Z]{4}0[A-Z0-9]{6}$"
+                                           minlength="11" maxlength="11"
+                                           value="@user.IFSC_No"
+                                           class="form-control"
+                                           required />
+
+                                </div>
+
+                                <!-- ESIC Number -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">ESIC Numbers</label>
+                                    <input type="text" name="ESIC_No" id="ESIC_No"
+                                           value="@user.ESIC_No" class="form-control" />
+                                </div>
+
+                                <!-- UAN Number -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">UAN Number<span class="text-red">*</span></label>
+                                    <input type="text" name="UAN_No" id="UAN_No"
+                                           value="@user.UAN_No" class="form-control" required/>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="row">
+                                <div class="col-12 text-end">
+                                    <button type="submit" value="Save" class="btn btn-info">
+                                        <i class="fa fa-save"></i>&ensp;Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="tab-pane" id="tab8">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-3">
+                                <div class="card">
+                                    <div class="card-header border-bottom-0">
+                                        <div class="card-title">Parameters for Formula</div>
+                                    </div>
+                                    <ul class="list-style-cricle">
+                                        <li>BASIC</li>
+                                        <li>HRA</li>
+                                        <li>DA</li>
+                                        <li>TA</li>
+                                        <li>BONUS</li>
+                                        <li>LEAVE</li>
+                                        <li>OTRate</li>
+                                        <li>PH</li>
+                                        <li>SPECIALALLOWANCE</li>
+                                        <li>OTHERALLOWANCE</li>
+                                        <li>PF</li>
+                                        <li>PT</li>
+                                        <li>ESIC</li>
+                                        <li>CANTEEN</li>
+                                        <li>HRA_DEDUCT</li>
+                                        <li>TRAVEL</li>
+                                        <li>ADVANCE</li>
+                                        <li>Uniform</li>
+                                        <li>Welfare</li>
+                                        <li>Other</li>
+                                        <li>NoOfDays</li>
+                                        <li>NoOfPH</li>
+                                        <li>NoOfOTShift</li>
+                                        <li>NoOfOTHors</li>
+                                        <li>ShiftHours</li>
+                                        <li>Wages</li>
+                                        <li>GrossIncome</li>
+                                        <li>GrossDeduction</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="col-xl-9 col-lg-9">
+                                @using (Ajax.BeginForm("EmployeeSalaryHeadUpdate", "Access", new AjaxOptions
+                                {
+                                    HttpMethod = "POST",
+                                    OnBegin = "OnFormBegin", // ✅ New line added
+                                    OnSuccess = "OnAdminUserUpdate"
+                                }, new { @id = "allfieldform", @enctype = "multipart/form-data", role = "form" }))
+                                {
+                                    <div class="card">
+
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <input type="hidden" id="User_ID" name="User_ID" value="@user.User_ID" />
+                                                    </div>
+                                                </div>
+
+
+                                                @{
+                                                    var salaryFields = new Dictionary<string, string> {
+                            { "DailyHours", "Daily Hours" },
+                            { "OTRate", "OT Rate" },
+                            { "PH", "PH Rate" },
+                            { "BASIC", "Basic Salary" },
+                            { "HRA", "House Rent Allowance" },
+                            { "DA", "Dearness Allowance" },
+                            { "TA", "Travel Allowance" },
+                            { "BONUS", "Bonus" },
+                            { "LEAVE", "Leave" },
+                            { "SPECIALALLOWANCE", "Special Allowance" },
+                            { "OTHERALLOWANCE", "Other Allowance" },
+                            { "PF", "Provident Fund" },
+                            { "PT", "Professional Tax" },
+                            { "ESIC", "ESIC" },
+                            { "CANTEEN", "Canteen Deduction" },
+                            { "HRA_DEDUCT", "HRA Deduction" },
+                            { "TRAVEL", "Travel Expenses" },
+                            { "ADVANCE", "Advance" },
+                            { "Uniform", "Uniform" },
+                            { "Welfare", "Welfare" },
+                            { "Other", "Other Deductions" }
+                        };
+
+                                                    var formulaFields = new List<string> { "BASIC", "HRA", "TA", "DA", "BONUS", "LEAVE" };
+                                                    int col = 0;
+
+                                                    foreach (var field in salaryFields)
+                                                    {
+                                                        if (col % 3 == 0)
+                                                        {
+                                                            @:<div class="w-100 d-none d-md-block"></div>
+                                                        }
+
+                                                        var cssClass = formulaFields.Contains(field.Key) ? "form-control formula-check" : "form-control";
+                                                        var fieldValue = objProjectSalaryHead.GetType().GetProperty(field.Key).GetValue(objProjectSalaryHead, null);
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label class="form-label">@field.Value</label>
+                                                                <input type="text" name="@field.Key" id="@field.Key" class="@cssClass" value="@fieldValue" />
+                                                            </div>
+                                                        </div>
+                                                        col++;
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+
+
+                                        <div class="card-footer text-right">
+                                            <div class="d-flex justify-content-end">
+                                                <div class="form-group">
+                                                    <button type="submit" value="Save" class="btn btn-info">
+                                                        <i class="fa fa-save"></i>&ensp;Save
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="tab11">
+                    <div class="card-body">
+                        <div>
+                            <nav style="float:right">
+                                <button class="btn btn-primary mr-3" onclick="return Add_Document_Emp(0,@user.User_ID,'','')" type="submit"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i>Add Document</strong></button>
+                            </nav>
+                        </div>
+                        <br />  <br />  <br />
+                        <table id="basic-datatable5" class="table table-striped table-bordered border-bottom table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Document</th>
+                                    <th>Document Name</th>
+                                    <th>Status</th>
+                                    <th>Operation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    CommonClasses util = new CommonClasses();
+                                }
+
+                                @foreach (Document_Master _newobj in user.Document_Master.Where(X => X.Status != 6))
+                                {
+                                    <tr>
+                                        <td>
+                                            <img src="~/Uploads/User_Document/@_newobj.Doc_Type"
+                                                 onerror="this.src='@Url.Content("~/Uploads/User_Image/profile.jpg")';"
+                                                style="width:30%;height:30%" />
+
+                                        </td>
+                                        <td style="text-transform: capitalize">@_newobj.Doc_Name</td>
+
+                                        <td>
+                                            @if (_newobj.Status == 0)
+                                            {
+                                                <span class="badge badge-secondary-light"><b>@util._Status_ByNumber(_newobj.Status)</b></span>
+                                            }
+                                            else if (_newobj.Status == 1)
+                                            {
+                                                <span class="badge badge-success">@util._Status_ByNumber(_newobj.Status)</span>
+                                            }
+                                            else if (_newobj.Status == 2)
+                                            {
+                                                <span class="badge badge-danger-light">@util._Status_ByNumber(_newobj.Status)</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-primary-light">@util._Status_ByNumber(_newobj.Status)</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-icon btn-primary" onclick="return Add_Document_Emp(@_newobj.Doc_Id,@user.User_ID,'@_newobj.Doc_Type','@_newobj.Doc_Name')" type="submit"><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></button>
+                                            <a class="btn btn-success btn-icon" href="~/Uploads/User_Document/@_newobj.Doc_Type" target="_blank" data-toggle="tooltip" data-original-title="Print"><i class="feather feather-download" aria-hidden="true"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <div class="modal fade" id="Model_AddDocument" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+
+                                @using (Ajax.BeginForm("Document_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAdminUpdateDoc" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "return submitDoc();" }))
+                                {
+                                    <div class="modal-content">
+                                        <div class="col-md-12 p-3 card-left" style="display:none;text-align:center" id="msgdig">
+                                            <div class="alert_R" style="border-radius: 5px; color: white;padding:inherit; background-color: #f91a1ab8 ">
+                                                <span id="failuremsg"></span>
+                                                <span class="closebtn " onclick="this.parentElement.style.display='none';" style="float:right">&times;</span>
+                                            </div>
+                                        </div>
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">New Employee Document</h5>
+                                            <button class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <input type="hidden" name="Add_Document_User_ID" id="Add_Document_User_ID" value="0">
+                                                <input type="hidden" name="Add_Document_Doc_Id" id="Add_Document_Doc_Id" value="0">
+                                                <div class="col-lg-8">
+                                                    <div class="form-group">
+                                                        <label class="form-label"> Select Document </label>
+                                                        <select id="Add_Document_Doc_Name" name="Add_Document_Doc_Name" class="form-control select2-show-search custom-select" data-placeholder="Select Document ">
+                                                            <option value="Aadhar Card">Aadhar Card</option>
+                                                            <option value="PAN Card">PAN Card</option>
+                                                            <option value="Driving License">Driving License</option>
+                                                            <option value="Other">Other</option>
+                                                            <option value="Passbook/Cancelcheck">Passbook/Cancelcheck</option>
+                                                            <option value="Degree Certificate">Degree Certificate</option>
+                                                            <option value="Experience">Experience</option>
+                                                            <option value="Reliving Letter">Reliving Letter</option>
+                                                            <option value="Passport Size Photo">Passport Size Photo</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-8">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Select Document Image </label>
+                                                        @*   <input type="file" name="file" id="file" placeholder="Select Image" value="" class="form-control" />*@
+                                                        <div class="input-group file-browser">
+                                                            <input type="text" class="form-control border-right-0 browse-file" placeholder="Choose File" readonly>
+                                                            <label class="input-group-append mb-0">
+                                                                <span class="btn ripple btn-primary">
+                                                                    Browse <input type="file" class="file-browserinput" name="file" id="file" style="display: none;" accept=".xls,.xlsx">
+                                                                </span>
+                                                            </label>
+                                                        </div><span class="text-lightpink-red">[ Allow Only .jpg .png .jpeg .pdf (5MB) ]</span>
+                                                        <script type="text/javascript">
+                                                            $('#file').bind('change', function () {
+                                                                if ((this.files[0].size / 1024 / 1024) > 5) {
+                                                                    alert('Sorry, Maximum File size : 5 MB Only ! ');
+                                                                    $('#file').val('');
+                                                                }
+                                                            });
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                                            <button type="submit" id="savebtndoc" name="Command" value="Save" class="btn btn-info"><i class="fa fa-save"></i>&ensp;Save</button>
+                                            <button type="submit" id="approvebtn4" name="Command" value="Approve" class="btn btn-success"><i class="fa fa-check"></i>&ensp;Approve</button>
+                                            <button type="submit" id="rejectbtn4" name="Command" value="Rejected" class="btn btn-danger"><i class="fa fa-remove"></i>&ensp;Rejected</button>
+                                            <button type="submit" id="deletebtn4" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="tab12">
+                    <div class="card" id="tabs-style3">
+                        <div class="card-body">
+                            <div class="panel panel-info tabs-style-3">
+                                <div class="tab-menu-heading">
+                                    <div class="tabs-menu ">
+                                        <!-- Tabs -->
+                                        <ul class="nav panel-tabs">
+                                            <li class=""><a href="#tab13" class="active" data-toggle="tab"><i class="fa fa-address-book"></i>&ensp; Address</a></li>
+                                            <li><a href="#tab121" data-toggle="tab"><i class="fa fa-group"></i>&ensp; Relation</a></li>
+                                            <li><a href="#tab131" data-toggle="tab"><i class="fa fa-mortar-board"></i> &ensp;Education</a></li>
+                                            <li><a href="#tab141" data-toggle="tab"><i class="fa fa-tasks"></i>&ensp;Experience</a></li>
+                                            <li><a href="#tab151" data-toggle="tab"><i class="fa fa-hourglass-start"></i>&ensp;Leave</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="panel-body tabs-menu-body">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tab13">
+                                            <div class="card-body">
+                                                <div>
+                                                    <nav style="float:right">
+                                                        <button class="btn btn-primary mr-3" onclick="return Add_Address_Emp(0,@user.User_ID,'','')" type="submit"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i>Add Address</strong></button>
+                                                    </nav>
+                                                </div>
+                                                <br />  <br />  <br />
+                                                <table id="basic-datatable" class="table table-striped table-bordered border-bottom table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Address</th>
+                                                            <th>City</th>
+                                                            <th>Status</th>
+                                                            <th>Operation</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (Address_Master _newobj in user.Address_Master.Where(x => x.Status != 6))
+                                                        {
+                                                            string r = util.GetTextStringScript(_newobj.Add_Address);
+                                                            string rem = util.GetTextStringTable(_newobj.Add_Address);
+                                                            <tr>
+                                                                <td style="text-transform: capitalize">@Html.Raw(rem)</td>
+                                                                <td style="text-transform: capitalize">@_newobj.CityName</td>
+                                                                <td>
+                                                                    @*@util._Status_ByNumber(_newobj.Status)*@
+                                                                    @if (_newobj.Status == 0)
+                                                                    {
+                                                                        <span class="badge badge-secondary-light"><b>@util._Status_ByNumber(_newobj.Status)</b></span>
+                                                                    }
+                                                                    else if (_newobj.Status == 1)
+                                                                    {
+                                                                        <span class="badge badge-success">@util._Status_ByNumber(_newobj.Status)</span>
+                                                                    }
+                                                                    else if (_newobj.Status == 2)
+                                                                    {
+                                                                        <span class="badge badge-danger-light">@util._Status_ByNumber(_newobj.Status)</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="badge badge-primary-light">@util._Status_ByNumber(_newobj.Status)</span>
+                                                                    }
+
+                                                                </td>
+                                                                <td>
+                                                                    <button class="btn btn-icon btn-info" onclick="return Add_Address_Emp(@_newobj.Add_ID,@_newobj.User_ID,'@r','@_newobj.CityName')" type="submit"><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="modal fade" id="Model_AddAddress" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    @using (Ajax.BeginForm("Address_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAdminUserUpdateAddress" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "return submitAdderss();" }))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Employee Address </h5>
+                                                                <button class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="hidden" name="Add_Address_Userid" id="Add_Address_Userid" value="0">
+                                                                <input type="hidden" name="Add_Address_Addid" id="Add_Address_Addid" value="0">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label">Address</label>
+                                                                            <textarea name="Add_Address_address" id="Add_Address_address" rows="2" value="" placeholder="Enter Address" class="form-control" ></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label">City Name </label>
+                                                                            <input type="text" name="Add_Address_City" id="Add_Address_City" class="form-control">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                                                                <button type="submit" id="btnadd" name="Command" value="Save" class="btn btn-primary"><i class="feather feather-save"></i>&ensp;Save</button>
+                                                                <button type="submit" id="approvebtn" name="Command" value="Approve" class="btn btn-success"><i class="fa fa-check"></i>&ensp;Approve</button>
+                                                                <button type="submit" id="rejectbtn" name="Command" value="Rejected" class="btn btn-danger"><i class="fa fa-remove"></i>&ensp;Rejected</button>
+                                                                <button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tab121">
+                                            <div class="card-body">
+                                                <div>
+                                                    <nav style="float:right">
+                                                        <button class="btn btn-primary mr-3" onclick="return Add_Relation_Emp(0,@user.User_ID,'','','')" type="submit"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i>Add Relation</strong></button>
+                                                    </nav>
+                                                </div>
+                                                <br />  <br />  <br />
+                                                <table id="basic-datatable2" class="table table-striped table-bordered border-bottom table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Relation Name</th>
+                                                            <th>Person Name</th>
+                                                            <th>Contact Number</th>
+                                                            <th>Status</th>
+                                                            <th>Operation</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (Relation_Master _newobj in user.Relation_Master.Where(x => x.Status != 6))
+                                                        {
+                                                            <tr>
+                                                                <td style="text-transform:capitalize">@_newobj.Relation_Name</td>
+                                                                <td style="text-transform:capitalize">@_newobj.Person_Name</td>
+                                                                <td>@_newobj.Mobile_No</td>
+                                                                <td>
+                                                                    @*@util._Status_ByNumber(_newobj.Status)*@
+                                                                    @if (_newobj.Status == 0)
+                                                                    {
+                                                                        <span class="badge badge-secondary-light"><b>@util._Status_ByNumber(_newobj.Status)</b></span>
+                                                                    }
+                                                                    else if (_newobj.Status == 1)
+                                                                    {
+                                                                        <span class="badge badge-success">@util._Status_ByNumber(_newobj.Status)</span>
+                                                                    }
+                                                                    else if (_newobj.Status == 2)
+                                                                    {
+                                                                        <span class="badge badge-danger-light">@util._Status_ByNumber(_newobj.Status)</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="badge badge-primary-light">@util._Status_ByNumber(_newobj.Status)</span>
+                                                                    }
+                                                                </td>
+                                                                <td>
+                                                                    <button class="btn btn-icon btn-info" onclick="return Add_Relation_Emp(@_newobj.Relation_Id,@user.User_ID,'@_newobj.Relation_Name','@_newobj.Person_Name',@_newobj.Mobile_No)" type="submit"><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal fade" id="Model_AddRelation" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    @using (Ajax.BeginForm("Relation_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAdminUserUpdateRel" }, new { @id = "form_relation", @enctype = "multipart/form-data", @role = "form", @onsubmit = "return submitRelation();" }))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Employee's Relatives Detail</h5>
+                                                                <button class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="hidden" name="Add_Relation_User_ID" id="Add_Relation_User_ID" value="0">
+                                                                <input type="hidden" name="Add_Relation_Relation_Id" id="Add_Relation_Relation_Id" value="0">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label">Relation Name </label>
+                                                                            <select class="form-control select2" name="Add_Relation_Relation_Name" data-placeholder="Select Relation" pattern="[a-zA-Z][a-zA-Z\s]*" id="Add_Relation_Relation_Name">
+                                                                                <option label="Select Relation" value="" selected></option>
+                                                                                <option value="Father">Father</option>
+                                                                                <option value="Mother">Mother</option>
+                                                                                <option value="Husband">Husband</option>
+                                                                                <option value="Wife">Wife</option>
+                                                                                <option value="Brother">Brother</option>
+                                                                                <option value="Sister">Sister</option>
+                                                                                <option value="Other">Other</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label">Person Name </label>
+                                                                            <input type="text" name="Add_Relation_Person_Name" autocomplete="off" placeholder="Enter Person Name" pattern="[a-zA-Z][a-zA-Z\s]*" id="Add_Relation_Person_Name" value="" class="form-control"  />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label">Mobile Number </label>
+                                                                            <input type="tel" pattern="[6789][0-9]{9}" maxlength="10"
+                                                                                   minlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                                                   name="Add_Relation_Mobile_No" placeholder="Enter Mobile Number" id="Add_Relation_Mobile_No"  class="form-control" autocomplete="off">
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                                                                <button type="submit" id="savebtnRel" name="Command" value="Save" class="btn btn-primary"><i class="fa fa-save"></i>&ensp;Save</button>
+                                                                <button type="submit" id="approvebtn1" name="Command" value="Approve" class="btn btn-success"><i class="fa fa-check"></i>&ensp;Approve</button>
+                                                                <button type="submit" id="rejectbtn1" name="Command" value="Rejected" class="btn btn-danger"><i class="fa fa-remove"></i>&ensp;Rejected</button>
+                                                                <button type="submit" id="deletebtn1" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tab131">
+                                            <div class="card-body">
+                                                <div>
+                                                    <nav style="float:right">
+                                                        <button class="btn btn-primary mr-3" onclick="return Add_Education_Emp(0,@user.User_ID,'','','')" type="submit"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i>Add Education</strong></button>
+                                                    </nav>
+                                                </div>
+                                                <br />  <br />  <br />
+                                                <table id="basic-datatable3" class="table table-striped table-bordered border-bottom table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Qualification</th>
+                                                            <th>Field Name</th>
+                                                            <th>University</th>
+                                                            <th>Pass Out</th>
+                                                            <th>Status</th>
+                                                            <th>Operation</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (Education_Master _newobj in user.Education_Master.Where(X => X.Status != 6))
+                                                        {
+                                                            <tr>
+                                                                <td style="text-transform:capitalize">@_newobj.Edu_Name</td>
+                                                                <td style="text-transform:capitalize">@_newobj.Field</td>
+                                                                <td style="text-transform:capitalize">@_newobj.university</td>
+                                                                <td>@_newobj.Pass_Out</td>
+                                                                <td>
+                                                                    @if (_newobj.Status == 0)
+                                                                    {
+                                                                        <span class="badge badge-secondary-light"><b>@util._Status_ByNumber(_newobj.Status)</b></span>
+                                                                    }
+                                                                    else if (_newobj.Status == 1)
+                                                                    {
+                                                                        <span class="badge badge-success">@util._Status_ByNumber(_newobj.Status)</span>
+                                                                    }
+                                                                    else if (_newobj.Status == 2)
+                                                                    {
+                                                                        <span class="badge badge-danger-light">@util._Status_ByNumber(_newobj.Status)</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="badge badge-primary-light">@util._Status_ByNumber(_newobj.Status)</span>
+                                                                    }
+                                                                </td>
+                                                                <td>
+                                                                    <button class="btn btn-icon btn-info" onclick="return Add_Education_Emp(@_newobj.Edu_Id,@user.User_ID, '@_newobj.Edu_Name', '@_newobj.university','@_newobj.Pass_Out')" type="submit"><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="modal fade" id="Model_AddEducation" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    @using (Ajax.BeginForm("Eduation_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAdminUserUpdateEdu" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "return submitEducation();" }))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Employee Education</h5>
+                                                                <button class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="hidden" name="Add_Education_User_ID" id="Add_Education_User_ID" value="0">
+                                                                <input type="hidden" name="Add_Education_Edu_Id" id="Add_Education_Edu_Id" value="0">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label">Qualification </label>
+                                                                            @* <input type="text" placeholder="Enter Education" name="Add_Education_Edu_Name" id="Add_Education_Edu_Name" value="" class="form-control" required />*@
+                                                                            <select class="form-control select2-show-search custom-select" name="Add_Education_Edu_Name" id="Add_Education_Edu_Name"  data-placeholder="Select Education">
+                                                                                <option label="Select Education" value=""></option>
+                                                                                <option value="SSC">SSC</option>
+                                                                                <option value="HSC">HSC</option>
+                                                                                <option value="Graduate">Graduate</option>
+                                                                                <option value="Post Graduate">Post Graduate</option>
+                                                                                <option value="PHD">PHD</option>
+                                                                                <option value="Other">Other</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label">Field Name </label>
+                                                                            <input type="text" name="Field" placeholder="Enter Field Name" autocomplete="off" id="Field" value="" class="form-control" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label">University </label>
+                                                                            <input type="text" name="Add_Education_university" placeholder="Enter University" autocomplete="off" id="Add_Education_university" value="" class="form-control"  />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label">Pass Out Year </label>
+                                                                            <input type="text" class="form-control" placeholder="YYYY" name="Add_Education_Pass_Out" pattern="\d{4}" max="@DateTime.Now.Year" id="datepicker-year" autocomplete="off" />
+                                                                            @*<input type="text" class="form-control" placeholder="MMMM YYYY" name="Add_Education_Pass_Out" onfocus="(this.type='month')" onfocusout="(this.type='text')" max="@DateTime.Now.Year"  />*@
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                                                                <button type="submit" id="savebtnedu" name="Command" value="Save" class="btn btn-primary"><i class="fa fa-save"></i>&ensp;Save</button>
+                                                                <button type="submit" id="approvebtn2" name="Command" value="Approve" class="btn btn-success"><i class="fa fa-check"></i>&ensp;Approve</button>
+                                                                <button type="submit" id="rejectbtn2" name="Command" value="Rejected" class="btn btn-danger"><i class="fa fa-remove"></i>&ensp;Rejected</button>
+                                                                <button type="submit" id="deletebtn2" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tab141">
+                                            <div class="card-body">
+                                                <div>
+                                                    <nav style="float:right">
+                                                        <button class="btn btn-primary mr-3" onclick="return Add_Experience_Emp(0,@user.User_ID,'','','')" type="submit"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i>Add Experience</strong></button>
+                                                    </nav>
+                                                </div>
+                                                <br />  <br />  <br />
+                                                <table id="basic-datatable4" class="table table-striped table-bordered border-bottom table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Last Company</th>
+                                                            <th>Working Experience</th>
+                                                            <th>Last Year</th>
+                                                            <th>Status</th>
+                                                            <th>Operation</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (Experience_Master _newobj in user.Experience_Master.Where(X => X.Status != 6))
+                                                        {
+                                                            <tr>
+                                                                <td style="text-transform: capitalize">@_newobj.Last_Company</td>
+                                                                <td style="text-transform: capitalize">@_newobj.working_years</td>
+                                                                <td>@_newobj.Last_Year</td>
+                                                                <td>
+                                                                    @if (_newobj.Status == 0)
+                                                                    {
+                                                                        <span class="badge badge-secondary-light"><b>@util._Status_ByNumber(_newobj.Status)</b></span>
+                                                                    }
+                                                                    else if (_newobj.Status == 1)
+                                                                    {
+                                                                        <span class="badge badge-success">@util._Status_ByNumber(_newobj.Status)</span>
+                                                                    }
+                                                                    else if (_newobj.Status == 2)
+                                                                    {
+                                                                        <span class="badge badge-danger-light">@util._Status_ByNumber(_newobj.Status)</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="badge badge-primary-light">@util._Status_ByNumber(_newobj.Status)</span>
+                                                                    }
+                                                                </td>
+                                                                <td>
+                                                                    <button class="btn btn-icon btn-info" onclick="return Add_Experience_Emp(@_newobj.Exp_Id,@user.User_ID,'@_newobj.Last_Company','@_newobj.working_years','@_newobj.Last_Year')" type="submit"><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal fade" id="Model_AddExperience" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    @using (Ajax.BeginForm("Experience_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAdminUserUpdateExp" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "return submitExp();" }))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Employee Experience</h5>
+                                                                <button class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="hidden" name="Add_Experience_User_ID" id="Add_Experience_User_ID" value="0">
+                                                                <input type="hidden" name="Add_Experience_Edu_Id" id="Add_Experience_Edu_Id" value="0">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label">Last Company Name </label>
+                                                                            <input type="text" name="Add_Experience_Last_Company" placeholder="Enter Company Name" id="Add_Experience_Last_Company" value="" class="form-control" autocomplete="off"  />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label">Working Experience </label>
+                                                                            <input type="text" name="Add_Experience_working_years" placeholder="Enter Total Working Years" id="Add_Experience_working_years" value="" class="form-control" autocomplete="off"  />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label">Last Year </label>
+                                                                            <input type="text" class="form-control" placeholder="YYYY" name="Add_Experience_Last_Year" pattern="\d{4}" max="@DateTime.Now.Year" id="Add_Experience_Last_Year" autocomplete="off"  />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                                                                <button type="submit" id="savebtnexp" name="Command" value="Save" class="btn btn-primary"><i class="fa fa-save"></i>&ensp;Save</button>
+                                                                <button type="submit" id="approvebtn3" name="Command" value="Approve" class="btn btn-success"><i class="fa fa-check"></i>&ensp;Approve</button>
+                                                                <button type="submit" id="rejectbtn3" name="Command" value="Rejected" class="btn btn-danger"><i class="fa fa-remove"></i>&ensp;Rejected</button>
+                                                                <button type="submit" id="deletebtn3" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tab151">
+                                            <div class="card-body">
+                                                <div>
+                                                    <nav style="float:right">
+                                                        @*    <button class="btn btn-primary mr-3" onclick="return Add_Leave()" type="submit"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i>Add Leave</strong></button>*@
+                                                    </nav>
+                                                </div>
+                                                <br />  <br />  <br />
+                                                <table id="basic-datatable1" class="table table-striped table-bordered border-bottom table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Total PL</th>
+                                                            <th>Total CL</th>
+                                                            <th>Total EL</th>
+                                                            <th>Total Leave</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>@user.Total_PL</td>
+                                                            <td>@user.Total_CL</td>
+                                                            <td>@user.Total_EL</td>
+                                                            <td>@user.Total_Leave</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            @*<div class="modal fade" id="Model_Leave_Add" tabindex="-1" role="dialog" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            @using (Ajax.BeginForm("Leave_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAdminUserUpdateLeave" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "return submitLeave()" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Add Leave </h5>
+                                                        <button class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="form-label">Leave  Type <span class="text-red">*</span></label>
+                                                                    <input type="hidden" name="User_ID" id="User_ID" value="@user.User_ID">
+                                                                    <select class="form-control" name="Leave_Type" id="Leave_Type" data-placeholder="Choose Leave Type" required>
+                                                                        <option value=""> Select Leave Type</option>
+                                                                        <option value="LWPS">LWPS</option>
+                                                                        <option value="PL">PL</option>
+                                                                        <option value="CL">CL</option>
+                                                                        <option value="EL">EL</option>
+                                                                        <option value="EL">SL</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="form-label">Leave Days <span class="text-red">*</span></label>
+                                                                    <input type="number" name="leave_days" required style="margin-top:0px;" id="leave_days" class="form-control" min="1" placeholder="Enter Leave Days" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="form-label">Reason <span class="text-red">*</span></label>
+                                                                    <textarea name="reason" id="reason" required style="margin-top:0px;" class="form-control" rows="2" cols="20"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                                                        <button type="submit" id="btnaddleave" name="Command" value="Save" class="btn btn-primary"><i class="feather feather-save"></i>&ensp;Save changes</button>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="tab251">
+                    @using (Ajax.BeginForm("Emp_Change_Password", "Access",
+new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAdminUserUpdate" },
+new { id = "form", enctype = "multipart/form-data", role = "form", onsubmit = "return submitEmpUpdate()" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="card-body">
+                            <input type="hidden" id="User_ID" name="User_ID" value="@user.User_ID" />
+
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="mb-3">Change Password</h5>
+                                </div>
+                                @*<div class="col-md-4 mb-3">
+                                    <label class="form-label">Old Password</label>
+                                    <input type="password" name="Old_Password" id="Old_Password"
+                                           required
+                                           class="form-control" />
+                                </div>*@
+
+                                <!-- Account Number -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">New Password</label>
+                                    <input type="password" name="New_Password" id="New_Password"
+                                           class="form-control" required/>
+                                </div>
+
+                                <!-- Bank Name -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input type="password" name="Confirm_password" id="Confirm_password"
+                                           class="form-control" required/>
+                                </div>
+
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="row">
+                                <div class="col-12 text-end">
+                                    <button type="submit" class="btn btn-info">
+                                        <i class="fa fa-save"></i>&ensp;Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="tab-pane" id="tablUsrRight">
+                    <div class="card-body">
+                        @using (Ajax.BeginForm("SaveUserRights", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUserRight" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form" }))
+                        {
+
+                            <h5>User Module Access</h5>
+                            <hr />
+                            <input type="hidden" id="User_Right_Id" name="User_Right_Id" value="@rights.User_Right_Id" />
+                            <input type="hidden" id="User_ID" name="User_ID" value="@user.User_ID" />
+                            if (MenuRights != null)
+                            {
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="custom-controls-stacked">
+                                            @if (MenuRights.Employees == true)
+                                            {
+                                                <label class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" name="Employees" @(rights.Employees == true ? "checked" : "")>
+                                                    <span class="custom-control-label">Employees</span>
+                                                </label>
+                                            }
+                                            @if (MenuRights.Assets == true)
+                                            {
+                                                <label class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" name="Assets" @(rights.Assets == true ? "checked" : "")>
+                                                    <span class="custom-control-label">Assets</span>
+                                                </label>
+                                            }
+                                            @if (MenuRights.Task == true)
+                                            {
+                                                <label class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" name="Task" @(rights.Task == true ? "checked" : "")>
+                                                    <span class="custom-control-label">Task</span>
+                                                </label>
+                                            }
+                                            @if (MenuRights.NoticeBoard == true)
+                                            {
+                                                <label class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" name="NoticeBoard" @(rights.NoticeBoard == true ? "checked" : "")>
+                                                    <span class="custom-control-label">NoticeBoard</span>
+                                                </label>
+                                            }
+                                            @if (MenuRights.Attendance == true)
+                                            {
+                                                <label class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" name="Attendance" @(rights.Attendance == true ? "checked" : "")>
+                                                    <span class="custom-control-label">Attendance</span>
+                                                </label>
+                                            }
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6">
+                                        @if (MenuRights.Vouchers == true)
+                                        {
+                                            <label class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" name="Vouchers" @(rights.Vouchers == true ? "checked" : "")>
+                                                <span class="custom-control-label">Vouchers</span>
+                                            </label>
+                                        }
+                                        @if (MenuRights.Salary_Generator == true)
+                                        {
+                                            <label class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" name="Salary_Generator" @(rights.Salary_Generator == true ? "checked" : "")>
+                                                <span class="custom-control-label">Salary Generator</span>
+                                            </label>
+                                        }
+                                        @if (MenuRights.Document_Generator == true)
+                                        {
+                                            <label class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" name="Document_Generator" @(rights.Document_Generator == true ? "checked" : "")>
+                                                <span class="custom-control-label">Document Generator</span>
+                                            </label>
+                                        }
+                                        @if (MenuRights.Document_Storage == true)
+                                        {
+                                            <label class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" name="Document_Storage" @(rights.Document_Storage == true ? "checked" : "")>
+                                                <span class="custom-control-label">Document Storage</span>
+                                            </label>
+                                        }
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-end">
+                                            <div class="form-group">
+                                                <button type="submit" value="Save" class="btn btn-info">
+                                                    <i class="fa fa-save"></i>&ensp;Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                        }
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- End Row-->
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script type="text/javascript">
+    var isadmin = true;
+    var todaydate = new Date();
+
+    var month = todaydate.getMonth() + 1;
+    var longmonth = todaydate.toLocaleString('default', { month: 'long' })
+
+    var year = todaydate.getFullYear();
+    var tdate = todaydate.getDate();
+    var d = $("#DOB").val();
+
+    if (month < 9) {
+        month = "0" + month;
+
+    }
+    if (tdate < 10) {
+        tdate = "0" + tdate;
+    }
+    var maxDate = tdate + " " + longmonth + " " + year;
+    $('#DOB').datepicker({
+        dateFormat: 'dd MM yy',
+        hideIfNoPrevNext: true,
+        duration: "slow",
+        maxDate: getFormattedDate(new Date()),
+        minDate: new Date(1889, 6, 12)
+
+
+    });
+    $('#Date_of_join').datepicker({
+        dateFormat: 'dd MM yy',
+        hideIfNoPrevNext: true,
+        duration: "slow",
+
+        maxDate: getFormattedDate(new Date()),
+        minDate: new Date(1889, 6, 12)
+
+
+    });
+
+    function isSafeFormula(formula, allowedVariables) {
+        if (!formula) return false;
+
+        formula = formula.trim();
+
+        // Basic safety pattern
+        const allowedPattern = /^[0-9a-zA-Z\s\+\-\*\/\.\(\)]+$/;
+        if (!allowedPattern.test(formula)) return false;
+
+        // Work with lowercase versions
+        let formulaCopy = formula.toLowerCase();
+        const allowedLower = allowedVariables.map(v => v.toLowerCase());
+
+        // Replace allowed variables with dummy values
+        allowedLower.forEach(variable => {
+            const regex = new RegExp('\\b' + variable + '\\b', 'gi'); // case-insensitive
+            formulaCopy = formulaCopy.replace(regex, '1');
+        });
+        if (/[a-z]/.test(formulaCopy)) return false;
+        try {
+            const result = new Function(`return (${formulaCopy});`)();
+            return !isNaN(result);
+        } catch {
+            return false;
+        }
+    }
+    function OnFormBegin() {
+        const formulaFields = [
+            "BASIC", "HRA", "DA", "TA", "BONUS", "LEAVE",
+            "OTRate", "PH", "SPECIALALLOWANCE", "OTHERALLOWANCE",
+            "PF", "PT", "ESIC", "CANTEEN", "HRA_DEDUCT", "TRAVEL", "ADVANCE",
+            "Uniform", "Welfare", "Other"
+        ];
+        const allowedVars = formulaFields;
+        const requiredFields = [
+            "BASIC", "HRA", "DA", "TA", "BONUS", "LEAVE",
+            "OTRate", "PH", "SPECIALALLOWANCE", "OTHERALLOWANCE",
+            "PF", "PT", "ESIC", "CANTEEN", "HRA_DEDUCT", "TRAVEL", "ADVANCE",
+            "Uniform", "Welfare", "Other"];
+
+        let valid = true;
+
+        $('input').removeClass('is-invalid');
+
+        // Required fields
+        requiredFields.forEach(function (fieldId) {
+            const $field = $('#' + fieldId);
+            const val = $field.val();
+            if (!val || val.trim() === "") {
+                $field.addClass('is-invalid');
+                valid = false;
+            }
+        });
+
+        // Formula field validation
+        $('input[type="text"]').each(function () {
+            debugger
+            const $field = $(this);
+            const fieldName = $field.attr('name');
+            const val = $field.val();
+            if (val && val.trim() !== "" && formulaFields.includes(fieldName)) {
+                if (!isSafeFormula(val, allowedVars)) {
+                    $field.addClass('is-invalid');
+                    valid = false;
+                }
+            }
+        });
+
+        if (!valid) {
+            alert('Some fields are empty or have invalid formulas.');
+        }
+
+        return valid; // Returning false cancels submission
+    }
+    function getFormattedDate(date) {
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+        return day + ' ' + longmonth + ' ' + year;
+    }
+    function AadharValidate() {
+
+        var aadhar = document.getElementById("Adharcard_No").value;
+        var adharcardTwelveDigit = /^\d{12}$/;
+
+        if (aadhar != '') {
+            if (aadhar.match(adharcardTwelveDigit)) {
+                return true;
+            }
+
+            else {
+                alert("Enter valid Aadhar Number");
+                return false;
+            }
+        }
+    }
+    function PancardValidate() {
+        var pan = document.getElementById("PanCard_No").value;
+        var panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+        if (!panPattern.test(pan)) {
+            alert("Invalid PAN number. Format: ABCDE1234F");
+            document.getElementById("PanCard_No").focus();
+        }
+    }
+
+    function validateIFSC() {
+        const ifsc = document.getElementById("IFSC_No").value;
+        const ifscPattern = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+        if (!ifscPattern.test(ifsc)) {
+            alert("Invalid IFSC code. Format: 4 letters, 0, then 6 alphanumeric characters.");
+            document.getElementById("IFSC_No").focus();
+        }
+    }
+
+    function checkDec(el) {
+        var ex = /^[0-9]+\.?[0-9]*$/;
+        if (ex.test(el.value) == false) {
+            el.value = el.value.substring(0, el.value.length - 1);
+        }
+    }
+    var isSubmitted = false;
+
+    function stopMultipleSubmitEmpUpdate() {
+        if (!isSubmitted) {
+            $("#btnupdateEmp").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#btnupdateEmp").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitEmpUpdate() {
+
+        stopMultipleSubmitEmpUpdate();
+
+        return isSubmitted;
+    }
+
+    function stopMultipleSubmitChangePwd() {
+        if (!isSubmitted) {
+            $("#btnchangepwd").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#btnchangepwd").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitChangePwd() {
+
+        stopMultipleSubmitChangePwd();
+
+        return isSubmitted;
+    }
+
+    function stopMultipleSubmitLeave() {
+        if (!isSubmitted) {
+            $("#btnaddleave").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#btnaddleave").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitLeave() {
+
+        stopMultipleSubmitLeave();
+
+        return isSubmitted;
+    }
+
+    function stopMultipleSubmitAdderss() {
+        if (!isSubmitted) {
+            $("#btnadd").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#btnadd").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitAdderss() {
+
+        stopMultipleSubmitAdderss();
+
+        return isSubmitted;
+    }
+
+    function stopMultipleSubmitEducation() {
+        if (!isSubmitted) {
+            $("#savebtnedu").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#savebtnedu").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitEducation() {
+
+        stopMultipleSubmitEducation();
+
+        return isSubmitted;
+    }
+
+    function stopMultipleSubmitRelation() {
+        if (!isSubmitted) {
+            $("#savebtnRel").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#savebtnRel").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitRelation() {
+
+        stopMultipleSubmitRelation();
+
+        return isSubmitted;
+    }
+
+    function stopMultipleSubmitExp() {
+        if (!isSubmitted) {
+            $("#savebtnexp").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#savebtnexp").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitExp() {
+
+        stopMultipleSubmitExp();
+
+        return isSubmitted;
+    }
+    function update() {
+        var end_Date = document.getElementById("reportrange").value;
+
+    }
+    function stopMultipleSubmitDoc() {
+        if (!isSubmitted) {
+            $("#savebtndoc").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#savebtndoc").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitDoc() {
+
+        stopMultipleSubmitDoc();
+
+        return isSubmitted;
+    }
+
+</script>
+
+
+<script>
+    function orignalval() {
+        var dtaa = $("#progvalue").val();
+        return dtaa;
+    }
+    function safuprogress() {
+        var dtaa = $("#progvalue").val();
+        // alert(dtaa);
+        var formetendval = dtaa.toString().split(".")[0];
+        return formetendval;
+    }
+
+    let circleprogress = document.querySelector("#circleprogress");
+    let circleendvalue = document.querySelector("#Attendanceval");
+
+    let progressvalue = 0;
+    let counter = 0;
+
+
+    let progress = setInterval(() => {
+        let Attendencedata = safuprogress();
+        if (Attendencedata < 1) {
+            document.getElementById("back").style.background = `conic-gradient( #36f 0 ${progressvalue}%,ff726f 0 10%)`;
+        }
+        else {
+            progressvalue++;
+            // console.log(circleendvalue);
+
+            // alert(Attendencedata);
+            //  alert(Attendencedata.toString().split(".")[0]);
+            document.getElementById("Attendanceval").innerHTML = progressvalue;
+            document.getElementById("back").style.background = `conic-gradient( #36f 0 ${progressvalue}%,silver 0 10%)`;
+            //    document.getElementById("circleprogress").style.borderColor = `conic-gardient(
+            //    red ${progressvalue} * 3.6deg,
+            //    green ${progressvalue} * 3.6deg
+
+            //)`;
+            // console.log(progressvalue);
+            // alert(progressvalue);
+        }
+        if (progressvalue == Attendencedata) {
+            // let circleendvalue = document.querySelector("#Attendanceval").innerHTML;
+            //console.log(circleendvalue);
+            document.getElementById("Attendanceval").innerHTML = orignalval();
+            clearInterval(progress);
+
+        }
+    }, 100);
+</script>

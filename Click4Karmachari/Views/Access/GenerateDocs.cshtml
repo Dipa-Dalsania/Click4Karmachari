@@ -1,0 +1,55 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "GenerateDocs";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<Generated_Documents> gendocs = ViewBag.gendocs;
+}
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">List of Documents</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header border-bottom-0">
+                <div class="card-title"></div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable" class="table table-hover table-striped table-bordered text-nowrap border-bottom">
+                        <thead>
+                            <tr>
+                                <th>Doc Id. </th>
+                                <th>Doc No.</th>
+                                <th>Employee Name</th>
+                                <th>Doc Name</th>
+                                <th>Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (gendocs != null)
+                            {
+                                foreach (Generated_Documents _newobj in gendocs)
+                                {
+
+                                    <tr>
+                                        <td style="text-transform: capitalize">@_newobj.Gen_doc_id</td>
+                                        <td style="text-transform: capitalize">@_newobj.Gen_doc_no</td>
+                                        <td style="text-transform: capitalize">@_newobj.UserMaster.User_Name</td>
+                                        <td style="text-transform: capitalize">@_newobj.Gen_doc_Title</td>
+                                        <td><a class="btn btn-info btn-sm" href="PrintDocument?Gen_doc_id=@_newobj.Gen_doc_id" target="_blank" data-toggle="tooltip" data-original-title="Print"><i class="feather feather-printer fa-2x" aria-hidden="true"></i></a></td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

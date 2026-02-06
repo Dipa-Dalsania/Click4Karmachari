@@ -1,0 +1,138 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    CommonClasses util = new CommonClasses();
+    ViewBag.Title = "CustomDocument_Add";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    Custom_Document v = ViewBag.c;
+}
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Add New Document</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+              
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                    @using (Ajax.BeginForm("CustomDocument_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateCustomDocument" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        if (v != null)
+                        {
+                            <input type="hidden" name="Add_Cust_Id" id="Add_Cust_Id" value="@v.Cust_Id" />
+                            <div class="row">
+                                <div class="col-lg-12"></div>
+                                <div class="col-lg-7">
+                                    <div class="form-group">
+                                        <label class="form-label">Document Name <span class="text-red">*</span></label>
+                                        <input type="text" name="Add_Doc_Name" placeholder="Enter Document Name" id="Add_Doc_Name" value="@v.Doc_Name" class="form-control" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Document Description</label>
+                                        <textarea class="content" name="Add_Doc_Disc" id="Add_Doc_Disc">@Html.Raw(v.Doc_Disc)</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        /NAME/ = Employee Name<br />
+                                        /DESG/ = Designation<br />
+                                        /DOJ/ = Date Of Joining<br />
+                                        /REPORTPERSON/ = Reporting Person<br />
+                                        /COMPANY/ = Company Name<br />
+                                        /DEPARTMENT/ =Department<br />
+                                        /POSTEDAT/ = Posted Date<br />
+                                        /COMPANYEMAIL/ = Company Email<br />
+                                        /DEPARTMENT/ = Department<br />
+                                        /TEAMNAME/ = TeamName<br />
+                                        /DOB/ = Employee Date Of Birthday<br />
+                                        /MOBILE/ = Employee Mobile<br />
+                                        /CITY/ = Employee City<br />
+                                        /Address/ = Employee Address<br />
+                                        /TodayDate/ = Today Date
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        }
+                        else
+                        {
+                            <input type="hidden" name="Add_Cust_Id" id="Add_Cust_Id" value="0" />
+                            <div class="row">
+                                <div class="col-lg-12"></div>
+                                <div class="col-lg-7">
+                                    <div class="form-group">
+                                        <label class="form-label">Document Name <span class="text-red">*</span></label>
+                                        <input type="text" name="Add_Doc_Name" placeholder="Enter Document Name" id="Add_Doc_Name" class="form-control" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Document Description</label>
+                                        <textarea class="content" name="Add_Doc_Disc" id="Add_Doc_Disc"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        /NAME/ = Employee Name<br />
+                                        /DESG/ = Designation<br />
+                                        /DOJ/ = Date Of Joining<br />
+                                        /REPORTPERSON/ = Reporting Person<br />
+                                        /COMPANY/ = Company Name<br />
+                                        /DEPARTMENT/ =Department<br />
+                                        /POSTEDAT/ = Posted Date<br />
+                                        /COMPANYEMAIL/ = Company Email<br />
+                                        /DEPARTMENT/ = Department<br />
+                                        /TEAMNAME/ = TeamName<br />
+                                        /DOB/ = Employee Date Of Birthday<br />
+                                        /MOBILE/ = Employee Mobile<br />
+                                        /CITY/ = Employee City<br />
+                                        /Address/ = Employee Address<br />
+                                        /TodayDate/ = Today Date
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                        <br/>
+                        if (v != null)
+                        {
+                            <div class="col-lg-12">
+                                <div class="card-footer">
+                                    <a href="~/Access/CustomDocument_List" class="btn btn-info"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
+                                    <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-primary"><i class="fa fa-save"></i>&ensp;Save</button>
+                                    <button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-lg-12">
+                                <div class="card-footer modal-new-footer">
+                                    <a href="~/Access/CustomDocument_List" class="btn btn-info"><i class="fa fa-arrow-left"></i>&ensp;Back</a>
+                                    <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-primary"><i class="fa fa-save"></i>&ensp;Save</button>
+                                </div>
+                            </div>
+                        }
+
+                    }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+         

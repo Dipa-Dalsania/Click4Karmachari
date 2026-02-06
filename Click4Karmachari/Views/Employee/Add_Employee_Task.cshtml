@@ -1,0 +1,155 @@
+﻿@using ClickKarmachari;
+@using ClickKarmachari.Models;
+@{
+    ViewBag.Title = "Add_Employee_Task";
+   Layout = "~/Views/Employee/Employee_Layout_new.cshtml";
+    ViewBag.PageTitle = "Add Employee Daily Task";
+}
+<br/>
+<br/>
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+
+                    <nav style="float:right">
+                        <input type="button" onclick="return addRow()" name="btnaddrow" id="btnaddrow" class="btn btn-primary" value="Add Task" />
+                    </nav>
+ 
+                <div>
+
+                    <table class="table table-hover" id="productTable" style="border-top-style: hidden;">
+
+                        <tbody>
+                            <tr id="myrow1">
+
+                                <td style="border-top: 0px;">
+                                    <input type="text" id="txttask1" class="form-control form-control-dark " placeholder="Enter Task Details" />
+
+                                </td>
+                                <td >
+                                    <button type="button" onclick="return removeRow(1)" name="btnSalesDetailremove" id="btnSalesDetailremove1" style="border: 1px solid #d3dfea;border-radius: 5PX; background: unset;"><i class="fa fa-close fa-2x" style="color: #3366ff"></i></button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                </div>
+                <div class="col-lg-6">
+                   <input type="button" value="Save" id="btnsave" onclick="return Add_task_details()" class="btn btn-info" style="width: 100px;">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function addRow() {
+        //sortTable();
+        var tdata = document.getElementById("productTable");
+        var rowcount = tdata.rows.length+1;
+        if ($("#productTable tbody").length == 0) {
+            $("#productTable").append("<tbody></tbody>");
+
+        }
+
+       
+        $("#productTable tbody").append(
+            "<tr id='myrow" + rowcount + "'>" +
+           
+            "<td style='border-top:0px;'><input type='text' id='txttask" + rowcount + "' class='form-control form-control-dark ' placeholder='Enter Task Details'/></td>" +
+            "<td style='border-top:0px;'><button type='button' onclick='return removeRow(" + rowcount + ")' name='btnSalesDetailremove' id='btnSalesDetailremove" + rowcount + "' style='border: 1px solid #d3dfea; border - radius: 5PX; background: unset;'><i class='fa fa-close fa-2x' style='color: #3366ff'></i></button></td>" +
+            "</tr>"
+
+        );
+       
+
+    }
+    function removeRow(x) {
+       
+        document.getElementById('productTable').deleteRow(x-1);
+
+        var tdata = document.getElementById("productTable");
+        var tBody = tdata.getElementsByTagName('tbody')[0];
+        var tableRow = tBody.getElementsByTagName('tr');
+      
+
+        for (var t = 0; t < tableRow.length; t++)
+        {
+            var nid = t + 1;
+            tableRow[t].id = "myrow" + nid;
+
+
+            //product_name
+            tableRow[t].cells[0].getElementsByTagName('input')[0].id = "txttask" + nid;
+            var did = document.getElementById("txttask" + nid);
+            var txtid = did.id;
+
+          
+         
+            //removerow button
+            tableRow[t].cells[1].getElementsByTagName('button')[0].id = "btnSalesDetailremove" + nid;
+            var did = document.getElementById("btnSalesDetailremove" + nid);
+            var txtid = did.id;
+            document.getElementById(txtid).removeAttribute("onclick");
+            document.getElementById(txtid).setAttribute("onclick", "return removeRow(" + nid + ")");
+
+
+           
+        }
+
+
+
+       
+    }
+    function Add_task_details() {
+
+        var valueArray = [];
+            var tdata = document.getElementById("productTable");
+            var rowcount = tdata.rows.length;
+
+       
+        for (i = 1; i <= rowcount; i++)
+        {
+            var task_name = document.getElementById("txttask" + i).value;
+            valueArray.push(task_name);
+        }
+
+        //var isSubmitted = false;
+
+        //if (!isSubmitted) {
+        //    $("#btnsave").prop('disabled', true);
+        //    isSubmitted = true;
+        //    return true;
+
+        //}
+        $.ajax({
+            type: "POST",
+            url: "/Employee/Add_task",
+            dataType: "json",
+            data: { values: valueArray },
+            success: function (data) {
+                if (data.rescode == 0) {
+            $("#btnsave").prop('disabled', true);
+            isSubmitted = true;
+                    var url = window.location.origin + "/Employee/Employee_Task_List?Taskdate=" + data.date;
+                    if (url) {
+                        window.location = url;
+                        
+                    }
+                }
+                else {
+                    alert(data.resmsg);
+                }
+            }
+        });
+       
+
+    }
+</script>

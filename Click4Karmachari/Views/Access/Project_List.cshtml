@@ -1,0 +1,401 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "Project_List";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+
+    List<UserMaster> u = ViewBag.u;
+    List<Project_Assign_Master> project_Asg = ViewBag.project_assign;
+    List<Project_Master> project = ViewBag.project;
+    var id = ViewBag.proid;
+    List<UserMaster> emp = ViewBag.emp;
+    Project_Master proj = ViewBag.projectdata;
+    List<UserMaster> _notincdlued = new List<UserMaster>();
+    if (ViewBag.proid != null)
+    {
+        foreach (UserMaster user in emp)
+        {
+            bool _found = false;
+            foreach (Project_Assign_Master _usr in proj.Project_Assign_Master)
+            {
+                if (user.User_ID == _usr.UserMaster.User_ID)
+                {
+                    _found = true;
+                }
+            }
+            if (_found == false)
+            {
+                _notincdlued.Add(user);
+            }
+        }
+    }
+}
+
+<link href="~/Content/animation.css" rel="stylesheet" />
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Project List</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="d-flex align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <button id="addanim" class="btn btn-primary" onclick="return Add_Project(0,'')" type="submit"><i class="feather feather-plus fs-15 my-auto mr-2"></i><strong>Add Project</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+<!-- Row -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable1" class="table table-striped table-bordered border-bottom table-hover">
+                        <thead>
+                            <tr>
+
+
+                                <th>Project Name</th>
+                                <th>Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (project != null)
+                            {
+                                foreach (Project_Master _newobj in project)
+                                {
+                                    <tr>
+                                        <td style="text-transform:uppercase">@_newobj.Project_Name</td>
+                                        <td>
+                                            @using (Ajax.BeginForm("Project_Delete", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminProject" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                                            {
+                                                <input type="hidden" name="Proj_Id" id="Proj_Id" value="@_newobj.Project_Id" />
+                                                <button class="btn btn-icon btn-primary" onclick="return Add_Project(@_newobj.Project_Id,'@_newobj.Project_Name')"><strong><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></strong></button>
+                                                <Button type="submit" id="deletepro" name="Command" value="Delete" class="btn btn-danger btn-icon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="return confirm('Are you sure you want to Delete?')" ;> <i class="feather feather-trash-2"></i></Button>
+                                                @*<a href="#" class="btn btn-icon btn-info" onclick=" return loadData(@_newobj.Project_Id  )"><strong><i class="feather feather-plus fs-15 my-auto mr-2" data-toggle="tooltip" data-original-title="View Project and Assign to User"></i></strong>Add Employee</a>*@
+
+                                            }
+
+                                        </td>
+                                      
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Row-->
+<!-------------------Add Proejct------------------------------------------->
+<div class="modal fade" id="Model_Add_Project" tabindex="-1" role="dialog" aria-hidden="true">
+    @using (Ajax.BeginForm("Project_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminProject" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Project</h5>
+                    <button class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Project_Id" id="Project_Id" value="0" />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Project Name <span class="text-red">*</span></label>
+                                <input type="text" name="Project_Name" id="Project_Name" placeholder="Enter Project Name" class="form-control" required autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                    <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info"><i class="feather feather-save"></i>&ensp;Save</button>
+                    <button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+
+<!--  add employe name model-->
+<div class="modal fade" id="Model_Add_empname" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-scrollable ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Employee Name</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input type="hidden" name="Assign_Id" id="Assign_Id" value="0" />
+                    <input type="hidden" name="Project_Id" id="pid" />
+                    <div class="col-lg-4 page-rightheader ml-md-auto">
+                        <div class="col-lg-6 linkadd" id="demo">
+                            <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    @using (Ajax.BeginForm("Project_Emp_Delete", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminProjectE" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                    {
+                        <input type="hidden" name="msgp1" id="msgp1" />
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <br />    
+                                <table class=" table table-hover table-bordered table-striped " id="basic-datatable1">
+                                    <thead>
+                                        <tr>
+                                            <th>Project_name</th>
+                                            <th>Employee</th>
+                                            <th>Operation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="tbody">
+                                    </tbody>
+                                </table>
+
+                                <div class=" ">
+                                    <span id="msg"> </span>
+                                </div>
+                                <br /> 
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="Model_Emp_Project" tabindex="-1" role="dialog" aria-hidden="true">
+
+    @using (Ajax.BeginForm("Project_Emp_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminProjectE" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Employee</h5>
+                    <button class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <span id="show"></span>
+                    <input type="hidden" name="Assign_Id" id="Assign_Id" value="0" />
+                    <input type="hidden" name="Project_Id" id="Pro_Id" />
+                    <div class="row">
+                        <div class="col-lg-6" id="demo1">
+                            <div class="form-group">
+                                <label class="form-label">Employee Name <span class="text-red">*</span></label>
+                                <select name="Emp_Id" id="Emp_Id" class="form-control" data-placeholder="Select Employee" required>
+                                    <option value="">Select Employee </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6" id="demo1">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                    <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info"><i class="feather feather-save"></i>&ensp;Save</button>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+@*delete model*@
+<div class="modal fade" id="deleteconfirm" tabindex="-1" role="dialog" aria-hidden="true">
+
+    @using (Ajax.BeginForm("Project_Emp_Delete", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminProjectE" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmation</h5>
+                    <button class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <span id="show"></span>
+
+                    <input type="hidden" name="msgp" id="msgp" />
+                    <div class="row">
+                        <div class="col-lg-6" id="">
+                            <div class="form-group">
+                                <span>Are you sure you want to delete this record !</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6" id="">
+                            <div class="form-group">
+                                <Button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Delete" onclick="return confirm('Are you sure you want to Delete?')" ;><i class="feather feather-trash-2"></i></Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+<script>
+
+
+    function loadData(id) {
+        $("#pid").val(id);
+        $("#Pro_Id").val(id);
+
+        var link = "";
+        link += '<a href="#" class="btn btn-primary"  data-toggle="tooltip" data-placement="top" title="Assign Project" onclick="return getbyID(' + id + ' ,' + 0 + ',' + 0 + ',' + "" + ')"><strong><i class="feather feather-plus fs-15 my-auto mr-2" ></i></strong>Add Employee</a>';
+
+        $(".linkadd").html(link);
+        $.ajax({
+            url: "/Access/emploPRojectboth/" + id,
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                
+                var html = '';
+                var datatake = data;
+                $.each(data, function (key, item) {
+
+                    html += '<tr>';
+                    html += '<td>' + item.Project_Name + '</td>';
+                    html += '<td>' + item.User_Name + '</td>';
+                    html += '<td> <Button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Delete" onclick="return confirmdelt(' + item.Project_Assign_ID + ')" ;> <i class="feather feather-trash-2"></i></Button ></td>';
+                    /*  html += '<td>' + item.Project_Assign_ID + '</td>';*/
+                    //html += '<td><a id="deletebtn" name="Command" value="Delete" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Delete" onclick="return confirmdelt('+ item.Project_Assign_ID +');" >Delete</a></td>';
+                    /*  html += '<td><Button type="submit id="deletebtn" name="Command" value="Delete" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Delete" onclick="return deleteID(' + item.Project_Assign_ID + ');" >Delete</Button></td>';*/
+                    //  html += '<td><a href="#"  class="btn btn-success" onclick="return getbyID(' + item.Project_Id +' ,'+ 0 +','+ 0 +','+ ""+')">Add Name</a> <input type="hidden" value="' + item.Project_Id + '" id="addprojID" name="Project_Id" /></td>';
+                    html += '</tr>';
+                });
+                $('.tbody').html(html);
+
+                if (datatake != "") {
+
+                    // $(".linkadd").show();
+                    $("#msg").text("");
+                }
+                else {
+                    // $(".linkadd").hide();
+                    $("#msg").text("No Data Found ! 'This Project is Not Assign to any Employee yet'.").css('color', '#ff7088');
+                }
+
+
+                $('#Model_Add_empname').modal('show');
+                /* $('#myModal').modal('hide');*/
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+        return false;
+    }
+
+    function getbyID(id, Project_Assign_Id, Emp_Id, User_Name) {
+        // Model_Add_Project
+        //  alert(Project_Id);
+        $("#Pro_Id").val(id);
+        $("#Assign_Id").val(Project_Assign_Id);
+
+        var count = 0;
+        var html = "";
+        $('#Model_Add_empname').modal('hide');
+        $.ajax({
+            url: "/Access/dropdownEmploeName/" + id,
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                // alert(result);
+                //  $("#Emp_Id").empty();
+                
+                $('#Emp_Id option[value!=""]').remove();
+                $("#Emp_Id").append("<option value='" + +"'>" + 'Select Employee' + "</option> ");
+                $.each(result, function (Key, item) {
+                    // alert(item.User_Name);
+                    $("#Emp_Id").append("<option value='" + item.User_ID + "' >" + item.User_Name + "</option>");
+
+
+                    count++;
+                });
+
+
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+
+        });
+
+        $('#Model_Emp_Project').modal('show');
+
+        return false;
+    }
+    function deleteID(Project_Assign_Id) {
+        alert(Project_Assign_Id);
+
+        var status = confirm("Are you sure you want to delete!");
+        if (status == true) {
+            return true;
+        }
+        else {
+            return false;
+        }
+ 
+    }
+    function confirmdelt(Project_Assign_Id) {
+        //  alert(Project_Assign_Id);
+        document.getElementById("msgp1").value = Project_Assign_Id;
+      
+        // $('#deleteconfirm').modal('show');
+        // alert(Project_Assign_Id);
+        var status = confirm("Are you sure you want to delete!");
+        if (status == true) {
+            $('#Model_Add_empname').modal('hide');
+            return true;
+        }
+        else {
+            $('#Model_Add_empname').modal('show');
+            return false;
+        }
+
+
+    }
+</script>

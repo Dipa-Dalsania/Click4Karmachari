@@ -1,0 +1,200 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    CommonClasses util = new CommonClasses();
+    ViewBag.Title = "Gift_List";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<Gift_Master> gift = ViewBag.gift;
+    List<Festival_Master> Fest = ViewBag.Fest;
+    List<UserMaster> user = ViewBag.user;
+    DateTime Date = Convert.ToDateTime(DateTime.Now);
+    string str1 = Date.ToString("dd MMMM yyyy");
+}
+
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Gift</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <button class="btn btn-primary mr-3" onclick="return Add_Gift(0,'','','','@str1','')" type="submit"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i>Add Gift</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable1" class="table table-striped table-bordered border-bottom table-hover">
+                        <thead>
+                            <tr>
+                                <th>Gift </th>
+                                <th>Employee Name</th>
+                                <th>Festival</th>
+                                <th>Date </th>
+                                <th>Description </th>
+                                <th>Operation</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (gift != null)
+                            {
+                                foreach (Gift_Master _newobj in gift)
+                                {
+
+                                    DateTime GiftDate = Convert.ToDateTime(_newobj.Date);
+                                    string str = GiftDate.ToString("dd MMMM yyyy");
+                                    <tr>
+                                        <td style="text-transform: capitalize">@_newobj.Gift_Name</td>
+                                        <td style="text-transform: capitalize">@_newobj.UserMaster.User_Name</td>
+                                        @if (_newobj.Festival_Id == null)
+                                        {
+                                            <td>-</td>
+                                        }
+                                        else
+                                        {
+                                            <td style="text-transform: capitalize">@_newobj.Festival_Master.Fest_Name</td>
+
+                                        }
+                                        <td>@str</td>
+                                        <td style="text-transform: capitalize">@Html.Raw(util.GetTextStringTable(_newobj.Gift_Desc))</td>
+
+                                        <td>
+                                            @using (Ajax.BeginForm("Gift_Delete", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminGift" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                                            {
+                                                <button class="btn btn-icon btn-primary" onclick="return Add_Gift(@_newobj.Gift_Id,'@_newobj.Gift_Name',@_newobj.User_Id,@_newobj.Festival_Id,'@str','@util.GetTextStringScript(_newobj.Gift_Desc)')" type="submit"><strong><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></strong></button>
+                                                <input type="hidden" name="gift_id" id="gift_id" value="@_newobj.Gift_Id" />
+                                                <Button type="submit" id="deleteGift" name="Command" value="Delete" class="btn btn-danger btn-icon" data-toggle="tooltip" data-original-title="Delete" onclick="return confirm('Are you sure you want to Delete?')" ;><i class="feather feather-trash-2"></i></Button>
+                                            }
+
+
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-------------------Add Gift------------------------------------------->
+<div class="modal fade" id="Model_Add_Gift" tabindex="-1" role="dialog" aria-hidden="true">
+
+    @using (Ajax.BeginForm("Gift_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminGift" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "submitgift()" }))
+    {
+    <div class="modal-dialog">
+        @Html.AntiForgeryToken()
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Gift </h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="Gift_Id" id="Gift_Id" value="0" />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="form-label">Gift Name <span class="text-red">*</span></label>
+                            <input type="text" name="Gift_Name" id="Gift_Name" class="form-control" placeholder="Enter Gift" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="form-label">Employee <span class="text-red">*</span></label>
+                            <select class="form-control select2-show-search custom-select" name="User_Id" id="User_Id" data-placeholder="Select Employee" required style="text-transform: capitalize">
+                                <option label="--- Select Employee ---"></option>
+                                @foreach (UserMaster _c in user)
+                                {
+
+                                    <option value=@_c.User_ID>@_c.User_Name</option>
+
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="form-label">Festival <span class="text-red">*</span> </label>
+                            <select class="form-control select2-show-search custom-select" name="Festival_Id" id="Festival_Id" data-placeholder="Select Festival" required style="text-transform: capitalize">
+                                <option label="--- Select Festival ---"></option>
+                                @foreach (Festival_Master F in Fest)
+                                {
+                                    <option value=@F.Fest_Id>@F.Fest_Name</option>
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="form-label">Date </label>
+                           <input type="text" class="form-control fc-datepicker"  name="Date" id="Date" data-single-mode="true" value="@str1" placeholder="01 January 2001" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="form-label">Description <span class="text-red">*</span></label>
+                            <textarea name="Gift_Desc" id="Gift_Desc" class="form-control" rows="1" cols="10" required placeholder="Enter Description"></textarea>
+
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="modal-footer modal-new-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                    <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info"><i class="feather feather-save"></i>&ensp;Save </button>
+                    <button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    </div>
+           
+
+            <script>
+                var isSubmitted = false;
+
+                function stopMultipleSubmitGift() {
+                    if (!isSubmitted) {
+                        $("#savebtn").prop('disabled', true);
+                        isSubmitted = true;
+                        return true;
+                    }
+                    else {
+                        $("#savebtn").prop('disabled', false);
+                        isSubmitted = false;
+                        return false;
+                    }
+                }
+                function submitgift() {
+                    //    var Address_Value = $("#Address_address").val();
+                    //if (Address_Value == "") {
+                    //}
+                    //    else {
+                    stopMultipleSubmitGift();
+                    /*}*/
+
+                    return isSubmitted;
+                }
+            </script>

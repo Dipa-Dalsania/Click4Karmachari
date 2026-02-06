@@ -1,0 +1,363 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "Imp_Document_Upload";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<GetCommericalDocuments_Result> impdoc = ViewBag.impdoc;
+    List<Company_Doc_Heads> heads = ViewBag.Heads;
+
+}
+<style>
+    #fltdatepicker {
+        height: calc(2.200rem + 2px); /* Bootstrap default height for .form-control */
+        padding: 0.375rem 0.75rem; /* Match Bootstrap padding */
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+</style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Commercial Document</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="d-flex align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <button class="btn btn-primary" onclick="return Add_Commerical_Document(0,0,0,'','')" type="submit"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i>Add Document</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+<!-- Row -->
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <div class="card-title"></div>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("Commercial_Documents", "Access", FormMethod.Post))
+                {
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                        <!-- Select Head -->
+                        <div class="col-12 col-md-3">
+                            <label class="form-label mb-0 mt-2">Select Head</label>
+                            <select name="fltHeadId" id="fltHeadId" onchange="getFltCompanyDocHeads2()" data-placeholder="Select Head" class="form-control select2-show-search custom-select">
+                                <option value="0">Select Head</option>
+                                @foreach (Company_Doc_Heads _u in @heads)
+                                {
+                                    if (ViewBag.fltHeadId != null)
+                                    {
+                                        if (ViewBag.fltHeadId == _u.Document_HeadId)
+                                        {
+                                            <option selected value="@_u.Document_HeadId">@_u.HeadName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@_u.Document_HeadId">@_u.HeadName</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="@_u.Document_HeadId">@_u.HeadName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Additional Document Heads -->
+                        <div class="col-12 col-md-3">
+                            <div id="fltdocHeads2"></div>
+                        </div>
+
+                        <!-- Month Picker -->
+                        <div class="col-12 col-md-3">
+                            <label class="form-label">Month</label>
+                            @if (ViewBag.fltdatepicker != null)
+                            {
+                                <input type="text" value="@(DateTime.Parse(ViewBag.fltdatepicker.ToString()).ToString("MM-yyyy"))" class="form-control" placeholder="Select Month" autocomplete="off" name="fltdatepicker" id="fltdatepicker" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" placeholder="Select Month" autocomplete="off" name="fltdatepicker" id="fltdatepicker" />
+                            }
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="col-12 col-md-3">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary w-100">Search</button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @if (impdoc != null)
+            {
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered text-nowrap border-bottom" id="basic-datatable">
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom-0">Month</th>
+                                    <th class="border-bottom-0">Doc Name</th>
+                                    <th class="border-bottom-0">Head</th>
+                                    <th class="border-bottom-0">Operation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (GetCommericalDocuments_Result i in impdoc)
+                                {
+                                    string DMonth = @Convert.ToDateTime(i.DMonth).ToString("yyyy-MM");
+                                    <tr>
+                                        <td style="text-transform: capitalize">@(DateTime.Parse(i.DMonth.ToString()).ToString("yyyy-MM"))</td>
+
+                                        <td style="text-transform: capitalize">@i.DName</td>
+                                        <td style="text-transform: capitalize">@i.Head / @i.Head2</td>
+                                        @using (Ajax.BeginForm("Commercial_Document_Delete", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateCommercial_Add" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                                        {
+
+                                            <td>
+                                                <input type="hidden" name="Document_Id" id="tDocument_Id" value="@i.Document_Id" />
+                                                <a class="btn btn-icon btn-primary"
+                                                   onclick="return Add_Commerical_Document(@i.Document_Id,@i.Document_HeadId,@i.Document_Head2Id,'@DMonth','@i.DName')">
+                                                    <strong><i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></strong>
+                                                </a>
+
+                                                <button type="submit"
+                                                        name="Command"
+                                                        value="Delete"
+                                                        class="btn btn-danger btn-icon"
+                                                        onclick="return confirm('Are you sure you want to Delete?')"
+                                                        data-toggle="tooltip"
+                                                        data-original-title="Delete">
+                                                    <i class="feather feather-trash-2"></i>
+                                                </button>
+                                                <a class="btn btn-success btn-icon" href="@ViewBag.ImagekitDisplayURL\Company_Document\@i.DURL" target="_blank" data-toggle="tooltip" data-original-title="Print"><i class="feather feather-download" aria-hidden="true"></i></a>
+
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<!-- End Row-->
+
+<div class="modal fade" id="Model_Add_Imp_Doc" tabindex="-1" role="dialog" aria-hidden="true">
+    @using (Ajax.BeginForm("Commercial_Documents_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateImp_Document_Add" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "submitdoc()" }))
+    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="col-md-12 p-3 card-left" style="display:none;text-align:center" id="msgdig">
+                    <div class="alert_R" style="border-radius: 5px; color: white;padding:inherit; background-color: #f91a1ab8 ">
+                        <span id="failuremsg"></span>
+                        <span class="closebtn " onclick="this.parentElement.style.display='none';" style="float:right">&times;</span>
+                    </div>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Document</h5>
+                    <button class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <input type="hidden" name="Document_Id" id="Document_Id" value="0" />
+                                <label class="form-label">Document Name <span class="text-red">*</span></label>
+                                <input type="text" required class="form-control" id="DName" name="DName" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Select Head <span class="text-red">*</span></label>
+                                <select name="HeadId" id="HeadId" onchange="getCompanyDocHeads2(0)" required data-placeholder="Select Head" class="form-control select2-show-search custom-select">
+                                    @foreach (Company_Doc_Heads _u in @heads)
+                                    {
+                                        <option value=@_u.Document_HeadId>@_u.HeadName</option>
+                                    }
+                                </select>
+                                <a class="text-primary text-decoration-underline d-flex justify-content-end align-items-end gap-3 mb-3 flex-wrap" target="_blank" href="~/Access/Head">Add Head</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <div id="docHeads2Container"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Month </label>
+                                <input type="text" class="form-control" style="height: 41px;" required placeholder="Select Month" autocomplete="off" name="datepicker" id="datepicker" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">Upload Document </label>
+                            <div class="form-group">
+                                @*<input type="file" name="file" id="file" placeholder="Select Image" value="" class="form-control" />*@
+                                <div class="input-group file-browser">
+                                    <input type="text" class="form-control border-right-0 browse-file" placeholder="Browser File" readonly>
+                                    <label class="input-group-append mb-0">
+                                        <span class="btn ripple btn-primary">
+                                            Browse <input type="file" class="file-browserinput" name="file" id="file" style="display: none;" multiple>
+                                        </span>
+                                    </label>
+                                </div><span class="text-lightpink-red">[ Allow Only .jpg .png .jpeg .pdf .xls .xlsx .txt .docx .ppt(5MB) ]</span>
+                                <script type="text/javascript">
+                                    $('#file').bind('change', function () {
+                                        if ((this.files[0].size / 1024 / 1024) > 5) {
+                                            alert('Sorry, Maximum File size : 5 MB Only ! ');
+                                            $('#file').val('');
+                                        }
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                    <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info"><i class="fa fa-save"></i>&ensp;Save</button>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+
+
+<script type="text/javascript">
+    var isSubmitted = false;
+
+    $("#datepicker").datepicker({
+        format: "mm-yyyy",
+        startView: "months",
+        minViewMode: "months"
+    });
+
+    $("#fltdatepicker").datepicker({
+        format: "mm-yyyy",
+        startView: "months",
+        minViewMode: "months"
+    });
+
+    function getCompanyDocHeads2(hdID) {
+
+        var headId = $("#HeadId").val();
+
+        if (headId !== "") {
+            $.ajax({
+            type: "GET",
+                url: "/Access/GetCompanyDocHeads2?headId=" + parseInt(headId),
+                success: function (data) {
+
+                    var html = '<label class="form-label">Select Head2<span class="text-red">*</span></label>';
+                    html += '<select name="Head2Id" id="Head2Id" class="form-control select2-show-search custom-select" required>';
+                    html += '<option value="">Select Head2</option>';
+
+                    $.each(data, function (i, item) {
+                        if (hdID != 0) {
+                            if (parseInt(hdID) == item.Document_Head2Id) {
+                                 html += `<option selected value="${item.Document_Head2Id}">${item.HeadName}</option>`;
+                             }
+                             else {
+                                 html += `<option value="${item.Document_Head2Id}">${item.HeadName}</option>`;
+                             }
+                         }
+                         else {
+                             html += `<option value="${item.Document_Head2Id}">${item.HeadName}</option>`;
+                         }
+                    });
+
+                    html += '</select>';
+                    $('#docHeads2Container').html(html);
+                    $('#Head2Id').select2();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", xhr.responseText);
+                }
+            });
+        } else {
+            $('#docHeads2Container').empty();
+        }
+    }
+    function getFltCompanyDocHeads2() {
+
+        var headId = $("#fltHeadId").val();
+
+
+        if (headId !== "") {
+            $.ajax({
+            type: "GET",
+                url: "/Access/GetCompanyDocHeads2?headId=" + parseInt(headId),
+                success: function (data) {
+
+                    var html = '<label class="form-label mb-0 mt-2">Select Head2</label>';
+                    html += '<select name="fltHead2Id" id="fltHead2Id"  data-placeholder="Select Head2" class="form-control select2" >';
+                    html += '<option value="0">Select Head2</option>';
+
+                    $.each(data, function (i, item) {
+
+                        if ('@ViewBag.fltHead2Id' != '') {
+                            if (parseInt('@ViewBag.fltHead2Id') == item.Document_Head2Id) {
+                                html += `<option selected value="${item.Document_Head2Id}">${item.HeadName}</option>`;
+                            }
+                            else {
+                                html += `<option value="${item.Document_Head2Id}">${item.HeadName}</option>`;
+                            }
+                        }
+                        else {
+                            html += `<option value="${item.Document_Head2Id}">${item.HeadName}</option>`;
+                        }
+
+                    });
+
+                    html += '</select>';
+                    $('#fltdocHeads2').html(html);
+                    $('#fltHead2Id').select2();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", xhr.responseText);
+                }
+            });
+        } else {
+            $('#fltdocHeads2').empty();
+        }
+    }
+    function stopMultipleSubmitImpDoc() {
+        if (!isSubmitted) {
+            $("#savebtn").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#savebtn").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitdoc() {
+        stopMultipleSubmitImpDoc();
+        return isSubmitted;
+    }
+</script>

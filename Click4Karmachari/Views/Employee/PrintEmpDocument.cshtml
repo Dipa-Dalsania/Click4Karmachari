@@ -1,0 +1,345 @@
+﻿@using ClickKarmachari;
+@{
+
+    ViewBag.Title = "PrintDocument";
+
+    Custom_Document _cust = ViewBag._cust;
+    UserMaster _user = ViewBag._user;
+    Generated_Documents gendocss = ViewBag.gendocs;
+    string str = gendocss.Gen_doc_text;
+    UserMaster user = gendocss.UserMaster;
+
+    str = str.ToString().Replace("/NAME/", user.User_Name).ToString();
+    str = str.ToString().Replace("/DOCNO/", "KJES/OUT/" + gendocss.Gen_doc_no).ToString();
+    str = str.ToString().Replace("/COMPANY/", user.Company_Master.Company_Name).ToString();
+    if (user.Reporting_Person != null)
+    {
+        str = str.ToString().Replace("/REPORTPERSON/", user.UserMaster2.User_Name).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/REPORTPERSON/", "-").ToString();
+    }
+
+    if (user.Date_of_join != null)
+    {
+        str = str.ToString().Replace("/DOJ/", Convert.ToDateTime(user.Date_of_join).ToString("dd/MM/yyyy"));
+    }
+    else
+    {
+        str = str.ToString().Replace("/DOJ/", "-").ToString();
+    }
+
+    if (user.Depart_id != null)
+    {
+        str = str.ToString().Replace("/DEPARTMENT/", user.Department_Master.Department).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/DEPARTMENT/", "-").ToString();
+
+    }
+    if (user.Depart_id != null)
+    {
+        str = str.ToString().Replace("/DESG/", user.Designation_Master.Designation).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/DESG/", "-").ToString();
+    }
+    if (user.Address_Master.FirstOrDefault() != null)
+    {
+        str = str.ToString().Replace("/Address/", user.Address_Master.FirstOrDefault().Add_Address).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/Address/", "-").ToString();
+
+    }
+    if (user.City_Name != null)
+    {
+        str = str.ToString().Replace("/CITY/", user.City_Name.ToString());
+    }
+    else
+    {
+        str = str.ToString().Replace("/CITY/", "-");
+    }
+    if (user.User_Mobile != null)
+    {
+        str = str.ToString().Replace("/MOBILE/", Convert.ToInt64(user.User_Mobile).ToString());
+    }
+    else
+    {
+        str = str.ToString().Replace("/MOBILE/", "-");
+    }
+    if (user.DOB != null)
+    {
+        str = str.ToString().Replace("/DOB/", Convert.ToDateTime(user.DOB).ToString("dd/MM/yyyy"));
+    }
+    else
+    {
+        str = str.ToString().Replace("/DOB/", "-");
+    }
+    if (user.Team_name != null)
+    {
+        str = str.ToString().Replace("/TEAMNAME/", user.Team_name).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/TEAMNAME/", "-");
+    }
+    if (user.Team_name != null)
+    {
+        str = str.ToString().Replace("/COMPANYEMAIL/", user.Company_Email).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/COMPANYEMAIL/", "-");
+    }
+    if (user.Posted_At != null)
+    {
+        str = str.ToString().Replace("/POSTEDAT/", user.Posted_At).ToString();
+    }
+    else
+    {
+        str = str.ToString().Replace("/POSTEDAT/", "-");
+    }
+
+    str = str.ToString().Replace("/TodayDate/", DateTime.Now.ToString("dd-MM-yyyy")).ToString();
+
+    decimal totalmt = 0;
+    decimal totalan = 0;
+    if (user.ProjectSalaryHeads.Count != 0)
+    {
+        if (user.ProjectSalaryHeads.FirstOrDefault().BASIC == "" || user.ProjectSalaryHeads.FirstOrDefault().BASIC == null)
+        {
+
+
+            str = str.ToString().Replace("/basicmt/", "-");
+            str = str.ToString().Replace("/basican/", "-");
+        }
+        else
+        {
+            decimal basicmt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().BASIC) * 26;
+            decimal basican = basicmt * 12;
+            str = str.ToString().Replace("/basicmt/", basicmt.ToString()).ToString();
+            str = str.ToString().Replace("/basican/", basican.ToString()).ToString();
+            totalmt = totalmt + basicmt;
+            totalan = totalan + basican;
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().HRA == "" || user.ProjectSalaryHeads.FirstOrDefault().HRA == null)
+        {
+            str = str.ToString().Replace("/hramt/", "-");
+            str = str.ToString().Replace("/hraan/", "-");
+        }
+        else
+        {
+            decimal hramt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().HRA) * 26;
+            decimal hraan = hramt * 12;
+            str = str.ToString().Replace("/hramt/", hramt.ToString()).ToString();
+            str = str.ToString().Replace("/hraan/", hraan.ToString()).ToString();
+            totalmt = totalmt + hramt;
+            totalan = totalan + hraan;
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().SPECIALALLOWANCE == null || user.ProjectSalaryHeads.FirstOrDefault().SPECIALALLOWANCE == "")
+        {
+
+
+            str = str.ToString().Replace("/samt/", "-");
+            str = str.ToString().Replace("/saan/", "-");
+        }
+        else
+        {
+            decimal samt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().SPECIALALLOWANCE) * 26;
+            decimal saan = samt * 12;
+            str = str.ToString().Replace("/samt/", samt.ToString()).ToString();
+            str = str.ToString().Replace("/saan/", saan.ToString()).ToString();
+            totalmt = totalmt + samt;
+            totalan = totalan + saan;
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().OTHERALLOWANCE == null || user.ProjectSalaryHeads.FirstOrDefault().OTHERALLOWANCE == "")
+        {
+
+            str = str.ToString().Replace("/oamt/", "-");
+            str = str.ToString().Replace("/oaan/", "-");
+        }
+        else
+        {
+            decimal oamt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().OTHERALLOWANCE) * 26;
+            decimal oaan = oamt * 12;
+            str = str.ToString().Replace("/oamt/", oamt.ToString()).ToString();
+            str = str.ToString().Replace("/oaan/", oaan.ToString()).ToString();
+            totalmt = totalmt + oamt;
+            totalan = totalan + oaan;
+
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().ESIC == null || user.ProjectSalaryHeads.FirstOrDefault().ESIC == "")
+        {
+
+            str = str.ToString().Replace("/medicalmt/", "-");
+            str = str.ToString().Replace("/medicalan/", "-");
+        }
+        else
+        {
+            decimal medicalmt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().ESIC) * 26;
+            decimal medicalan = medicalmt * 12;
+            str = str.ToString().Replace("/medicalmt/", medicalmt.ToString()).ToString();
+            str = str.ToString().Replace("/medicalan/", medicalan.ToString()).ToString();
+            totalmt = totalmt + medicalmt;
+            totalan = totalan + medicalan;
+
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().LEAVE == null || user.ProjectSalaryHeads.FirstOrDefault().LEAVE == "")
+        {
+
+
+            str = str.ToString().Replace("/leavemt/", "-");
+            str = str.ToString().Replace("/leavean/", "-");
+        }
+        else
+        {
+            decimal leavemt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().LEAVE) * 26;
+            decimal leavean = leavemt * 12;
+            str = str.ToString().Replace("/leavemt/", leavemt.ToString()).ToString();
+            str = str.ToString().Replace("/leavean/", leavean.ToString()).ToString();
+            totalmt = totalmt + leavemt;
+            totalan = totalan + leavean;
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().PF == null || user.ProjectSalaryHeads.FirstOrDefault().PF == "")
+        {
+
+
+            str = str.ToString().Replace("/pfmt/", "-");
+            str = str.ToString().Replace("/pfan/", "-");
+        }
+        else
+        {
+            decimal pfmt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().PF) * 26;
+            decimal pfan = pfmt * 12;
+            str = str.ToString().Replace("/pfmt/", pfmt.ToString()).ToString();
+            str = str.ToString().Replace("/pfan/", pfan.ToString()).ToString();
+            totalmt = totalmt + pfmt;
+            totalan = totalan + pfan;
+        }
+        if (user.ProjectSalaryHeads.FirstOrDefault().BONUS == null || user.ProjectSalaryHeads.FirstOrDefault().BONUS == "")
+        {
+
+
+            str = str.ToString().Replace("/bonusmt/", "-");
+            str = str.ToString().Replace("/bonusan/", "-");
+        }
+        else
+        {
+            decimal bonusmt = decimal.Parse(user.ProjectSalaryHeads.FirstOrDefault().BONUS) * 26;
+            decimal bonusan = bonusmt * 12;
+            str = str.ToString().Replace("/bonusmt/", bonusmt.ToString()).ToString();
+            str = str.ToString().Replace("/bonusan/", bonusan.ToString()).ToString();
+            totalmt = totalmt + bonusmt;
+            totalan = totalan + bonusan;
+        }
+        str = str.ToString().Replace("/totalmt/", totalmt.ToString()).ToString();
+        str = str.ToString().Replace("/totalan/", totalan.ToString()).ToString();
+        str = str.ToString().Replace("/ctc/", totalan.ToString()).ToString();
+    }
+}
+<br />
+<br />
+
+<!-- Row -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-9 center">
+            <div class="col-xl-9 col-lg-9">
+                <div class="card">
+                    <div class="d-lg-12" style="background-color: #17263a;height:150%;">
+                        <img src="~/Design/SatyamGroup.png" class="header-brand-img dark-logo" alt="Satyam Group" style="height: 125%; width: 50%; padding-top: 30px; padding-bottom: 30px; padding-left: 30px; ">
+                    </div>
+                    <div class="m-md-7">
+                        <div class="mt-5 center">
+                            <div><br />@Html.Raw(str)</div>
+                        </div>
+                    </div>
+                    <br />  <br />
+                    <div class="card-footer" style="background-color: #17263a;height:150%;">
+                        <div class="footer" style="background-color: #17263a;color:white;">
+
+                            <strong> @user.Company_Master.Company_Name</strong><br />
+                            @user.Company_Master.Company_Address
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>
+<!-- End Row -->
+<link rel="icon" href="~/AdminTemplate/assets/images/brand/favicon.ico" type="image/x-icon" />
+<!-- Bootstrap css -->
+<link href="~/AdminTemplate/assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+
+<!-- Style css -->
+<link href="~/AdminTemplate/assets/css/style.css" rel="stylesheet" />
+<link href="~/AdminTemplate/assets/css/dark.css" rel="stylesheet" />
+<link href="~/AdminTemplate/assets/css/skin-modes.css" rel="stylesheet" />
+
+<!-- Animate css -->
+<link href="~/AdminTemplate/assets/plugins/animated/animated.css" rel="stylesheet" />
+
+<!--Sidemenu css -->
+<link href="~/AdminTemplate/assets/css/sidemenu.css" rel="stylesheet">
+
+<!-- P-scroll bar css-->
+<link href="~/AdminTemplate/assets/plugins/p-scrollbar/p-scrollbar.css" rel="stylesheet" />
+
+<!---Icons css-->
+<link href="~/AdminTemplate/assets/plugins/icons/icons.css" rel="stylesheet" />
+
+<!---Sidebar css-->
+<link href="~/AdminTemplate/assets/plugins/sidebar/sidebar.css" rel="stylesheet" />
+
+<!-- Select2 css -->
+<link href="~/AdminTemplate/assets/plugins/select2/select2.min.css" rel="stylesheet" />
+
+
+
+<!-- INTERNAL Switcher css -->
+<link href="~/AdminTemplate/assets/switcher/css/switcher.css" rel="stylesheet" />
+<link href="~/AdminTemplate/assets/switcher/demo.css" rel="stylesheet" />
+<!--Moment js-->
+<script src="~/AdminTemplate/assets/plugins/moment/moment.js"></script>
+
+<!-- Jquery js-->
+<script src="~/AdminTemplate/assets/plugins/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap4 js-->
+<script src="~/AdminTemplate/assets/plugins/bootstrap/popper.min.js"></script>
+<script src="~/AdminTemplate/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+<!--Othercharts js-->
+<script src="~/AdminTemplate/assets/plugins/othercharts/jquery.sparkline.min.js"></script>
+
+<!-- Circle-progress js-->
+<script src="~/AdminTemplate/assets/plugins/circle-progress/circle-progress.min.js"></script>
+
+<!--Sidemenu js-->
+<script src="~/AdminTemplate/assets/plugins/sidemenu/sidemenu.js"></script>
+
+<!-- P-scroll js-->
+<script src="~/AdminTemplate/assets/plugins/p-scrollbar/p-scrollbar.js"></script>
+<script src="~/AdminTemplate/assets/plugins/p-scrollbar/p-scroll1.js"></script>
+
+<!--Sidebar js-->
+<script src="~/AdminTemplate/assets/plugins/sidebar/sidebar.js"></script>
+
+<!-- Select2 js -->
+<script src="~/AdminTemplate/assets/plugins/select2/select2.full.min.js"></script>
+
+
+
+<!-- Custom js-->
+<script src="~/AdminTemplate/assets/js/custom.js"></script>
+
+<!-- Switcher js -->
+<script src="~/AdminTemplate/assets/switcher/js/switcher.js"></script>
+

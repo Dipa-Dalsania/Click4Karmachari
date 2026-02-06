@@ -1,0 +1,405 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    CommonClasses util = new CommonClasses();
+    ViewBag.Title = "Leave_List";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<Leave_Master> leaves = ViewBag.leaves;
+    List<Leave_Master> topleave = ViewBag.topleave;
+    List<UserMaster> user = ViewBag.user;
+    DateTime Date = Convert.ToDateTime(DateTime.Now);
+    string str1 = Date.ToString("dd MMMM yyyy"), r = "", rem = "", r1 = "";
+
+}
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Leave Request</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list" onclick="myfunctionLeaveA()">
+                <button class="btn btn-primary" onclick="return Add_Emp_Leave(0,'',0,'@str1','@str1','','','',0,0)" type="submit"><i class="feather feather-plus fs-15 my-auto mr-2"></i><strong>Add Leave</strong></button>
+
+            </div>
+            <button id="approvebtn" type="button" onclick="return Getleavereqdata()" class="btn btn-success"><i class="fa fa-check"></i>Approved</button>
+            <button id="Rejectbtn" type="button" onclick="return Getleavereqdatareject()" class="btn btn-danger"><i class="fa fa-warning"></i>Rejected</button>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+
+<!-- Row -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-xl-5">
+                        <form action="/Access/Leave_List?status = 0" method="get">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Select Status</label>
+
+                                        <select id="Sts" name="Sts" class="form-control select2" data-placeholder="Choose Status">
+
+                                            @if (ViewBag.Sts == 0)
+                                            {
+
+                                                <option value="0" selected>Pending</option>
+                                                <option value="1">Approved</option>
+                                                <option value="2">Rejected</option>
+                                            }
+                                            @if (ViewBag.Sts == 1)
+                                            {
+
+                                                <option value="0">Pending</option>
+                                                <option value="1" selected>Approved</option>
+                                                <option value="2">Rejected</option>
+
+                                            }
+                                            @if (ViewBag.Sts == 2)
+                                            {
+
+                                                <option value="0">Pending</option>
+                                                <option value="1">Approved</option>
+                                                <option value="2" selected>Rejected</option>
+
+                                            }
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mt-5">
+                                        <input type="submit" value="Search" class="btn btn-primary" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table  table-hover table-vcenter text-nowrap table-bordered border-bottom" id="basic-datatable1">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="border-bottom-0 w-5">Employee Name</th>
+                                <th class="border-bottom-0">Leave Type</th>
+                                <th class="border-bottom-0">Reason</th>
+                                <th class="border-bottom-0">From Date</th>
+                                <th class="border-bottom-0">To Date</th>
+                                <th class="border-bottom-0">Days</th>
+                                <th style="display:none"></th>
+                                <th class="border-bottom-0">Applied on</th>
+                                <th class="border-bottom-0">Status</th>
+                                <th class="border-bottom-0">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (leaves != null)
+                            {
+                                foreach (Leave_Master p in leaves)
+                                {
+                                    //r1 = util.GetTextStringScript(p.Remark);
+                                    rem = util.GetTextStringTable(p.Reason);
+                                    r = util.GetTextStringScript(p.Reason);
+                                    <tr>
+                                        <td><input type="checkbox" id="leavecheckAll_@p.leave_Id" name="leavereqchk" value="@p.leave_Id" /></td>
+                                        <td style="text-transform: capitalize">
+                                            <div class="d-flex align-items-center">
+                                                @*<span class="avatar avatar brround mr-3" style="background-image: url(~/AdminTemplate/assets/images/users/1.jpg)"></span>*@
+                                                @if (p.UserMaster.image_name == null)
+                                                {
+                                                    <img src="~/Uploads/User_Image/profile.png" target="_blank" class="avatar avatar brround mr-1" style="cursor: default;">
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/Uploads/User_Image/@p.UserMaster.image_name" target="_blank" class="avatar avatar brround mr-3" style="cursor: default;">
+                                                }
+                                                <div class="mr-3 mt-0 mt-sm-2 d-block">
+                                                    <h6 class="mb-1 fs-14 mr-3">@p.UserMaster.User_Name</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>@p.Leave_Type</td>
+                                        <td>@p.Reason</td>
+                                        <td>@p.From_Date.ToString("dd MMMM yyyy")</td>
+                                        <td>@p.To_Date.ToString("dd MMMM yyyy")</td>
+                                        <td class="font-weight-semibold">@p.leave_days</td>
+
+                                        <td style="display:none">@Html.Raw(rem)</td>
+
+                                        <td>@p.ReqDate.ToString("dd MMMM yyyy")</td>
+                                        <td>
+                                            @if (p.Status == 0)
+                                            {
+                                                <span class="badge badge-secondary-light"><b>@util._Status_ByNumber(p.Status)</b></span>
+                                            }
+                                            else if (p.Status == 1)
+                                            {
+                                                <span class="badge badge-success">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else if (p.Status == 2)
+                                            {
+                                                <span class="badge badge-danger-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-primary-light">@util._Status_ByNumber(p.Status)</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @using (Ajax.BeginForm("Leave_Emp_Delete", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminLeaveList" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                                            {
+                                                <input type="hidden" name="lev_Id" id="lev_Id" value="@p.leave_Id" />
+                                                <button class="btn btn-icon  btn-primary" onclick="return Add_Emp_Leave(@p.leave_Id,@p.User_Id,@p.leave_days,'@p.From_Date.ToString("dd MMMM yyyy")','@p.To_Date.ToString("dd MMMM yyyy")','@p.Leave_Type','@r','@r1',@p.F_Date,@p.T_Date)" type="submit"><strong> <i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></strong></button>
+                                                <Button type="submit" id="deleteLeave" name="Command" value="Delete" class="btn btn-danger btn-icon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="return confirm('Are you sure you want to Delete?')" ;> <i class="feather feather-trash-2"></i></Button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Row-->
+
+
+<!-------------------Add Leave------------------------------------------->
+<div class="modal fade" id="Model_Add_Leave_M" tabindex="-1" role="dialog" aria-hidden="true">
+    @using (Ajax.BeginForm("Leave_Emp_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminLeaveList" }, new { @id = "form", @enctype = "multipart/form-data", role = "form", @onsubmit = "return submitLeave();" }))
+    {
+        @Html.AntiForgeryToken()
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="col-md-12 p-3 card-left" style="display:none;text-align:center" id="msgdig">
+                <div class="alert_R" style="border-radius: 5px; color: white;padding:inherit; background-color: #f91a1ab8 ">
+                    <span id="failuremsg"></span>
+                    <span class="closebtn " onclick="this.parentElement.style.display='none';" style="float:right">&times;</span>
+                </div>
+            </div>
+
+            <div class="modal-header">
+                <h5 class="modal-title">Add Leave</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="leave_Id" id="leave_Id" value="0">
+                <input type="hidden" name="F_Date_Ch" id="F_Date_Ch" value="0">
+                <input type="hidden" name="T_Date_Ch" id="T_Date_Ch" value="0">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Employee <span class="text-red">*</span></label>
+                            <select name="Emp_Id" id="User_Id" class="form-control" data-placeholder="Select Employee" required>
+                                <option label="Select Employee"></option>
+                                @foreach (UserMaster _c in user)
+                                {
+                                    <option value=@_c.User_ID>@_c.User_Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Leave Type <span class="text-red">*</span></label>
+                        <select class="form-control" name="Leave_Type" id="Leave_Type" required>
+                            <option value=""> Select Leave Type</option>
+                            <option value="LWPS">LWPS</option>
+                            <option value="PL">PL</option>
+                            <option value="CL">CL</option>
+                            <option value="EL">EL</option>
+                            <option value="SL">SL</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Start Date <span class="text-red">*</span></label>
+                            <input type="text" name="From_Date" id="From_Date" class="form-control fc-datepicker" placeholder="01 January 2022" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label"> End Date <span class="text-red">*</span></label>
+                            <input type="text" name="To_Date" id="To_Date" class="form-control fc-datepicker" placeholder="01 January 2022" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="form-label">Half Day-Start Date</label>
+                            <input type="checkbox" name="F_Date" id="F_Date" value="1" style="width: 35px; height: 20px;" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="form-label">Half Day-End Date</label>
+                            <input type="checkbox" name="T_Date" id="T_Date" value="1" style="width: 35px; height: 20px; " />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="form-label">Reason <span class="text-red">*</span></label>
+                            <textarea name="reason" id="Reason" class="form-control" rows="2" cols="20" placeholder="Reason" required></textarea>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="form-label">Remark By Admin</label>
+                            <textarea name="Remark" id="Remark" class="form-control" rows="2" placeholder="Remark by Admin" cols="20"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info"><i class="feather feather-save"></i>&ensp;Save</button>
+                <button type="submit" id="approvebtn" name="Command" value="Approve" class="btn btn-success"><i class="fa fa-check"></i>&ensp;Approve</button>
+                <button type="submit" id="rejectbtn" name="Command" value="Rejected" class="btn btn-danger"><i class="fa fa-remove"></i>&ensp;Rejected</button>
+                <button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+            </div>
+        </div>
+
+    </div>
+
+    }
+</div>
+
+<script type="text/javascript">
+    function getHalfLeave() {
+        var S_Date = document.getElementById('F_Date_Ch').value;
+        var E_Date = document.getElementById('T_Date_Ch').value;
+        if (S_Date == 1) {
+            document.getElementById("F_Date").checked = true;
+        }
+        if (S_Date != 1) {
+            document.getElementById("F_Date").checked = false;
+        }
+        if (E_Date == 1) {
+            document.getElementById("T_Date").checked = true;
+        }
+        if (E_Date != 1) {
+            document.getElementById("T_Date").checked = false;
+        }
+    }
+    var isSubmitted = false;
+
+    function stopMultipleSubmitLeave() {
+        if (!isSubmitted) {
+            $("#savebtn").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#savebtn").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitLeave() {
+        //    var Address_Value = $("#Address_address").val();
+        //if (Address_Value == "") {
+        //}
+        //    else {
+        stopMultipleSubmitLeave();
+        /*}*/
+
+        return isSubmitted;
+    }
+    function myfunctionLeaveA() {
+
+        document.getElementById("msgdig").style.display = "none";
+        $("#Model_Add_Leave_M").modal('show');
+
+        document.getElementById("failuremsg").innerText = "";
+
+        document.getElementById("Reason").value = "";
+    }
+</script>
+<script type="text/javascript">
+    function Getleavereqdata() {
+
+        let leavemyList = [];
+        let checkboxes = document.getElementsByName('leavereqchk');
+        let result = "";
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                /*result += checkboxes[i].value + ",";*/
+                leavemyList.push(checkboxes[i].value);
+
+            }
+        }
+
+
+        $.ajax({
+
+            url: '/Access/LeaveGetreqres',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(leavemyList),
+            success: function (data) {
+                alert(data.msg);
+                location.reload();
+            },
+
+            error: function (errormessage) {
+
+            }
+        });
+    }
+
+    function Getleavereqdatareject() {
+        let leavemyListreject = [];
+        let checkboxes = document.getElementsByName('leavereqchk');
+        let result = "";
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                /*result += checkboxes[i].value + ",";*/
+                leavemyListreject.push(checkboxes[i].value);
+
+            }
+        }
+
+
+        $.ajax({
+
+            url: '/Access/LeaveGetreqresreject',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(leavemyListreject),
+            success: function (data) {
+                alert(data.msg);
+                location.reload();
+            },
+
+            error: function (errormessage) {
+
+            }
+        });
+
+    }
+</script>

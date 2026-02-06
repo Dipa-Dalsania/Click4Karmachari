@@ -1,0 +1,116 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    ViewBag.Title = "Department_List";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<ProjectSalaryHead> projectSalarieshead = ViewBag.salaryheads;
+    List<ProjectSalaryGroup> ProjectSalaryGroups = ViewBag.ProjectSalaryGroups;
+    List<ProjectSalary> projectSalary = ViewBag.Project_Salaries;
+}
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Uploaded Salary</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("DownloadSalarySample", "Access", FormMethod.Post, new { enctype = "multipart/form-data", @class = "d-flex align-items-center", style = "gap: 0.75rem;" }))
+                {
+                    <div class="d-flex justify-content-between align-items-end flex-wrap" style="gap: 1rem;">
+                        <select class="form-control select2-show-search custom-select" id="month" name="month">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i" @(ViewBag.month == i ? "selected" : "")>@i</option>
+                            }
+                        </select>
+
+                        <select class="form-control select2-show-search custom-select" id="year" name="year">
+                            @for (int i = 2025; i <= 2040; i++)
+                            {
+
+                                <option value="@i" @(ViewBag.year == i ? "selected" : "")>@i</option>
+                            }
+                        </select>
+
+                        <select class="form-control select2-show-search custom-select" id="Project_SalaryGroupID" name="Project_SalaryGroupID">
+                            @foreach (ProjectSalaryGroup head in ProjectSalaryGroups)
+                            {
+                                <option value="@head.Project_SalaryGroupID" @(ViewBag.Project_SalaryGroupID == head.Project_SalaryGroupID ? "selected" : "")>@head.Project_Name</option>
+                            }
+                        </select>
+
+                        <button type="submit" name="Command" id="Command" value="ShowSalary" class="btn btn-primary">Show Available Salary</button>
+                        <button type="submit" name="Command" id="Command" value="Download" class="btn btn-primary">Download Blank Sheet</button>
+                        <button type="submit" name="Command" id="Command" value="DownloadWage" class="btn btn-primary">Download Wage Sheet</button>
+                        <div class="input-group file-browser">
+                            <input type="text" class="form-control border-right-0 browse-file" placeholder="Browser File" readonly>
+                            <label class="input-group-append mb-0">
+                                <span class="btn ripple btn-primary">
+                                    Browse <input type="file" class="file-browserinput" name="UploadedFile" id="UploadedFile" style="display: none;" multiple>
+                                </span>
+                            </label>
+                        </div>
+                        <button type="submit" name="Command" id="Command" value="Upload" class="btn btn-primary">Upload Salary</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-12 col-md-12 col-lg-12">
+
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable1" class="table table-striped table-bordered border-bottom table-hover">
+                        <thead>
+                            <tr>
+                                <th>Month of Salary</th>
+                                <th>EmployeeID</th>
+                                <th>User_Name</th>
+                                <th>Income</th>
+                                <th>Deduction</th>
+                                <th>Net Salary</th>
+                                <th>Download</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (projectSalary != null)
+                            {
+                                foreach (ProjectSalary _Salary in projectSalary)
+                                {
+                                    string monthName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(_Salary.SalaryMonth.Month);
+
+                                    <tr>
+                                        <td style="text-transform: capitalize">@monthName, @_Salary.SalaryMonth.Year.ToString() </td>
+                                        <td style="text-transform: capitalize">@_Salary.UserMaster.EmployeeID</td>
+                                        <td style="text-transform: capitalize">@_Salary.UserMaster.User_Name</td>
+                                        <td style="text-transform: capitalize">@_Salary.GROSS_INCOME</td>
+                                        <td style="text-transform: capitalize">@_Salary.GROSS_DEDUCTION</td>
+                                        <td style="text-transform: capitalize">@_Salary.NET_INCOME</td>
+                                        <td style="text-transform: capitalize">
+
+                                            <a class="btn btn-success btn-icon" href="\Access\Salarydetail?salaryid=@_Salary.ProjectSalaryID.ToString()" target="_blank" data-toggle="tooltip" data-original-title="Print"><i class="feather feather-download" aria-hidden="true"></i></a>
+
+
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

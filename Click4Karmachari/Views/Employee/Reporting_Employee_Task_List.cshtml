@@ -1,0 +1,372 @@
+﻿@using ClickKarmachari;
+@using ClickKarmachari.Models;
+@{
+    ViewBag.Title = "Employee_Task_List";
+    Layout = "~/Views/Employee/Employee_Layout_new.cshtml";
+    int count = 1;
+    List<Employee_Task_Master> employee = ViewBag.em;
+    DateTime dtoday = DateTime.Now;
+    string st = dtoday.ToString("dd MMMM yyyy");
+    ViewBag.PageTitle = "Employee Daily Task List";
+    string ckstatus = "";
+    List<UserMaster> um = ViewBag.um;
+    string strmsg = ViewBag.str;
+    long finaluserid = ViewBag.userid;
+    List<long> user_id = new List<long>();
+}
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">Employee Daily Task list</h4>
+    </div>
+  
+</div>
+
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+
+                @using (Html.BeginForm("Get_Employee_Task_Details_reporting", "Employee", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+                {
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-label">Task Date &ensp;<span class="text-danger">*</span></label>
+                                @if (employee.Count > 0)
+                                {
+                                    DateTime dt = Convert.ToDateTime(employee.FirstOrDefault().Task_Date);
+                                    string str = dt.ToString("dd MMMM yyyy");
+                                    <input id="Task_date" type="text" name="Task_date" class="form-control fc-datepicker" autocomplete="off" value="@str" max="@st" placeholder="Please Enter Date" required>
+                                }
+                                else
+                                {
+                                    string str1 = "";
+                                    if (ViewBag.taskdate != "")
+                                    {
+                                        DateTime dt = Convert.ToDateTime(ViewBag.taskdate);
+                                        str1 = dt.ToString("dd MMMM yyyy");
+                                    }
+                                    <input id="Task_date" type="text" name="Task_date" class="form-control fc-datepicker" autocomplete="off" value="@str1" max="@st" placeholder="Please Enter Date" required>
+                                }
+
+                            </div>
+
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-label">Employee &ensp;<span class="text-danger">*</span></label>
+                                <select id="user_id" name="user_id" class="form-control select2-show-search custom-select"  data-placeholder="Select Employee" required>
+                                    @if (employee.Count > 0)
+                                    {
+                                        if (finaluserid == -1)
+                                        {
+                                            <option value="-1" selected>All</option>
+                                            foreach (UserMaster user in um)
+                                            {
+                                                <option value="@user.User_ID">@user.User_Name</option>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <option value="-1">All</option>
+                                            foreach (UserMaster user in um)
+                                            {
+                                                if (finaluserid == user.User_ID)
+                                                {
+                                                    <option value="@user.User_ID" selected>@user.User_Name</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@user.User_ID">@user.User_Name</option>
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (finaluserid == -1)
+                                        {
+                                            <option value="-1" selected>All</option>
+                                            foreach (UserMaster user in um)
+                                            {
+                                                <option value="@user.User_ID">@user.User_Name</option>
+                                            }
+                                        }
+                                        else if (finaluserid == 0)
+                                        {
+                                            @*<option value="0" selected>Select Employee</option>*@
+                                            <option value="-1">All</option>
+                                            foreach (UserMaster user in um)
+                                            {
+                                                <option value="@user.User_ID">@user.User_Name</option>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <option value="-1">All</option>
+                                            foreach (UserMaster user in um)
+                                            {
+                                                if (finaluserid == user.User_ID)
+                                                {
+                                                    <option value="@user.User_ID" selected>@user.User_Name</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@user.User_ID">@user.User_Name</option>
+                                                }
+                                            }
+                                        }
+                                        @*<option value="0">Select Employee</option>
+                                            <option value="-1" selected>All</option>
+                                            foreach (UserMaster user in um)
+                                            {
+                                                <option value="@user.User_ID">@user.User_Name</option>
+                                            }*@
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+
+                        <input type="submit" value="Select" id="btnAdd" name="Command" class="btn btn-primary">
+
+                    </div>
+
+                }
+                <br />
+                <div>
+                    @if (strmsg == "one")
+                    {
+                        if (um.Count > 0)
+                        {
+                            ckstatus = "true";
+                            <div class="col-sm-10 col-lg-12">
+                                <div class="card">
+                                    <div class="card-header border-bottom-0">
+                                        <h3 class="card-title">All Employee Task Details</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        @foreach (Employee_Task_Master em in employee)
+                                        {
+                                            string s = "collapse" + count;
+
+                                            <ul class="list-group">
+                                                <li class="list-group-item justify-content-between">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#@s" aria-expanded="true" aria-controls="collapseOne">
+                                                        <span class="badgetext badge badge-info badge-pill pull-left"> @count</span>&ensp;&ensp;
+                                                        <strong style="font-size:14px;text-transform:capitalize">@em.Task_Detail</strong>
+                                                    </a>
+                                                    <span style="float:right">
+                                                        <a href="delete_task?taskdate=@em.Task_Date&emp_task_id=@em.Employee_Task_id" onclick="return confirm('Are you sure you want to Delete')">
+                                                            <i class="fa fa-trash fa-2x" style="color: #FF4433 " title="Delete"></i>
+                                                        </a>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                            count++;
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            ckstatus = "false";
+                        }
+                    }
+                    @if (strmsg == "all")
+                    {
+                        if (um.Count > 0)
+                        {
+
+                            ckstatus = "true";
+                            <div class="row">
+
+                                <div class="col-lg-12">
+                                    <div class="hpanel collapsed " style="margin-top: 20px;">
+                                        <div class="panel-heading">
+                                            @*<div class="panel-tools">
+                                                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+
+                                                </div>*@
+
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div aria-multiselectable="true" class="accordion" id="accordion" role="tablist">
+                                                @foreach (UserMaster u in um)
+                                                {
+                                                    foreach (Employee_Task_Master em in employee.Where(x => x.UserMaster.User_ID == u.User_ID))
+                                                    {
+                                                        if (user_id.Contains(Convert.ToInt64(em.User_id)))
+                                                        {
+
+                                                        }
+                                                        else
+                                                        {
+                                                            user_id.Add(Convert.ToInt64(em.User_id));
+                                                            string s = "collapse" + count;
+
+                                                            <div class="acc-card mb-4">
+                                                                <div class="acc-header" id="headingOne" role="tab" style="text-transform:capitalize">
+                                                                    <h5 class="mb-0">
+                                                                        <a aria-controls="collapseOne" aria-expanded="true" href="#@s" data-toggle="collapse">
+                                                                            <span class="badgetext badge badge-info badge-pill pull-left"> @count</span>&ensp;&ensp;
+                                                                            @em.UserMaster.User_Name
+                                                                            <span class="float-right"><i class="fe fe-chevron-right"></i></span>
+                                                                        </a>
+                                                                    </h5>
+                                                                </div>
+                                                                <div aria-labelledby="headingOne" class="collapse" data-parent="#accordion" id="@s" role="tabpanel">
+                                                                    @foreach (Employee_Task_Master em1 in employee.Where(x => x.User_id == em.User_id).ToList())
+                                                                    {
+
+                                                                        <div class="acc-body">
+                                                                            <span class="feather feather-check text-success icon-style-circle bg-success-transparent"></span>&ensp;&ensp;@em1.Task_Detail
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                            count++;
+                                                        }
+                                                    }
+                                                }
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+
+
+
+                        }
+                        else
+                        {
+                            ckstatus = "false";
+                        }
+
+                    }
+                    @if (ckstatus == "false" && ViewBag.taskdate != "")
+                    {
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="hpanel" style="">
+
+
+                                    <div class="col-lg-4"></div>
+                                    <div class="col-lg-4">
+                                        <img src="~/img/nodata.jpg" style="width:100%;height:100%;" />
+                                        <h4 style="text-align:center;">No Data Found</h4>
+                                    </div>
+                                    <div class="col-lg-4"></div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+                @*<div>
+                    @if (employee.Count > 0)
+                    {
+                        ckstatus = "true";
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                    @foreach (Employee_Task_Master em in employee)
+                                    {
+                                        DateTime employee_date = Convert.ToDateTime(em.Task_Date);
+                                        string st1 = employee_date.ToString("yyyy-MM-dd");
+                                        string s = "collapse" + count;
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingOne">
+                                                <h4 class="panel-title">
+
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#@s" aria-expanded="true" aria-controls="collapseOne">
+                                                        <span class="label h-bg-red" style="color:#ffffff;background:#337ab7;"><i aria-hidden="true">@count</i></span>
+
+                                                        @em.Task_Detail
+                                                    </a>
+                                                    @if (st == st1)
+                                                    {
+                                                        <span class="pull-right">
+
+                                                            <a href="delete_task?taskdate=@em.Task_Date&emp_task_id=@em.Employee_Task_id" onclick="return confirm('Are you sure you want to Delete')">
+                                                                <img src="~/Design/images/close_2.png" style="width:20px;height:20px;" />
+                                                            </a>
+                                                        </span>
+                                                    }
+
+                                                </h4>
+                                            </div>
+
+
+                                        </div>
+                                        count++;
+                                    }
+                                </div>
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        ckstatus = "false";
+                    }
+                    @if (ckstatus == "false" && ViewBag.taskdate != "")
+                    {
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="hpanel" style="">
+
+
+                                    <div class="col-lg-4"></div>
+                                    <div class="col-lg-4">
+                                        <img src="~/img/nodata.jpg" style="width:100%;height:100%;" />
+                                        <h4 style="text-align:center;">No Data Found</h4>
+                                    </div>
+                                    <div class="col-lg-4"></div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+
+                    }
+                </div>*@
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,585 @@
+﻿@using ClickKarmachari;
+@using ClickKarmachari.Models;
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Employee/Employee_Layout_new.cshtml";
+    Company_Menu_Rights MenuRights = ViewBag.MenuRights;
+    User_Menu_Rights UserMenuRights = ViewBag.UserMenuRights;
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    CommonClasses util = new CommonClasses();
+    User_Punch punch_detail = ViewBag.punch_detail;
+    //List<UserMaster> alluser = ViewBag.alluser;
+    List<Event_Master> Allevent = ViewBag.Allevent;
+    List<NoticeBoard_Master> Allnotice = ViewBag.Allnotice;
+    String p = ViewBag.p;
+    DateTime date = DateTime.Now.Date;
+    List<UserMaster> alluaer = ViewBag.em;
+    List<UserMaster> user = ViewBag.user;
+    string ckstatus = "";
+}
+@*<script src="~/Scripts/publici.js"></script>
+
+<script type="text/javascript">
+    var data;
+ 
+    function getIP(json) {
+    
+        data = json.ip;
+  
+        document.getElementById('publicIpp').value = data;
+
+    }
+   
+</script>*@
+
+
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title" style="text-transform:capitalize"><span class="font-weight-normal text-muted ml-2">Welcome </span> @_LogedUser.User_Name </h4>
+
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="d-flex align-items-end flex-wrap my-auto right-content justify-content-center breadcrumb-right">
+            <div class="form-group gap">
+
+
+            </div>
+            <div class="d-flex align-items-center">
+
+
+
+                <div class="d-none">
+                    <div class="header-datepicker mr-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <i class="feather feather-calendar"></i>
+                                </div> <span id="dtshow" class="form-control font-weight-bold  btn-lg" style="padding-top:5px;"></span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-none">
+                    <div class="header-datepicker mr-6">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <i class="feather feather-clock"></i>
+                                </div> <span id="clock" class="form-control font-weight-bold  btn-lg" style="padding-top:7px;width:80px !important;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="d-lg-flex d-block">
+                <div class="btn-list">
+                    @using (Ajax.BeginForm("Dashboard", "Employee", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateUserE" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+                            <div class="col-lg-12" style="padding-top: 10px;">
+                                <input type="hidden" id="log" name="log" />
+                                <input type="hidden" id="lat" name="lat" />
+                                <input type="hidden" id="uid" name="uid" />
+                                <input type="hidden" id="loc" name="loc" />
+                                <input type="hidden" id="publicIpp" name="publicip" />
+                                <span name="ipaddd" id="ipaddd"></span>
+                                <input type="hidden" name="User_ID" id="User_ID" value="@_LogedUser.User_ID">
+                                @if (p == "New_Punch")
+                                {
+
+                                    <div class="form-group">
+
+                                        <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="1"><b>Check In </b>&ensp;<i class="fa fa-hand-o-up fa-spin ml-2"></i></Button>
+
+                                    </div>
+                                }
+                                &ensp;
+                                @if (punch_detail != null)
+                                {
+                                    if (punch_detail.Time.Date != date)
+                                    {
+                                        <div class="form-group">
+
+                                            <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="1"><b>Check In </b>&ensp;<i class="fa fa-hand-o-up fa-spin ml-2"></i></Button>
+
+
+                                        </div>
+                                    }
+
+                                    if (punch_detail.Time.Date == date && punch_detail.PunchType_Id == 2)
+                                    {
+                                        <div class="form-group">
+
+                                            <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="1"><b>Check In </b>&ensp;<i class="fa fa-hand-o-up fa-spin ml-2"></i></Button>
+
+
+                                        </div>
+                                    }
+                                    if (punch_detail.Time.Date == date && punch_detail.PunchType_Id == 1)
+                                    {
+                                        <div class="form-group">
+                                            &ensp; &ensp;
+                                            <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="3" style="margin:0px 8px 0px 0px;"><b>Lunch In</b> &ensp;<i class="fa fa-bell-o fa-spin ml-2"></i></Button>
+
+                                            <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="2"><b>Check Out</b>&ensp;<i class="fa fa-hand-o-up fa-spin ml-2"></i></Button>
+
+
+                                        </div>
+                                    }
+                                    if (punch_detail.Time.Date == date && punch_detail.PunchType_Id == 3)
+                                    {
+
+                                        <div class="form-group">
+                                            <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="4"><b>Lunch Out</b> &ensp;<i class="fa fa-bell-o  fa-spin ml-2"></i></Button>
+                                        </div>
+
+                                    }
+                                    if (punch_detail.Time.Date == date && punch_detail.PunchType_Id == 4)
+                                    {
+                                        <div class="form-group">
+                                            <Button type="submit" class="btn btn-primary" name="PunchType_Id" id="PunchType_Id" value="2"><b>Check Out</b>&ensp;<i class="fa fa-hand-o-up fa-spin ml-2"></i></Button>
+
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                        <div id="map"></div>
+
+                    }
+                </div>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="row">
+            @if (UserMenuRights.Attendance == true && MenuRights.Attendance == true)
+            {
+                <div class="col-xl-4 col-lg-6 col-md-12">
+                    <a href="~/Employee/Leave_List?status=501">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold"> Total Leave</span>
+                                            <h3 class="mb-0 mt-1 mb-2">@_LogedUser.Total_Leave</h3>
+                                            <span class="text-muted">
+                                                <span class="text-danger fs-12 mt-2 mr-1"><i class="feather feather-arrow-down-left mr-1 bg-primary-transparent p-1 brround"></i></span>
+                                                Pending Leave
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-primary my-auto  float-right"> <i class="fe fe-grid"></i> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xl-4 col-lg-6 col-md-12">
+                    <a href="~/Employee/Leave_List?status=0">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold">Leave Request</span>
+                                            <h3 class="mb-0 mt-1  mb-2">@ViewBag.leave</h3>
+                                        </div>
+                                        <span class="text-muted">
+                                            <span class="text-purple fs-12 mt-2 mr-1"><i class="feather feather-arrow-up-right mr-1 bg-purple-transparent p-1 brround"></i> </span>
+                                            Total Leave Request
+                                        </span>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-purple brround my-auto  float-right"> <i class="fa fa-hand-o-left"></i> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+            @*<div class="col-xl-4 col-lg-6 col-md-12">
+            <a href="~/Employee/Employee_Task_List?status=0">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="mt-0 text-left">
+                                    <span class="fs-14 font-weight-semibold">Daily Task</span>
+                                    <h3 class="mb-0 mt-1  mb-2">  &ensp; &ensp;</h3>
+                                </div>
+
+                                <span class="text-muted">
+                                    <span class="text-danger fs-12 mt-2 mr-1"><i class="feather feather-arrow-down-left mr-1 bg-danger-transparent p-1 brround"></i></span>
+                                    Add  Daily Task
+                                </span>
+                            </div>
+                            <div class="col-4">
+                                <div class="icon1 bg-danger brround my-auto  float-right"> <i class="feather feather-compass fa fa-spin"></i> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>*@
+            @if (UserMenuRights.Vouchers == true && MenuRights.Vouchers == true)
+            {
+                <div class="col-xl-4 col-lg-6 col-md-12">
+                    <a href="~/Employee/VoucherReq_List?status=0">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold">Total Voucher </span>
+                                            <h3 class="mb-0 mt-1 mb-2">@ViewBag.voucher</h3>
+                                            <span class="text-muted">
+                                                <span class="text-success fs-12 mt-2 mr-1"><i class="feather feather-arrow-up-right mr-1 bg-success-transparent p-1 brround"></i></span>
+                                                Total Voucher Request
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-success my-auto  float-right"> <i class="fa fa-bookmark"></i> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+            @if (UserMenuRights.Assets == true && MenuRights.Assets == true)
+            {
+                <div class="col-xl-4 col-lg-6 col-md-12">
+                    <a href="~/Employee/Employee_AssetMovement_List?status=0">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold">Asset</span>
+                                            <h3 class="mb-0 mt-1  mb-2">@ViewBag.Asset</h3>
+                                        </div>
+                                        <span class="text-muted">
+                                            <span class="text-danger fs-12 mt-2 mr-1"><i class="feather feather-arrow-up-right mr-1 bg-secondary-transparent p-1 brround"></i></span>
+                                            Total All Asset
+                                        </span>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-secondary brround my-auto  float-right"> <i class="feather feather-book"></i> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+                
+
+            </div>
+
+        <!--Row-->
+        <div class="row">
+            @if (UserMenuRights.NoticeBoard == true && MenuRights.NoticeBoard == true)
+            {
+                <div class="col-xl-3 col-md-12 col-lg-12">
+
+                    <div class="mb-4">
+                        <div class="card-header border-bottom-0 pt-2 pl-0">
+                            <h4 class="card-title">Upcoming Events</h4>
+                        </div>
+                        <ul class="vertical-scroll pt-4">
+                            @if (Allevent != null)
+                            {
+                                foreach (Event_Master u in Allevent.Take(5))
+                                {
+                                    <li class="item">
+                                        <div class="card p-3 ">
+                                            <div class="d-flex comming_events calendar-icon icons">
+                                                <span class="date_time bg-pink-transparent bradius mr-3">
+                                                    <span class="date fs-15">@u.Date.Value.ToString("dd")</span>
+                                                    <span class="month">@u.Date.Value.ToString("MMM")</span>
+                                                </span>
+                                                <div class="mr-3 mt-0 mt-sm-1 d-block">
+                                                    <div class="h5 fs-14 mb-2" style="text-transform:capitalize">@u.UserMaster.User_Name</div>
+                                                    <div class="fs-12" style="text-transform:capitalize"><span class="badge badge-info-light">@u.Title</span></div>
+                                                    <small class="text-muted" style="text-transform:capitalize">@u.Description</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </li>
+                                }
+                            }
+                            @if (alluaer != null)
+                            {
+                                foreach (UserMaster _newobj in alluaer.Take(5))
+                                {
+                                    <li class="item">
+                                        <div class="card p-3 ">
+                                            <div class="d-flex comming_events calendar-icon icons">
+                                                <span class="date_time bg-pink-transparent bradius mr-3">
+                                                    <span class="date fs-16">@_newobj.DOB.ToString("dd")</span>
+                                                    <span class="month">@_newobj.DOB.ToString("MMM")</span>
+                                                </span>
+                                                <div class="mr-3 mt-0 mt-sm-1 d-block">
+                                                    <div class="h5 fs-14 mb-2" style="text-transform:capitalize">
+                                                        @_newobj.User_Name
+                                                    </div>
+
+                                                    <div class="fs-12"><span class="badge badge-info-light"><i class="fa fa-birthday-cake mr-2" style="color:indianred"></i>&ensp;Birthday</span></div>
+                                                    <small class="text-muted fs-13"></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        </ul>
+
+                    </div>
+
+                </div>
+                <div class="col-xl-4 col-lg-12 col-md-12">
+                    <div class="card overflow-hidden" style="height: 337px;">
+                        <div class="card-header border-0">
+                            <h4 class="card-title">Notice Board</h4>
+                        </div>
+                        <div class="pt-2">
+                            @if (Allnotice != null)
+                            {
+                                ckstatus = "false";
+                                foreach (NoticeBoard_Master n in Allnotice.Take(5))
+                                {
+                                    ckstatus = "True";
+                                    <div class="list-group">
+                                        <div class="list-group-item d-flex pt-3 pb-3 align-items-center border-0">
+                                            <div class="mr-3 mr-xs-0">
+                                                <div class="calendar-icon icons">
+                                                    <div class="date_time bg-purple-transparent">
+                                                        <span class="date fs-15">@n.Date.Value.ToString("dd")</span>
+                                                        <span class="month">@n.Date.Value.ToString("MMM")</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="ml-1">
+                                                <div class="h5 fs-14 mb-1" style="text-transform:capitalize">@n.Title</div> <small class="text-muted" style="text-transform:capitalize">@n.Description</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+
+                            }
+                            @if (ckstatus == "false")
+                            {
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="hpanel" style="">
+                                            <div class="col-lg-6 center-align" style="margin: auto;">
+                                                @*<img src="~/AdminTemplate/assets/images/data_not_found.png" style="width:100%;height:100%; " />*@
+                                                <img src="~/img/2803.png" style="width:100%;height:190%;" />
+
+
+                                                <h4 style="text-align:center;color:dodgerblue">No Data Found</h4>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-xl-5 col-md-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header border-bottom-0">
+                                    <h3 class="card-title">To Do Task</h3>
+                                </div>
+                                <div class="card-body text-center" style="height: 285px">
+                                    <div class="avatar avatar-xl brround bg-cyan text-center">
+                                        <i class="feather feather-corner-right-up"></i>
+                                    </div>
+                                    <br />
+                                    <h5 class="mt-4" style="display:none">Employess</h5>
+                                    <br />
+                                    <h2 class="counter fs-30">@ViewBag.task_N</h2>
+                                    <br />
+
+                                    <span class="text-muted">
+                                        <span class="text-danger fs-12 mt-2 mr-1"> </span>
+                                        Employee Can do task Provided by the company.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header border-bottom-0">
+                                    <h3 class="card-title">Running Task</h3>
+                                </div>
+                                <div class="card-body text-center" style="height: 285px">
+                                    <div class="avatar avatar-xl brround bg-pink text-center">
+                                        <i class="feather feather-corner-right-down"></i>
+                                    </div>
+                                    <br />
+                                    <h5 class="mt-4" style="display:none">Employess</h5>
+                                    <br />
+                                    <h2 class="counter fs-30">@ViewBag.task_R</h2>
+                                    <br />
+
+                                    <span class="text-muted">
+                                        <span class="text-danger fs-12 mt-2 mr-1"> </span>
+                                        Ongoing working task details in the Company. &ensp;
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>*@
+            }
+            </div>
+    </div>
+    <!-- End Row-->
+</div>
+@*<script src="~/Scripts/reverse_geocoding_Apikey.js"></script>*@
+@*<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqj1YyWB8T4IWvTmRyT8zsTuJnN-0vDD0&libraries=places,geometry"></script>*@
+<script type="text/javascript">
+
+    var x = document.getElementById("demo");
+    //var addition = "DEFAULT LOCATION";
+    //var options = {
+    //    enableHighAccuracy: true,
+    //    timeout: 5000,
+    //    maximumAge: 0
+    //};
+
+    //if (navigator.geolocation) {
+    //    navigator.geolocation.getCurrentPosition(success, error, options);
+    //} else {
+    //    alert("geolocation not supported");
+    //}
+
+    function success(position) {
+        var lat = position.coords.latitude;
+        var log = position.coords.longitude;
+        document.getElementById("log").value = log;
+        document.getElementById("lat").value = lat;
+        var navigator_info = window.navigator;
+        var screen_info = window.screen;
+        var uid = navigator_info.mimeTypes.length;
+        uid += navigator_info.userAgent.replace(/\D+/g, '');
+        uid += navigator_info.plugins.length;
+        uid += screen_info.height || '';
+        uid += screen_info.width || '';
+        uid += screen_info.pixelDepth || '';
+        document.getElementById("uid").value = uid;
+    }
+
+    function error(err) {
+      /*  alert(err.message);*/
+    }
+
+
+
+</script>
+
+
+<script>
+    //function getLocation() {
+
+    //    const map = new google.maps.Map(document.getElementById("map"), {
+    //        zoom: 8,
+    //        center: { lat: 21.715515, lng: 73.001865 },
+    //    });
+    //    const geocoder = new google.maps.Geocoder();
+    //    geocodeLatLng(geocoder, map);
+    //}
+
+    //function geocodeLatLng(geocoder, map) {
+
+    //    const input = document.getElementById("lat").value + "," + document.getElementById("log").value;
+    //    const latlngStr = input.split(",", 2);
+    //    const latlng = {
+    //        lat: parseFloat(latlngStr[0]),
+    //        lng: parseFloat(latlngStr[1]),
+    //    };
+
+    //    geocoder
+    //        .geocode({ location: latlng }
+    //            , function (results, status) {
+    //                // This is checking to see if the Geoeode Status is OK before proceeding
+    //                if (status == google.maps.GeocoderStatus.OK) {
+    //                    //This is placing the marker at the returned address
+    //                    if (results[0]) {
+    //                        // Creating a new marker and adding it to the map
+    //                        map.setZoom(16);
+    //                        marker = new google.maps.Marker({
+    //                            map: map, draggable: true
+    //                        });
+    //                        marker.setPosition(latlng);
+    //                        map.panTo(latlng);
+    //                    }
+    //                    var address = (results[0].formatted_address);
+    //                    //This is placing the returned address in the 'Address' field on the HTML form
+    //                    document.getElementById('loc').value = address;
+    //                }
+    //            })
+    //        .catch((e) => window.alert("Geocoder failed due to: " + e));
+    //}
+</script>
+
+<script>
+    window.onload = function () {
+
+        //function getIP(json) {
+        //    document.write("My public IP address is:", json.ip);
+
+        //    var data = json.ip;
+        //    alert("hello ip");
+
+        //}
+
+
+        //document.getElementById('publicIpp').value = "heloooo";
+        //    document.getElementById('ipaddd').innerHTML = "helloooooo";
+        //    document.getElementById('ipaddd').innerHTML = "helloooooo";
+
+        //$("#PunchType_Id").click(function () {
+        //    alert("hekkllo");
+        //    document.getElementById('ipaddd').innerHTML="helloooooo";
+        //    $("#publicIpp").val("hello");
+        //    $.ajax({
+        //        url: "/Epmloyee/TakingpublicIP/"+ 1,
+
+        //        type: "POST",
+        //        contentType: "application/json;charset=utf-8",
+        //        dataType: "json",
+
+        //    });
+
+
+        /*   });*/
+        //getLocation();
+    }
+</script>
+
+@*<script type="application/javascript" src="https://api.ipify.org?format=jsonp&callback=getIP"></script>*@

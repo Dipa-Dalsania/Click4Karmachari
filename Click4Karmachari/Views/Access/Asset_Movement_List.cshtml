@@ -1,0 +1,194 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    ViewBag.Title = "Asset_Movement_List";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    List<UserMaster> user = ViewBag.user;
+    Asset_Master asset = ViewBag.asset;
+    Asset_Movement movment = ViewBag.movment;
+    DateTime Date = Convert.ToDateTime(DateTime.Now);
+    CommonClasses util = new CommonClasses();
+    string str1 = Date.ToString("dd MMMM yyyy");
+}
+
+
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Asset Movement</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <button class="btn btn-primary" onclick="return Add_Asset_Movement(@asset.Asset_id)" type="submit"><i class="feather feather-plus fs-15 my-auto mr-2"></i><strong>Add Movement</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+<!-- Row -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <h4 class="card-title"></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="basic-datatable" class="table table-striped table-bordered border-bottom table-hover">
+                        @if (asset.Asset_Movement == null)
+                        {
+                            <tr>
+                                <td>
+                                    No Record Found...!
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <thead>
+                                <tr>
+                                    <th>Asset Name</th>
+                                    <th>From User</th>
+                                    <th>To user </th>
+                                    <th> Movement Date </th>
+                                    <th>Detail </th>
+                                </tr>
+                            </thead>
+                            foreach (Asset_Movement _newobj in asset.Asset_Movement)
+                            {
+                                DateTime MovmentDate = Convert.ToDateTime(_newobj.Movement_Date);
+                                string str2 = MovmentDate.ToString("dd MMMM yyyy");
+
+                                <tbody>
+                                    <tr>
+                                        <td style="text-transform: capitalize">@_newobj.Asset_Master.Asset_Name-@_newobj.Asset_Master.Serial_Number</td>
+                                        <td style="text-transform: capitalize">@_newobj.UserMaster.User_Name</td>
+                                        <td style="text-transform: capitalize">@_newobj.UserMaster1.User_Name</td>
+                                        <td>@str2</td>
+                                        <td  style="text-transform: capitalize" >@Html.Raw(util.GetTextStringTable(_newobj.Detail))</td>
+                                    </tr>
+                                </tbody>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Row-->
+<!-------------------Add Asset Movement------------------------------------------->
+<div class="modal fade" id="Model_Asset_Movement" tabindex="-1" role="dialog" aria-hidden="true">
+
+    @using (Ajax.BeginForm("Asset_Movement_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminAssetMovment" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Movement</h5>
+                    <button class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Movement_id" id="Movement_id" value="0" />
+                    <input type="hidden" name="Asset_id" id="Asset_id" />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">From User </label>
+                                @if (ViewBag.Ast != null)
+                                {
+                                    Asset_Movement Ast = ViewBag.Ast;
+                                    <input type="hidden" name="From_id" id="From_id" value="@Ast.UserMaster1.User_ID">
+                                    <input type="text" readonly class="form-control" value="@Ast.UserMaster1.User_Name">
+
+                                }
+                                else
+                                {
+                                    <select name="From_id" id="From_id" class="form-control" required>
+                                        <option value=""> Select User Name</option>
+                                        @foreach (UserMaster U in user)
+                                        {
+                                            if (U.User_type == _LogedUser.User_type)
+                                            {
+                                                <option value=@U.User_ID>@U.User_Name</option>
+                                            }
+
+                                        }
+                                    </select>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">To User <span class="text-red">*</span></label>
+                                @if (ViewBag.Ast != null)
+                                {
+                                    Asset_Movement Ast = ViewBag.Ast;
+                                    long uid = Ast.UserMaster1.User_ID;
+                                    <select name="To_id" id="To_id" class="form-control select2-show-search custom-select" required  data-placeholder="Select Employee">
+                                        <option value=""> Select User Name</option>
+                                        @foreach (UserMaster U in user)
+                                        {
+                                            if (U.User_ID != uid)
+                                            {
+                                                <option value=@U.User_ID>@U.User_Name</option>
+                                            }
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select name="To_id" id="To_id" class="form-control select2" required  data-placeholder="Select Employee">
+                                        <option value=""> Select User Name</option>
+                                        @foreach (UserMaster U in user)
+                                        {
+                                            if (U.User_type != _LogedUser.User_type)
+                                            {
+                                                <option value=@U.User_ID>@U.User_Name</option>
+                                            }
+                                        }
+                                    </select>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                 
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Movement Date</label>
+                                <input type="text" name="Movement_Date" id="Movement_Date" class="form-control fc-datepicker" value="@str1" max="@str1" data-single-mode="true" placeholder="01 January 2001" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Detail</label>
+                                <textarea name="Detail" id="Detail" rows="2" cols="30" class="form-control" placeholder="Enter Detail"></textarea>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+                <br/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                        <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info"><i class="feather feather-save"></i>&ensp;Save</button>
+                    </div>
+                </div>
+        </div>
+    }
+
+</div>     
+
+
+
+
+
+
+
+

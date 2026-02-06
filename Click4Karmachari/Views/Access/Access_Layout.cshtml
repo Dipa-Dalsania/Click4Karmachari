@@ -1,0 +1,782 @@
+﻿
+@using ClickKarmachari;
+
+@{
+    Layout = null;
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    string str = DateTime.Now.ToString("dd MMM yyyy");
+    string st = DateTime.Now.ToString("hh:mm tt");
+    Company_Menu_Rights MenuRights = ViewBag.MenuRights;
+    User_Menu_Rights UserMenuRights = ViewBag.UserMenuRights;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Meta data -->
+    <meta charset="UTF-8">
+    <meta content='width=device-width, initial-scale=1.0, user-scalable=0' name='viewport'>
+    <meta content="Satyam Group - Administrator Portal - Monitoring employee works, project task & many more. This portal helps to save time,&track accurate attendance." name="description">
+    <meta content="Satyam Group - Administrator Portal" name="author">
+    <meta content="Satyam Group - Administrator Portal" name="keywords" />
+    <title>Click4Karmachari - Administrator Portal</title>
+    <link rel="icon" href="~/Design/fevicon.svg" type="image/x-icon" />
+    <link rel="stylesheet" href="~/AdminTemplate/assets/plugins/summernote/summernote-bs4.css">
+    <link href="~/AdminTemplate/assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/css/style.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/css/dark.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/css/skin-modes.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/wysiwyag/richtext.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/animated/animated.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/css/sidemenu.css" rel="stylesheet">
+    <link href="~/AdminTemplate/assets/plugins/p-scrollbar/p-scrollbar.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/icons/icons.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/sidebar/sidebar.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/select2/select2.min.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/fullcalendar/fullcalendar.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/time-picker/jquery.timepicker.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/modal-datepicker/datepicker.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/notify/css/notifIt.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/jvectormap/jqvmap.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/datatable/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/datatable/css/buttons.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/AdminTemplate/assets/plugins/datatable/responsive.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/jQuery-countdowntimer/jQuery.countdownTimer.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/rating/css/ratings.css" rel="stylesheet">
+    <link href="~/AdminTemplate/assets/plugins/rating/css/rating-themes.css" rel="stylesheet">
+    <link href="~/AdminTemplate/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.css" rel="stylesheet">
+    <link href="~/AdminTemplate/assets/plugins/modal-datepicker/datepicker.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/switcher/css/switcher.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/switcher/demo.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/accordion/accordion.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/charts-c3/c3-chart.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/multipleselect/multiple-select.css" rel="stylesheet">
+    <link href="~/AdminTemplate/assets/plugins/sumoselect/sumoselect.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/AdminTemplate/assets/plugins/multi/multi.min.css">
+    <link href="~/AdminTemplate/assets/plugins/formwizard/smart_wizard.css" rel="stylesheet" />
+    <link href="~/AdminTemplate/assets/plugins/formwizard/smart_wizard_theme_dots.css" rel="stylesheet" />
+    <style>
+        .slide .side-menu__item.active, .slide .side-menu__item:hover {
+            background: #6f453e !important;
+            color: #fff !important;
+        }
+    </style>
+</head>
+
+<body class="app sidebar-mini" id="index1">
+    <!-- Switcher -->
+    <div class="switcher-wrapper">
+        <div class="demo_changer">
+
+            <div class="form_holder sidebar-right1">
+                <div class="row">
+                    <div class="predefined_styles">
+
+                        <div class="swichermainleft">
+                            <h4>Theme Layout</h4>
+                            <div class="switch_section d-flex my-4">
+                                <ul class="switch-buttons row">
+                                    <li class="col-md-6 mb-0">
+                                        <button type="button" id="background-left1" class="bg-left1 wscolorcode1 button-image"></button>
+                                        <span class="d-block">Light Theme</span>
+                                    </li>
+                                    <li class="col-md-6 mb-0">
+                                        <button type="button" id="background-left2" class="bg-left2 wscolorcode1 button-image"></button>
+                                        <span class="d-block">Dark Theme</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="swichermainleft">
+                            <h4>Header Styles Mode</h4>
+                            <div class="switch_section d-flex my-4">
+                                <ul class="switch-buttons row">
+                                    <li class="col-md-6 light-bg">
+                                        <button type="button" id="background1" class="bg1 wscolorcode1 button-image"></button>
+                                        <span class="d-block">Light Header</span>
+                                    </li>
+                                    <li class="col-md-6">
+                                        <button type="button" id="background2" class="bg2 wscolorcode1 button-image"></button>
+                                        <span class="d-block">Color Header</span>
+                                    </li>
+                                    <li class="col-md-6 d-block mx-auto dark-bg">
+                                        <button type="button" id="background3" class="bg3 wscolorcode1 button-image"></button>
+                                        <span class="d-block">Dark Header</span>
+                                    </li>
+                                    <li class="col-md-6 d-block mx-auto">
+                                        <button type="button" id="background11" class="bg8 wscolorcode1 button-image"></button>
+                                        <span class="d-block">Gradient Header</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="swichermainleft">
+                            <h4>Leftmenu Styles Mode</h4>
+                            <div class="switch_section d-flex my-4">
+                                <ul class="switch-buttons row">
+                                    <li class="col-md-6 mb-4">
+                                        <button type="button" id="background4" class="bg4 wscolorcode1 button-image"></button>
+                                        <span class="d-block">Light Menu</span>
+                                    </li>
+                                    <li class="col-md-6 mb-4">
+                                        <button type="button" id="background5" class="bg5 wscolorcode1 button-image"></button>
+                                        <span class="d-block">Color Menu</span>
+                                    </li>
+                                    <li class="col-md-6 mb-0 d-block mx-auto dark-bgmenu">
+                                        <button type="button" id="background6" class="bg6 wscolorcode1 button-image"></button>
+                                        <span class="d-block">Dark Menu</span>
+                                    </li>
+                                    <li class="col-md-6 mb-0 d-block mx-auto">
+                                        <button type="button" id="background10" class="bg7 wscolorcode1 button-image"></button>
+                                        <span class="d-block">Gradient Menu</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Switcher -->
+    <!---Global-loader-->
+    <div id="global-loader">
+
+    </div>
+
+
+    <div id="wrapper">
+        @{
+            String PageTitle = null;
+            try
+            {
+                PageTitle = ViewBag.PageTitle;
+
+            }
+            catch { }
+
+            String PageDescription = "";
+            try
+            {
+                PageDescription = ViewBag.PageDescription;
+
+            }
+            catch { }
+
+        }
+
+
+        <div class="page">
+            <div class="page-main">
+
+                <!--aside open-->
+                <aside class="app-sidebar" style="background: white;">
+                    <div class="app-sidebar__logo">
+                        <a class="header-brand" href="~/Access/Dashboard">
+                            <img src="~/AdminTemplate/images/logo.svg" class="header-brand-img desktop-lgo" alt="Satyam Group" style="height: 125%;">
+                            <img src="~/AdminTemplate/images/logo.svg" class="header-brand-img " alt="Satyam Group" style="height: 125%;">
+                            <img src="~/Design/fevicon.svg" class="header-brand-img mobile-logo" alt="Satyam Group" style="height:40px">
+                            <img src="~/Design/fevicon.svg" class="header-brand-img darkmobile-logo" alt="Satyam Group" style="height:40px">
+
+
+                        </a>
+                    </div>
+                    <div class="app-sidebar3" style="background:black;">
+                        <div class="app-sidebar__user">
+                            <div class="dropdown user-pro-body text-center">
+                                <div class="user-pic">
+                                    @if (@_LogedUser.image_name == null || @_LogedUser.image_name == "")
+                                    {
+                                        <img src="~/Uploads/User_Image/profile.jpg" alt="user-img" class="avatar-xl rounded-circle mb-1" height="50" width="40" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@ViewBag.ImagekitDisplayURL/User_Image/@_LogedUser.image_name.ToString()" onerror="this.src='../Uploads/User_Image/profile.jpg';" alt="user-img" class="avatar-xl rounded-circle mb-1" height="50" width="40">
+                                    }
+                                </div>
+                                <div class="user-info">
+                                    <h5 class=" mb-2">@_LogedUser.User_Name</h5>
+                                    <span class="text-muted app-sidebar__user-name text-sm">@_LogedUser.User_type</span>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="side-menu">
+                            <li class="slide">
+                                <a class="side-menu__item" href="~/Access/Dashboard">
+                                    <i class="feather feather-home sidemenu_icon"></i>
+                                    <span class="side-menu__label">Dashboard</span>
+                                </a>
+                            </li>
+
+                            @if (UserMenuRights.Employees == true && MenuRights.Employees == true)
+                            {
+                                <li class="slide">
+                                    <a class="side-menu__item" data-toggle="slide" href="#">
+                                        <i class="fe fe-calendar sidemenu_icon"></i>
+                                        <span class="side-menu__label">Employees</span><i class="angle fa fa-angle-right"></i>
+                                    </a>
+                                    <ul class="slide-menu">
+                                        <li><a class="sub-slide-item" href="~/Access/Employee_All">Employees</a></li>
+                                        <li><a class="sub-slide-item" href="~/Access/EmployeeType_List">Employee Types</a></li>
+                                        <li><a class="sub-slide-item" href="~/Access/Department_List">Departments</a></li>
+                                        <li><a class="sub-slide-item" href="~/Access/Designation_List">Designations</a></li>
+                                        @*<li><a class="sub-slide-item" href="~/Access/Resignation_List">Resignations</a></li>*@
+                                        <li><a class="sub-slide-item" href="~/Access/SalaryGroups">Salary Groups</a></li>
+                                        @*<li><a class="sub-slide-item" href="~/Access/Gift_List">Gifts</a></li>*@
+                                    </ul>
+                                </li>
+                            }
+                            @if (UserMenuRights.Assets == true && MenuRights.Assets == true)
+                            {
+
+                                <li class="slide">
+                                    <a class="side-menu__item" data-toggle="slide" href="#">
+                                        <i class="fe fe-calendar sidemenu_icon"></i>
+                                        <span class="side-menu__label">Asset</span><i class="angle fa fa-angle-right"></i>
+                                    </a>
+                                    <ul class="slide-menu">
+                                        <li><a class="sub-slide-item" href="~/Access/Asset_List">Asset List</a></li>
+                                        <li><a class="sub-slide-item" href="~/Access/AssetType_List">Asset Types</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (UserMenuRights.Task == true && MenuRights.Task == true)
+                                {
+                                    <li class="slide">
+                                        <a class="side-menu__item" data-toggle="slide" href="#">
+                                            <i class="feather feather-clipboard sidemenu_icon"></i>
+                                            <span class="side-menu__label">Task</span><i class="angle fa fa-angle-right"></i>
+                                        </a>
+                                        <ul class="slide-menu">
+                                            <li><a href="~/Access/Project_List" class="sub-slide-item">Projects</a></li>
+                                            
+                                            <li><a href="~/Access/Project_Task_List" class="sub-slide-item">Project Task</a></li>
+                                            <li><a href="~/Access/Employee_Task" class="sub-slide-item">Daily Task</a></li>
+                                            <li><a href="~/Access/Employee_Task_weelky" class="sub-slide-item">Employee Task</a></li>
+                                            <li><a href="~/Access/TaskType_List" class="sub-slide-item">Task Type</a></li>
+                                        </ul>
+                                    </li>
+                                }
+
+
+                            @if (UserMenuRights.NoticeBoard == true && MenuRights.NoticeBoard == true)
+                            {
+                                <li class="slide">
+                                    <a class="side-menu__item" data-toggle="slide" href="#">
+                                        <i class="fe fe-calendar sidemenu_icon"></i>
+                                        <span class="side-menu__label">Notice Board</span><i class="angle fa fa-angle-right"></i>
+                                    </a>
+                                    <ul class="slide-menu">
+                                        <li><a class="sub-slide-item" href="~/Access/NoticeBoard_list">Notice Board</a></li>
+                                        <li><a class="sub-slide-item" href="~/Access/Event_list">Events</a></li>
+                                        <li><a class="sub-slide-item" href="~/Access/Festival_List">Festival</a></li>
+                                        <li><a class="sub-slide-item" href="~/Access/Holiday_List">Holiday</a></li>
+                                    </ul>
+                                </li>
+
+                            }
+                            @if (UserMenuRights.Attendance == true && MenuRights.Attendance == true)
+                            {
+                                <li class="slide">
+                                    <a class="side-menu__item" data-toggle="slide" href="#">
+                                        <i class="fe fe-calendar sidemenu_icon"></i>
+                                        <span class="side-menu__label">Attendance</span><i class="angle fa fa-angle-right"></i>
+                                    </a>
+                                    <ul class="slide-menu">
+                                        <li><a class="sub-slide-item" href="~/Access/Employee_Punch_List">Punch</a></li>
+                                        <li><a class="sub-slide-item" href="~/Access/Attendance_Report">Attendance Report</a></li>
+                                        @*<li><a class="sub-slide-item" href="~/Access/Attendance_ReportNew">Attendance Report</a></li>*@
+                                        <li><a class="sub-slide-item" href="~/Access/Employee_Visit_List">Visit</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (UserMenuRights.Attendance == true && MenuRights.Attendance == true)
+                            {
+                                <li class="slide">
+                                    <a class="side-menu__item" data-toggle="slide" href="#">
+                                        <i class="feather feather-log-out sidemenu_icon"></i>
+                                        <span class="side-menu__label">Leaves</span>
+                                        <i class="angle fa fa-angle-right"></i>
+                                    </a>
+                                    <ul class="slide-menu">
+                                        <li><a class="sub-slide-item" href="~/Access/Emp_Leave">Add Employee Leave</a></li>
+                                        <li><a class="sub-slide-item" href="~/Access/Leave_List">Leave Request</a></li>
+                                        <li><a class="sub-slide-item" href="~/Access/View_Emp_Leave_Transaction">Leave Transaction</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (UserMenuRights.Vouchers == true && MenuRights.Vouchers == true)
+                            {
+                                <li class="slide">
+                                    <a class="side-menu__item" data-toggle="slide" href="#">
+                                        <i class="fe fe-bookmark sidemenu_icon"></i>
+                                        <span class="side-menu__label">Vouchers</span><i class="angle fa fa-angle-right"></i>
+                                    </a>
+                                    <ul class="slide-menu">
+                                        <li><a href="~/Access/AdvanceReq_List" class="sub-slide-item">Advance Request</a></li>
+                                        <li><a href="~/Access/VoucherReq_List" class="sub-slide-item">Voucher Request</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (UserMenuRights.Document_Storage == true && MenuRights.Document_Storage == true)
+                            {
+                                <li class="slide">
+                                    <a class="side-menu__item" data-toggle="slide" href="#">
+                                        <i class="fe fe-file sidemenu_icon"></i>
+                                        <span class="side-menu__label">Document Storage</span><i class="angle fa fa-angle-right"></i>
+                                    </a>
+                                    <ul class="slide-menu">
+                                        <li><a href="~/Access/Imp_Document_List" class="sub-slide-item">Employee Documents</a></li>
+                                        <li><a href="~/Access/Commercial_Documents" class="sub-slide-item">Commercial Documents</a></li>
+                                        <li><a href="~/Access/Head" class="sub-slide-item">Document Heads</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (UserMenuRights.Document_Generator == true && MenuRights.Document_Generator == true)
+                            {
+                                <li class="slide">
+                                    <a class="side-menu__item" data-toggle="slide" href="#">
+                                        <i class="fe fe-file sidemenu_icon"></i>
+                                        <span class="side-menu__label">Document Generator</span><i class="angle fa fa-angle-right"></i>
+                                    </a>
+                                    <ul class="slide-menu">
+                                        <li><a href="~/Access/CustomDocument_List" class="sub-slide-item">Document Format</a></li>
+                                        <li><a href="~/Access/GenerateDoc" class="sub-slide-item">Generate Document</a></li>
+                                        <li><a href="~/Access/GenerateDocs" class="sub-slide-item">All Document</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (UserMenuRights.Salary_Generator == true && MenuRights.Salary_Generator == true)
+                            {
+                                <li class="slide">
+                                    <a class="side-menu__item" data-toggle="slide" href="#">
+                                        <i class="fe fe-file sidemenu_icon"></i>
+                                        <span class="side-menu__label">Salary</span><i class="angle fa fa-angle-right"></i>
+                                    </a>
+                                    @*<ul class="slide-menu">
+                                            <li><a class="sub-slide-item" href="~/Access/ProjectSalaryUploads">Salary Uploader</a></li>
+                                        </ul>*@
+                                    <ul class="slide-menu">
+                                        <li><a class="sub-slide-item" href="~/Access/ProjectSalaryView">Salary View</a></li>
+                                    </ul>
+                                    <ul class="slide-menu">
+                                        <li><a class="sub-slide-item" href="~/Access/ProjectSalaryCreater">Salary Generator</a></li>
+                                    </ul>
+                                </li>
+                            }
+
+                            <li class="slide">
+                                <a class="side-menu__item" data-toggle="slide" href="#">
+                                    <i class="fe feather-database sidemenu_icon"></i>
+                                    <span class="side-menu__label">Company Management</span><i class="angle fa fa-angle-right"></i>
+                                </a>
+                                <ul class="slide-menu">
+                                    @*<li><a href="~/Access/Project_List" class="sub-slide-item">Projects</a></li>*@
+                                    <li><a class="sub-slide-item" href="~/Access/Shift_List">Shifts</a></li>
+                                    <li><a class="sub-slide-item" href="~/Access/Company_Profile">Company Profile</a></li>
+                                    <li><a class="sub-slide-item" href="~/Access/User_Profile">User Profile</a></li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </aside>
+                <!--aside closed-->
+
+                <div class="app-content main-content">
+                    <div class="side-app">
+
+                        <!--app header-->
+                        <div class="app-header header">
+                            <div class="container-fluid">
+                                <div class="d-flex">
+                                    <a class="header-brand" href="~/Access/Dashboard">
+                                        <img src="~/Design/logo.svg" class="header-brand-img desktop-lgo" alt="Satyam Group" style="height: 125%;">
+                                        <img src="~/Design/SatyamGroup.png" class="header-brand-img dark-logo" alt="Satyam Group" style="height: 125%;">
+                                        <img src="~/Design/fevicon.svg" class="header-brand-img mobile-logo" alt="Satyam Group" style="height:40px;">
+                                        <img src="~/Design/fevicon.svg" class="header-brand-img darkmobile-logo" alt="Satyam Group" style="height:40px;">
+                                    </a>
+                                    <div class="app-sidebar__toggle" data-toggle="sidebar">
+                                        <a class="open-toggle" href="#">
+                                            <i class="feather feather-menu"></i>
+                                        </a>
+                                        <a class="close-toggle" href="#">
+                                            <i class="feather feather-x"></i>
+                                        </a>
+                                    </div>
+
+                                    <div class="d-flex order-lg-2 my-auto ml-auto">
+                                        <a class="nav-link my-auto icon p-0 nav-link-lg d-none navsearch" href="#" data-toggle="search">
+                                            <i class="feather feather-search search-icon header-icon"></i>
+                                        </a>
+
+
+                                        <div class="dropdown profile-dropdown">
+                                            <a href="#" class="nav-link pr-1 pl-0 leading-none" data-toggle="dropdown">
+                                                <span>
+                                                    @if (_LogedUser.Company_Master.Logo_URL == null || _LogedUser.Company_Master.Logo_URL == "")
+                                                    {
+                                                        <img src="~/Uploads/User_Image/building.jpg" alt="img" class="avatar avatar-md bradius" height="60" width="80" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/Uploads/User_Image/@_LogedUser.Company_Master.Logo_URL" onerror="this.src='../Uploads/User_Image/building.jpg';" alt="img" class="avatar avatar-md bradius" height="60" width="80" />
+                                                    }
+                                                </span>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow animated header-notify">
+                                                <div class="p-3 text-center border-bottom">
+                                                    <a href="#" class="text-center user pb-0 font-weight-bold">@_LogedUser.User_Name</a>
+                                                    <p class="text-center user-semi-title">@_LogedUser.UserType.Usertype_name.ToString() </p>
+                                                </div>
+                                                <a class="dropdown-item d-flex" href="~/Access/User_Profile">
+                                                    <i class="feather feather-user mr-3 fs-16 my-auto"></i>
+                                                    <div class="mt-1">Profile</div>
+                                                </a>
+                                                <a class="dropdown-item d-flex" href="~/Access/Company_Profile">
+                                                    <i class="feather feather-server mr-3 fs-16 my-auto"></i>
+                                                    <div class="mt-1">Company Profile</div>
+                                                </a>
+
+                                                <a class="dropdown-item d-flex" href="#" data-toggle="modal" onclick="myfunctioncp()">
+                                                    <i class="feather feather-edit-2 mr-3 fs-16 my-auto"></i>
+                                                    <div class="mt-1">Change Password</div>
+                                                </a>
+                                                <a class="dropdown-item d-flex" href="~/Home/LogOut">
+                                                    <i class="feather feather-power mr-3 fs-16 my-auto" data-toggle="tooltip" data-original-title="LogOut"></i>
+                                                    <div class="mt-1">Sign Out</div>
+                                                </a>
+                                            </div>
+
+                                        </div>
+                                        <div class="dropdown header-notify">
+                                            <a class="nav-link icon" href="~/Home/LogOut">
+                                                <i class="feather feather pe-7s-power header-icons" style="font-weight: 700;" title="LogOut"></i>
+
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal fade" id="myModal" data-keyboard="false" data-backdrop="static">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content tx-size-sm">
+                                    <div class="modal-body text-center">
+                                        <i class="fe fe-alert-triangle fs-50"></i>
+                                        <h4 class="text-primary fs-20 font-weight-semibold mt-2">Session Timeout</h4>
+                                        @*<progress id="custom-bar" class="custom-progress mb-4 wd-70p mt-3" max="100" value="0">0%</progress>*@
+                                        <p class="mb-4 mx-4">You're being timed out due to inactivity. Please choose to stay signed in or to logout. </p>
+                                        <a class="btn btn-danger px-5" href="~/Home/Login">Log Out</a>
+                                        @*<a aria-label="Close" class="btn btn-primary px-5 text-white" data-dismiss="modal">Stay Logedin</a>*@
+                                        <button class="btn btn-primary px-5 text-white" onclick="resettingSession()">Stay Logged In</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/app header-->
+                        <!--Page header-->
+                        <!--End Page header-->
+                        <!--Row-->
+
+                        @RenderBody()
+
+                    </div>
+                </div><!-- end app-content-->
+            </div>
+
+
+
+            <!--Footer-->
+            <footer class="footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 footer-copyright large-view">
+                            <p class="mb-0">Copyright 2022 © <span class="font-primary" style="color: #012e58; "><b>MBH</b></span>. All Rights Reserved.</p>
+                        </div>
+                        <div class="col-md-6 large-view-left">
+                            <p class="pull-right mb-0">Hand Crafted & Made With <i class="fa fa-heart" style="color:#fe2228;margin:0px 3px;"></i> By<a href="https://mbhtechnologies.com" ; target="_blank"> <span style="color: #012e58;"><b>MBH Technologies Pvt. Ltd.</b></span></a></p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <!-- End Footer-->
+            <!--Change password Modal -->
+            <div class="modal fade" id="changepasswordnmodal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="col-md-12 p-3 card-left" style="display:none;text-align:center" id="msgdig">
+                            <div class="alert_R" style="border-radius: 5px; color: white;padding:inherit; background-color: #f91a1ab8 ">
+                                <span id="failuremsg"></span>
+                                <span class="closebtn " onclick="this.parentElement.style.display='none';" style="float:right">&times;</span>
+                            </div>
+                        </div>
+                        <div class="modal-header">
+                            <h5 class="modal-title">Change Password</h5>
+                            <button class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        @using (Ajax.BeginForm("Change_Password", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminChangePswd" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="modal-body">
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label class="form-label">Old Password<span class="text-danger">&ensp;*</span></label>
+                                        <input type="password" class="form-control" placeholder="Old Password" value="" name="Old_Password" id="Old_Password" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label class="form-label">New Password<span class="text-danger">&ensp;*</span></label>
+                                        <input type="password" class="form-control" placeholder="New Password" value="" name="New_Password" id="new_Password" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label class="form-label">Confirm New Password<span class="text-danger">&ensp;*</span></label>
+                                        <input type="password" class="form-control" placeholder="Confirm Password" value="" name="Confirm_password" id="confirm_password" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="#" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></a>
+                                <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-primary"><i class="feather feather-save"></i>&ensp;Save Confirm</button>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+            <!-- End Change password Modal  -->
+        </div>
+    </div>
+    <!-- Back to top -->
+    <a href="#top" id="back-to-top"><span class="feather feather-chevrons-up"></span></a>
+    <script src="~/Scripts/MasterV1.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/summernote/summernote-bs4.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/moment/moment.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/jquery/jquery.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/bootstrap/popper.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/othercharts/jquery.sparkline.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/circle-progress/circle-progress.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/sidemenu/sidemenu.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/p-scrollbar/p-scrollbar.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/p-scrollbar/p-scroll1.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/sidebar/sidebar.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/select2/select2.full.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/peitychart/jquery.peity.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/peitychart/peitychart.init.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/apexchart/apexcharts.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/vertical-scroll/jquery.bootstrap.newsbox.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/vertical-scroll/vertical-scroll.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/date-picker/jquery-ui.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/rating/js/jquery.barrating.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/rating/js/custom-ratings.js"></script>
+    <script src="~/AdminTemplate/assets/js/hr/hr-empview.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/chart/chart.bundle.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/chart/utils.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/chart.min/chart.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/chart.min/rounded-barchart.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/jQuery-countdowntimer/jQuery.countdownTimer.js"></script>
+    <script src="~/AdminTemplate/assets/js/index1.js"></script>
+    <script src="~/AdminTemplate/assets/js/hr/hr-emp.js"></script>
+    <script src="~/AdminTemplate/assets/js/custom.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/datatable/js/dataTables.bootstrap4.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/datatable/js/dataTables.buttons.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/datatable/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/datatable/js/jszip.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/datatable/pdfmake/pdfmake.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/datatable/pdfmake/vfs_fonts.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/datatable/js/buttons.html5.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/datatable/js/buttons.print.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/datatable/js/buttons.colVis.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/datatable/dataTables.responsive.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/datatable/responsive.bootstrap4.min.js"></script>
+    <script src="~/AdminTemplate/assets/js/datatables.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/time-picker/jquery.timepicker.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/time-picker/toggles.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/wysiwyag/jquery.richtext.js"></script>
+    <script src="~/AdminTemplate/assets/js/form-editor.js"></script>
+    <script src="~/AdminTemplate/assets/js/custom.js"></script>
+    <script src="~/AdminTemplate/assets/switcher/js/switcher.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/modal-datepicker/datepicker.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/date-picker/jquery-ui.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/input-mask/jquery.maskedinput.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/fullcalendar/fullcalendar.min.js"></script>
+    <script src="~/AdminTemplate/assets/js/hr/hr-holiday.js"></script>
+    <script src="~/AdminTemplate/assets/js/hr/hr-department.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/daterangepicker/moment.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+    <script src="~/AdminTemplate/assets/js/formelementadvnced.js"></script>
+    <script src="~/AdminTemplate/assets/js/form-elements.js"></script>
+    <script src="~/AdminTemplate/assets/js/hr/hr-leaves.js"></script>
+    <script src="~/AdminTemplate/assets/js/task/task-list.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/accordion/accordion.min.js"></script>
+    <script src="~/AdminTemplate/assets/js/accordion.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/charts-c3/d3.v5.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/charts-c3/c3-chart.js"></script>
+    <script src="~/AdminTemplate/assets/js/charts.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/sumoselect/jquery.sumoselect.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/multipleselect/multiple-select.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/multipleselect/multi-select.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/multi/multi.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/formwizard/jquery.smartWizard.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/formwizard/fromwizard.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/accordion-Wizard-Form/jquery.accordion-wizard.min.js"></script>
+    <script src="~/AdminTemplate/assets/js/form-wizard.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/jquery-steps/jquery.steps.min.js"></script>
+    <script src="~/AdminTemplate/assets/plugins/parsleyjs/parsley.min.js"></script>
+    <script src="~/AdminTemplate/assets/js/script.js"></script>
+    <script src="~/AdminTemplate/assets/js/notify/bootstrap-notify.min.js"></script>
+    <script src="~/AdminTemplate/assets/js/notify/notify-script.js"></script>
+    <script src="~/AdminTemplate/assets/js/dashboard/default.js"></script>
+    <script src="~/AdminTemplate/assets/js/bootstrap-notify.min.js"></script>
+    <script src="~/AdminTemplate/assets/js/admin/admin-general.js"></script>
+
+    @RenderSection("DataTable", false)
+
+    <script>
+        $(function () {
+            $('.summernote').summernote();
+            var sHTML = $('.summernote').code();
+            console.log(sHTML);
+            $('.summernote1').summernote({
+                toolbar: [
+                    ['headline', ['style']],
+                    ['style', ['bold', 'italic', 'underline', 'superscript', 'subscript', 'strikethrough', 'clear']],
+                    ['textsize', ['fontsize']],
+                    ['alignment', ['ul', 'ol', 'paragraph', 'lineheight']],
+                ]
+            });
+
+            $('.summernote2').summernote({
+                airMode: true,
+            });
+
+        });
+
+    </script>
+
+    <script>
+
+        $(function () {
+            $(function () {
+
+                var updateOutput = function (e) {
+                    var list = e.length ? e : $(e.target),
+                        output = list.data('output');
+                    if (window.JSON) {
+                        output.val(window.JSON.stringify(list.nestable('serialize')));//, null, 2));
+                    } else {
+                        output.val('JSON browser support required for this demo.');
+                    }
+                };
+                // activate Nestable for list 1
+                $('#nestable').nestable({
+                    group: 1
+                }).on('change', updateOutput);
+
+                // activate Nestable for list 2
+                $('#nestable2').nestable({
+                    group: 1
+                }).on('change', updateOutput);
+
+                // output initial serialised data
+                updateOutput($('#nestable').data('output', $('#nestable-output')));
+                updateOutput($('#nestable2').data('output', $('#nestable2-output')));
+
+                $('#nestable-menu').on('click', function (e) {
+                    var target = $(e.target),
+                        action = target.data('action');
+                    if (action === 'expand-all') {
+                        $('.dd').nestable('expandAll');
+                    }
+                    if (action === 'collapse-all') {
+                        $('.dd').nestable('collapseAll');
+                    }
+                });
+
+            });
+            // Initialize Example 1
+            $('#Table1').dataTable({
+                //"ajax": '"~/Admin_design/api/datatables.json',
+                'sorting': [],
+                dom: "<'row'<'col-sm-4'l><'col-sm-4 text-center'B><'col-sm-4'f>>tp",
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                buttons: [
+                    { extend: 'copy', className: 'btn-sm' },
+                    { extend: 'csv', title: 'ExampleFile', className: 'btn-sm' },
+                    { extend: 'pdf', title: 'ExampleFile', className: 'btn-sm' },
+                    { extend: 'print', className: 'btn-sm' }
+                ]
+            });
+
+            // Initialize Example 2
+            $('#example2').dataTable();
+
+        });
+
+        function myfunctioncp() {
+
+            document.getElementById("msgdig").style.display = "none";
+            $("#changepasswordnmodal").modal('show');
+
+            document.getElementById("failuremsg").innerText = "";
+            document.getElementById("Old_Password").value = "";
+            document.getElementById("new_Password").value = "";
+            document.getElementById("confirm_password").value = "";
+
+        }
+
+    </script>
+    <script>
+
+         var sessionTimeoutWarning = @Session.Timeout ;
+        var stimeout = parseInt(sessionTimeoutWarning) * 60;
+       // alert(stimeout);
+        var value = '@Request.RequestContext.HttpContext.Session["LOGIN_ID"]';
+       // alert(value);
+        var count = 1;
+        setInterval(CheckSession,1000);
+       // alert(count);
+        function CheckSession() {
+            var session = 'Session["username"]' != null;
+            //alert(session);
+            if (stimeout == count) {
+                $('#myModal').modal('show');
+            }
+            count++;
+           // alert(count);
+
+        }
+    function resettingSession() {
+        //alert("call..." + value);
+            //$.ajax({
+            //    type: "GET",
+            //    url: "/Employee/Sessionresest/"+value,
+
+            //    contentType:"application/json; charset=utf-8",
+            //    success: function () { $('#myModal').modal('hide'); location.reload(); }
+
+            //});
+        $('#myModal').modal('hide'); location.reload();
+    }
+    </script>
+
+
+
+</body>
+</html>
+
+
+
+

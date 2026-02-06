@@ -1,0 +1,183 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "Imp_Document_Upload";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    List<UserMaster> user = ViewBag.user;
+    List<Imp_Doc_Master> impdoc = ViewBag.impdoc;
+}
+
+<!--Page header-->
+<div class="page-header d-xl-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title">All Important Document</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="d-flex align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="btn-list">
+                <button class="btn btn-primary" onclick="return Add__Imp_Document()" type="submit"><strong><i class="feather feather-plus fs-15 my-auto mr-2"></i>Add Document</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Page header-->
+<!-- Row -->
+<div class="row">
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header  border-0">
+                <div class="card-title"></div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered text-nowrap border-bottom" id="basic-datatable">
+                        <thead>
+                            <tr>
+                                <th class="border-bottom-0">Doc Name</th>
+                                <th class="border-bottom-0">Employee Name</th>
+                                <th class="border-bottom-0">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (impdoc != null)
+                            {
+                                foreach (Imp_Doc_Master i in impdoc)
+                                {
+                                    <tr>
+                                        <td style="text-transform: capitalize">@i.Doc_Name</td>
+                                        <td style="text-transform: capitalize">@i.UserMaster.User_Name</td>
+                                        @using (Ajax.BeginForm("Imp_Document_Delete", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateImp_Document_Add" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                                        {
+                                            <td>
+                                                <input type="hidden" name="Imp_Id" id="Imp_Id" value="@i.Doc_Id" />
+                                                <Button value="Delete" class="btn btn-danger btn-icon" data-toggle="tooltip" data-original-title="Delete" type="submit" id="btnDelete" name="Command" onclick="return confirm('Are you sure you want to Delete?')" ;><i class="feather feather-trash-2"></i></Button>
+                                                <a class="btn btn-success btn-icon" href="@ViewBag.ImagekitDisplayURL\User_Document\@i.File_Name" target="_blank" data-toggle="tooltip" data-original-title="Print"><i class="feather feather-download" aria-hidden="true"></i></a>
+
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Row-->
+
+<div class="modal fade" id="Model_Add_Imp_Doc" tabindex="-1" role="dialog" aria-hidden="true">
+    @using (Ajax.BeginForm("Imp_Document_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateImp_Document_Add" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "submitdoc()" }))
+    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="col-md-12 p-3 card-left" style="display:none;text-align:center" id="msgdig">
+                    <div class="alert_R" style="border-radius: 5px; color: white;padding:inherit; background-color: #f91a1ab8 ">
+                        <span id="failuremsg"></span>
+                        <span class="closebtn " onclick="this.parentElement.style.display='none';" style="float:right">&times;</span>
+                    </div>
+                </div>
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Document</h5>
+                    <button class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="form-label">Employee Name <span class="text-red">*</span></label>
+                            <select name="Emp_Id" id="Emp_Id" required data-placeholder="Select Employee" class="form-control select2-show-search custom-select">
+                                <option value="">Select Employee</option>
+                                <option value="0">All Employee</option>
+                                @foreach (UserMaster _u in user)
+                                {
+                                    <option value=@_u.User_ID>@_u.User_Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">Document Type <span class="text-red">*</span></label>
+                            <select name="Type" id="Type" required class="form-control select2">
+                                <option value="1">Important Document</option>
+                                <option value="2">Salary Slip</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="form-label">Upload Document </label>
+                            @*<input type="file" name="file" id="file" class="form-control" required>*@
+                            @*<div class="custom-file">
+                                    <input type="file" name="file" id="file" class="custom-file-input" required>
+                                    <label class="custom-file-label">Choose file</label>
+                                </div>*@
+                            <div class="form-group">
+                                @*<input type="file" name="file" id="file" placeholder="Select Image" value="" class="form-control" />*@
+                                <div class="input-group file-browser">
+                                    <input type="text" class="form-control border-right-0 browse-file" placeholder="Browser File" readonly>
+                                    <label class="input-group-append mb-0">
+                                        <span class="btn ripple btn-primary">
+                                            Browse <input type="file" class="file-browserinput" name="file" id="file" style="display: none;" multiple>
+                                        </span>
+                                    </label>
+                                </div><span class="text-lightpink-red">[ Allow Only .jpg .png .jpeg .pdf .xls .xlsx .txt .docx .ppt(5MB) ]</span>
+                                <script type="text/javascript">
+                                    $('#file').bind('change', function () {
+                                        if ((this.files[0].size / 1024 / 1024) > 5) {
+                                            alert('Sorry, Maximum File size : 5 MB Only ! ');
+                                            $('#file').val('');
+                                        }
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">Document Name <span class="text-red">*</span></label>
+                            <input type="text" name="Doc_Name" id="Doc_Name" class="form-control" placeholder="Enter Document Name" required autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                    <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-info"><i class="fa fa-save"></i>&ensp;Save</button>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+
+
+
+<script>
+    var isSubmitted = false;
+
+    function stopMultipleSubmitImpDoc() {
+        if (!isSubmitted) {
+            $("#savebtn").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#savebtn").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function submitdoc() {
+        //    var Address_Value = $("#Address_address").val();
+        //if (Address_Value == "") {
+        //}
+        //    else {
+        stopMultipleSubmitImpDoc();
+        /*}*/
+
+        return isSubmitted;
+    }
+</script>

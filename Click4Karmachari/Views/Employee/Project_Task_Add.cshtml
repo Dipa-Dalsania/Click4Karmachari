@@ -1,0 +1,415 @@
+﻿@using ClickKarmachari;
+@{
+    ViewBag.Title = "Project_Task_Add";
+    Layout = "~/Views/Employee/Employee_Layout_new.cshtml";
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    List<Project_Assign_Master> projects = ViewBag.Project;
+    Project_Task_Master _p = ViewBag._p;
+    List<TaskType> t = ViewBag.t;
+    List<Comment_Master> _c = ViewBag._c;
+    DateTime Date = Convert.ToDateTime(DateTime.Now);
+    string str1 = Date.ToString("dd MMMM yyyy");
+}
+<style>
+    .member-initials {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        height: 32px;
+        left: 0;
+        line-height: 32px;
+        overflow: hidden;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100%;
+    }
+
+    .new-comment .member {
+        position: absolute;
+        left: -40px;
+    }
+
+    .member-no-menu {
+        cursor: default;
+    }
+
+    .new-comment {
+        position: relative;
+        margin: 0 0 8px 40px;
+    }
+
+    .member {
+        background-color: #dfe1e6;
+        border-radius: 25em;
+        color: #172b4d;
+        cursor: pointer;
+        display: block;
+        float: left;
+        height: 32px;
+        margin: 0 4px 4px 0;
+        overflow: visible;
+        position: relative;
+        width: 32px;
+        text-decoration: none;
+        -webkit-user-select: none;
+        user-select: none;
+        z-index: 0;
+    }
+</style>
+<br/><br/>
+<div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xl-12">
+            <div class="card">
+                <div class="card-header border-bottom-0">
+                    <h3 class="card-title">Add Task</h3>
+                </div>
+                <div class="card-body">
+                    @using (Ajax.BeginForm("Project_Task_Add", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateEUserProTask" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form", @onsubmit = "return submitProjTask();" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        if (_p != null)
+                        {
+                            <input type="hidden" name="Task_Id" id="Task_Id" class="form-control" value="@_p.Task_Id">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Project Name <span class="text-red">*</span></label>
+                                        <select name="Project_Id" id="Project_Id" class="form-control select2" required data-placeholder="Select Project">
+                                            <option value="@_p.Project_Id">@_p.Project_Master.Project_Name</option>
+                                            @foreach (Project_Assign_Master _u in projects)
+                                            {
+                                                <option value=@_u.Project_Id>@_u.Project_Master.Project_Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Duration Unit <span class="text-red">*</span></label>
+                                        <select class="form-control select2" name="Duration_Unit" id="Duration_Unit" required>
+                                            <option value="@_p.Duration_Unit">@_p.Duration_Unit</option>
+                                            <option value="Min">Min</option>
+                                            <option value="Hour">Hour</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Task Name <span class="text-red">*</span></label>
+                                        <input type="text" name="Task_Name" id="Task_Name" value="@_p.Task_Name" class="form-control" placeholder="Enter Task Name" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Task Type <span class="text-red">*</span></label>
+                                        <select name="Task_Type" id="Task_Type" class="form-control select2" required>
+                                            <option value="@_p.Task_Type">@_p.TaskType.TaskType_Name</option>
+                                            @foreach (TaskType _t in t)
+                                            {
+                                                <option value=@_t.TaskType_Id>@_t.TaskType_Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label"> Revised End Date</label>
+                                        <input type="text" name="R_End_Date" id="R_End_Date" class="form-control fc-datepicker" data-single-mode="true" placeholder="Enter End Date" required value="@_p.Revised_End_Date.Value.ToString("dd MMMM yyyy")">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label"> Start Date</label>
+                                        <input type="text" name="A_Start_Date" id="A_Start_Date" class="form-control fc-datepicker" data-single-mode="true" placeholder="Enter Start_Date" required value="@_p.Actual_Start_Date.Value.ToString("dd MMMM yyyy")">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Duration <span class="text-red">*</span></label>
+                                        <input type="number" name="Duration" value="@_p.Duration" id="Duration" class="form-control" placeholder="Enter Duration" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Description <span class="text-red">*</span></label>
+                                        <textarea name="Description" id="Description" class="form-control" placeholder="Enter Description" rows="1" cols="10" required>@_p.Description</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                        }
+                        else
+                        {
+                            <input type="hidden" name="Task_Id" id="Task_Id" class="form-control" value="0">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Project Name <span class="text-red">*</span></label>
+                                        <select name="Project_Id" id="Project_Id" class="form-control select2" required data-placeholder="Select Project">
+                                            <option value="">Select Project</option>
+                                            @foreach (Project_Assign_Master _u in projects)
+                                            {
+                                                <option value=@_u.Project_Id>@_u.Project_Master.Project_Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Task Name <span class="text-red">*</span></label>
+                                        <input type="text" name="Task_Name" id="Task_Name" class="form-control" placeholder="Enter Task Name" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Task Type <span class="text-red">*</span></label>
+                                        <select name="Task_Type" id="Task_Type" class="form-control select2" required>
+                                            <option value="">Select Task Type</option>
+                                            @foreach (TaskType _t in t)
+                                            {
+                                                <option value=@_t.TaskType_Id>@_t.TaskType_Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Duration Unit <span class="text-red">*</span></label>
+                                        <select class="form-control select2" name="Duration_Unit" id="Duration_Unit" required>
+                                            <option value="">
+                                                Plz select Below Option
+                                            </option>
+                                            <option value="Min">Min</option>
+                                            <option value="Hour">Hour</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Duration <span class="text-red">*</span></label>
+                                        <input type="number" name="Duration" id="Duration" class="form-control" placeholder="Enter Duration" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label"> Start Date <span class="text-red">*</span></label>
+                                        <input type="text" name="A_Start_Date" id="A_Start_Date" class="form-control fc-datepicker" data-single-mode="true" placeholder="Enter Start_Date" required value="@str1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label"> Revised End Date <span class="text-red">*</span></label>
+                                        <input type="text" name="R_End_Date" id="R_End_Date" class="form-control fc-datepicker" data-single-mode="true" placeholder="Enter End Date" required value="@str1">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Description <span class="text-red">*</span></label>
+                                        <textarea name="Description" id="Description" placeholder="Enter Description" class="form-control" rows="1" cols="10" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                        }
+                        if (_p != null)
+                        {
+                            <div class="col-lg-12" style=" margin-bottom: 25px;">
+                                @if (_p.Status == 1 || _p.Status == 8)
+                                {
+                                    <div>
+                                        <button type="submit" id="Runningbtn" name="Command" value="Running" class="btn btn-danger">Running</button>
+                                    </div>
+                                }
+                                @if (_p.Status == 7)
+                                {
+                                    <div>
+                                        <button type="submit" id="Stopbtn" name="Command" value="Stop" class="btn btn-danger">Stop</button>
+                                        <button type="submit" id="Completebtn" name="Command" value="Complete" class="btn btn-danger">Complete</button>
+                                    </div>
+                                }
+                                @if (_p.Status == 0)
+                                {
+                                    <div>
+                                        <a href="~/Employee/Project_Task_List?status=101" class="btn btn-info"><i class="fa fa-arrow-left"></i>&ensp; Back</a>
+                                        <button type="submit" id="save" name="Command" value="Save" class="btn btn-primary"><i class="fa fa-save"></i>&ensp;Save</button>
+                                        <button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="card-footer right" style=" margin-bottom: 25px;">
+                                <div>
+                                    <a href="~/Employee/Project_Task_List?status=101" class="btn btn-info"><i class="fa fa-arrow-left"></i>&ensp; Back</a>
+                                    <button type="submit" id="save" name="Command" value="Save" class="btn btn-primary"><i class="fa fa-save"></i>&ensp;Save</button>
+                                </div>
+                            </div>
+                        }
+                        if (_p != null)
+                        {
+                            <table style="width:100%;margin-bottom:20px;margin-top:20px;">
+                                <tbody>
+                                    <tr>
+                                        <td style="width:5%;">
+                                            <div class="member member-no-menu"><span class="member-initials" title="Admin" aria-label="Admin">AD</span><span class="member-gold-badge" title="This member has Trello Gold."></span></div>
+                                        </td>
+                                        <td style="width:80%;">
+                                            <input type="text" style="width:98%" name="comments" id="comments" class="form-control" placeholder="Enter Comments">
+                                        </td>
+                                        <td style="width:15%;">
+                                            <input type="submit" id="sendbtn" class="btn btn-primary" name="Command" value="Send">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        }
+
+                    }
+                    @if (_p != null)
+                    {
+                      
+                <div class="chat-body-style" id="ChatBody">
+
+                    @foreach (Comment_Master c in _c)
+                    {
+                        if (_LogedUser.User_ID == c.Add_By)
+                        {
+                            <div class="message-feed media mt-0">
+                                <div class="float-left pr-2">
+                                    <img class="avatar avatar-md brround" src="~/Uploads/User_Image/@_LogedUser.image_name" alt="">
+                                </div>
+                                @*<div class="media-body">
+                     <a class="message-author" href="#">  @_LogedUser.User_Name </a>
+                     <span class="message-date">   @c.Commented_Date </span>
+                     <span class="message-content">
+                         @c.Comments
+                     </span>
+
+                    </div>*@
+                                <div class="media-body">
+                                    <div class="mf-content">
+                                        @c.Comments
+                                    </div>
+                                    <small class="mf-date"><i class="fa fa-clock-o"></i> <b>@c.Commented_Date</b> </small>
+                                    <input type="button" id="Edit" onclick="return EPEditComment(@c.Comnt_ID,'@c.Comments',@c.Emp_Id,@c.Task_Id)" value="Edit" style="color:#17A2B8;border:none;background-color:white;text-decoration:underline" name="btnEdit" />
+
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                <div class="message-feed right">
+                    <div class="float-right pl-2">
+                        <img src="~/Uploads/User_Image/@c.UserMaster1.image_name" alt="" class="avatar avatar-md brround">  <b>@c.UserMaster1.User_Name </b>
+                    </div>
+                    @*<div class="message">
+            <a class="message-author" href="#">     @c.UserMaster1.User_Name </a>
+            <span class="message-date">  @c.Commented_Date</span>
+            <span class="message-content">
+                @c.Comments
+            </span>
+        </div>*@
+                    <div class="media-body">
+                        <div class="mf-content">
+                            @c.Comments
+                        </div>
+                        <small class="mf-date"><i class="fa fa-clock-o"></i><b>@c.Commented_Date</b></small>
+                    </div>
+                </div>
+                        }
+                    }
+
+                </div>
+                        @*</div>*@
+                    }
+
+                </div>
+                        </div>
+                        </div>
+    </div>
+</div>
+<!---Edit Comment-->
+<div class="modal fade" id="EPEdit_Comment_M" tabindex="-1" role="dialog" aria-hidden="true">
+
+    @using (Ajax.BeginForm("Edit_Comment", "Employee", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateUserEcmnt" }, new { @id = "form", @enctype = "multipart/form-data", @role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Comments</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                @Html.AntiForgeryToken()
+                <table style="width:100%;margin-bottom:20px;margin-top:20px;">
+                    <tbody>
+                        <tr>
+                            <td style="width:5%;">
+                                <div class="member member-no-menu"><span class="member-initials" title="Admin" aria-label="Admin" style="font-size:10px">EP</span><span class="member-gold-badge" title="This member has Trello Gold."></span></div>
+                            </td>
+                            <td style="width:95%;">
+                                <input type="hidden" name="Emp_Id" id="UEmp_Id" />
+                                <input type="hidden" name="Task_Id" id="UTask_Id" />
+                                <input type="hidden" name="Comnt_ID" id="UComnt_ID" />
+                                <input type="text" name="comments" id="UComments" class="form-control" placeholder="Enter Comments">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal"><i class="fa fa-close"></i>&ensp;<b style="color:#222222">Close</b></button>
+                <button type="submit" id="savebtn" name="Command" value="Save" class="btn btn-primary"><i class="feather feather-save"></i>&ensp;Save</button>
+                <button type="submit" id="deletebtn" name="Command" value="Delete" class="btn btn-danger"><i class="feather feather-trash"></i>&ensp;Delete</button>
+            </div>
+        </div>
+    </div>
+            }
+       
+    </div>
+
+<script>
+    function getFocus() {
+        document.getElementById("Reply").focus();
+    }
+    var isSubmitted = false;
+
+    function stopMultipleSubmitProTask() {
+        if (!isSubmitted) {
+            $("#save").prop('disabled', true);
+            isSubmitted = true;
+            return true;
+        }
+        else {
+            $("#savebtn").prop('disabled', false);
+            isSubmitted = false;
+            return false;
+        }
+    }
+    function stopMultipleSubmitProTask() {
+        //    var Address_Value = $("#Address_address").val();
+        //if (Address_Value == "") {
+        //}
+        //    else {
+        stopMultipleSubmit();
+        /*}*/
+
+        return isSubmitted;
+    }
+</script>

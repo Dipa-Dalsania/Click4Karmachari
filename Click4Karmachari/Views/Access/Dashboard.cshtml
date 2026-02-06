@@ -1,0 +1,931 @@
+﻿@using ClickKarmachari.Models;
+@using ClickKarmachari;
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Access/Access_Layout.cshtml";
+    UserMaster _LogedUser = ViewBag._LogedUser;
+    Admin_Dashboard_Result DashboardCounter = ViewBag.DashboardCounter;
+    Company_Menu_Rights MenuRights = ViewBag.MenuRights;
+    User_Menu_Rights UserMenuRights = ViewBag.UserMenuRights;
+    List<UserMaster> Trainee = ViewBag.Trainee;
+    List<UserMaster> rEmp = ViewBag.rEmp;
+    List<NoticeBoard_Master> Allnotice = ViewBag.Allnotice;
+    List<Event_Master> Allevent = ViewBag.Allevent;
+    List<UserMaster> AllEmp = ViewBag.AllEmp;
+    List<Leave_Master> leave = ViewBag.leaves;
+    CommonClasses util = new CommonClasses();
+    DateTime Date = Convert.ToDateTime(DateTime.Now);
+    string str1 = Date.ToString("dd MMMM yyyy"), r = "", rem = "", r1 = "";
+    List<Request_Master> Req=ViewBag.res;
+    List<Voucher_Master> voucher = ViewBag.voucher;
+}
+}
+
+<div class="page-header d-lg-flex d-block">
+    <div class="page-leftheader">
+        <h4 class="page-title" style="text-align:center;"><span class="font-weight-normal text-muted ml-2">Welcome </span> @_LogedUser.Company_Master.Company_Name</h4>
+    </div>
+    <div class="page-rightheader ml-md-auto">
+        <div class="d-flex align-items-end flex-wrap my-auto right-content breadcrumb-right">
+            <div class="d-flex">
+
+            </div>
+
+            <div class="d-lg-flex d-block">
+                <div class="btn-list">
+                    <button class="btn btn-light" data-toggle="modal" data-target="#mailmodal" title="E-mail"> <i class="feather feather-mail"></i> </button>
+                    <button class="btn btn-light" data-toggle="modal" data-target="#contactmodal" title="Contact"> <i class="feather feather-phone-call"></i> </button>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#infomodal" title="Info"> <i class="feather feather-info"></i> </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-xl-12 col-md-12 col-lg-12">
+        <div class="row">
+            @if (UserMenuRights.Employees == true && MenuRights.Employees == true)
+            {
+                <div class="col-xl-3 col-lg-6 col-md-12">
+                    <a href="~/Access/Employee_All">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold">Employees</span>
+                                            <h3 class="mb-0 mt-1 mb-2">@DashboardCounter.TotalEmployee</h3>
+                                            <span class="text-muted">
+                                                <span class="text-success fs-12 mt-2 mr-1"><i class="feather feather-arrow-up-right mr-1 bg-success-transparent p-1 brround"></i></span>
+                                                Total Employees
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-success my-auto  float-right"> <i class="fa fa-group"></i> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-6 col-md-12">
+                    <a href="~/Access/Department_List">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold">Departments</span>
+                                            <h3 class="mb-0 mt-1 mb-2">@DashboardCounter.TotalDepartment</h3>
+                                            <span class="text-muted">
+                                                <span class="text-danger fs-12 mt-2 mr-1"><i class="feather feather-arrow-down-left mr-1 bg-primary-transparent p-1 brround"></i></span>
+                                                Total Departments
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-primary my-auto  float-right"> <i class="fe fe-grid"></i> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-6 col-md-12">
+                    <a href="~/Access/Project_List">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold">Projects</span>
+                                            <h3 class="mb-0 mt-1 mb-2">@DashboardCounter.ProjectCount</h3>
+                                            <span class="text-muted">
+                                                <span class="text-danger fs-12 mt-2 mr-1"><i class="feather feather-arrow-down-left mr-1 bg-primary-transparent p-1 brround"></i></span>
+                                                Total Projects
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-primary my-auto  float-right"> <i class="fe fe-grid"></i> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+            @if (UserMenuRights.Attendance == true && MenuRights.Attendance == true)
+            {
+                <div class="col-xl-3 col-lg-6 col-md-12">
+                    <a href="~/Access/Leave_List?status=0">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold">Leave Request</span>
+                                            <h3 class="mb-0 mt-1  mb-2">@DashboardCounter.LeaveRequest</h3>
+                                        </div>
+                                        <span class="text-muted">
+                                            <span class="text-danger fs-12 mt-2 mr-1"><i class="feather feather-arrow-up-right mr-1 bg-danger-transparent p-1 brround"></i> </span>
+                                            All Leave Request
+                                        </span>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-danger brround my-auto  float-right"> <i class="fa fa-hand-o-left"></i> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+            @if (UserMenuRights.Salary_Generator == true && MenuRights.Salary_Generator == true)
+            {
+                <div class="col-xl-3 col-lg-6 col-md-12">
+                    <a href="~/Access/SalaryGroups">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold">Salary Groups</span>
+                                            <h3 class="mb-0 mt-1  mb-2">@DashboardCounter.Projectsalarygroup</h3>
+                                        </div>
+                                        <span class="text-muted">
+                                            <span class="text-danger fs-12 mt-2 mr-1"><i class="feather feather-arrow-up-right mr-1 bg-secondary-transparent p-1 brround"></i></span>
+                                            Total Salary Group
+                                        </span>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-secondary brround my-auto  float-right"> <i class="feather feather-book"></i> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+            @*<div class="col-xl-3 col-lg-6 col-md-12">
+                    <a href="~/Access/Project_Task_List">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold">Project Task</span>
+                                            <h3 class="mb-0 mt-1 mb-2">@DashboardCounter.ProjectTaskPending</h3>
+                                        </div>
+                                        <span class="text-muted">
+                                            <span class="text-danger fs-12 mt-2 mr-1"><i class="feather feather-arrow-down-left mr-1 bg-warning-transparent p-1 brround"></i></span>
+                                            Total Working Task
+                                        </span>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-warning my-auto  float-right"> <i class="fe fe-file-text"></i> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>*@
+            @if (UserMenuRights.Vouchers == true && MenuRights.Vouchers == true)
+            {
+                <div class="col-xl-3 col-lg-6 col-md-12">
+                    <a href="~/Access/VoucherReq_List">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold">Voucher Request</span>
+                                            <h3 class="mb-0 mt-1  mb-2">@DashboardCounter.VourcherRequestPending</h3>
+                                        </div>
+                                        <span class="text-muted">
+                                            <span class="text-danger fs-12 mt-2 mr-1"><i class="feather feather-arrow-up-right mr-1 bg-info-transparent p-1 brround"></i> </span>
+                                            Total All  Voucher
+                                        </span>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-info brround my-auto  float-right"> <i class="fe fe-bookmark"></i> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-6 col-md-12">
+                    <a href="~/Access/AdvanceReq_List">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold">Advance Request</span>
+                                            <h3 class="mb-0 mt-1 mb-2">@DashboardCounter.AdReqPending</h3>
+                                        </div>
+                                        <span class="text-muted">
+                                            <span class="text-danger fs-12 mt-2 mr-1"><i class="feather feather-arrow-down-left mr-1 bg-pink-transparent p-1 brround"></i></span>
+                                            Total All Request
+                                        </span>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-indigo my-auto  float-right text-2xl"> ₹</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+            @if (UserMenuRights.Assets == true && MenuRights.Assets == true)
+            {
+                <div class="col-xl-3 col-lg-6 col-md-12">
+                    <a href="~/Access/Asset_List">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="mt-0 text-left">
+                                            <span class="fs-14 font-weight-semibold">Assets</span>
+                                            <h3 class="mb-0 mt-1 mb-2">@DashboardCounter.TotalAsset</h3>
+
+                                        </div>
+                                        <span class="text-muted">
+                                            <span class="text-danger fs-12 mt-2 mr-1"><i class="feather feather-arrow-up-left mr-1 bg-danger-transparent p-1 brround"></i> </span>
+                                            Total All Assets
+                                        </span>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="icon1 bg-purple my-auto  float-right"> <i class="feather feather-layers sidemenu_icon"></i> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="row">
+    @*@if (UserMenuRights.Leave == true && MenuRights.Attendance == true)
+        {*@
+    <div class="col-xl-12 col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <h3 class="card-title">Leave Request</h3>
+                <div class="card-options ">
+                    <a href="~/Access/Leave_List" class="btn btn-info"> View All <i class="fa fa-plus fa-spin ml-2"></i> </a>
+
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="sortable table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="border-bottom-0 w-5">Employee Name</th>
+                            <th class="border-bottom-0">Leave Type</th>
+                            <th class="border-bottom-0">From Date</th>
+                            <th class="border-bottom-0">To Date</th>
+                            <th class="border-bottom-0">Days</th>
+                            <th style="display:none"></th>
+                            <th class="border-bottom-0">Applied on</th>
+                            <th class="border-bottom-0">Status</th>
+                            @*<th class="border-bottom-0">Actions</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (AllEmp != null)
+                        {
+                            foreach (Leave_Master u in leave)
+                            {
+
+                                <tr class="border-bottom">
+                                    <td class="font-weight-semibold fs-14" style="text-transform:capitalize">@u.UserMaster.User_Name</td>
+                                    <td class="font-weight-semibold fs-14" style="text-transform:capitalize">@u.Leave_Type</td>
+                                    <td class="font-weight-semibold fs-14" style="text-transform:capitalize">@u.From_Date.ToString("dd MMMM yyyy")</td>
+                                    <td class="font-weight-semibold fs-14" style="text-transform:capitalize">@u.To_Date.ToString("dd MMMM yyyy")</td>
+                                    <td class="font-weight-semibold fs-14" style="text-transform:capitalize">@u.leave_days</td>
+
+                                    <td style="display:none">@Html.Raw(rem)</td>
+
+                                    <td>@u.ReqDate.ToString("dd MMMM yyyy")</td>
+                                    <td>
+                                        @if (u.Status == 0)
+                                        {
+                                            <span class="badge badge-secondary-light"><b>@util._Status_ByNumber(u.Status)</b></span>
+                                        }
+                                        else if (u.Status == 1)
+                                        {
+                                            <span class="badge badge-success">@util._Status_ByNumber(u.Status)</span>
+                                        }
+                                        else if (u.Status == 2)
+                                        {
+                                            <span class="badge badge-danger-light">@util._Status_ByNumber(u.Status)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-primary-light">@util._Status_ByNumber(u.Status)</span>
+                                        }
+                                    </td>
+                                    @*<td>
+                                        @using (Ajax.BeginForm("Leave_Emp_Delete", "Access", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnUpdateAdminLeaveList" }, new { @id = "form", @enctype = "multipart/form-data", role = "form" }))
+                                        {
+                                            <input type="hidden" name="lev_Id" id="lev_Id" value="@u.leave_Id" />
+                                            <button class="btn btn-icon  btn-primary" onclick="return Add_Emp_Leave(@u.leave_Id,@u.User_Id,@u.leave_days,'@u.From_Date.ToString("dd MMMM yyyy")','@u.To_Date.ToString("dd MMMM yyyy")','@u.Leave_Type','@r','@r1',@u.F_Date,@u.T_Date)" type="submit"><strong> <i class="feather feather-edit" data-toggle="tooltip" data-original-title="View/Edit"></i></strong></button>
+                                            <Button type="submit" id="deleteLeave" name="Command" value="Delete" class="btn btn-danger btn-icon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="return confirm('Are you sure you want to Delete?')" ;> <i class="feather feather-trash-2"></i></Button>
+                                        }
+                                    </td>*@
+                                </tr>
+
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @*}*@
+</div>
+<div class="row">
+    @if (UserMenuRights.Vouchers == true && MenuRights.Vouchers == true)
+        {
+    <div class="col-xl-12 col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <h3 class="card-title">Advance Request</h3>
+                <div class="card-options ">
+                    <a href="~/Access/AdvanceReq_List" class="btn btn-info"> View All <i class="fa fa-plus fa-spin ml-2"></i> </a>
+
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="sortable table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="border-bottom-0">Pay To</th>
+                            <th class="border-bottom-0">Project Name/ <br>Opp Name</th>
+                            <th class="border-bottom-0">Date</th>
+                            <th class="border-bottom-0">Expense Requested <br> Amount</th>
+                            <th class="border-bottom-0">Expense Granted<br> Amount</th>
+                            <th class="border-bottom-0">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Req != null)
+                        {
+                            foreach (Request_Master p in Req)
+                            {
+                                <tr>
+
+                                    
+                                    <td style="text-transform: capitalize">@p.UserMaster.User_Name</td>
+                                    @if (p.Project_Id != null)
+                                    {
+                                        <td style="text-transform: capitalize">@p.Project_Master.Project_Name</td>
+
+                                    }
+                                    else
+                                    {
+                                        <td style="text-transform: capitalize">@p.Parent_Type</td>
+                                    }
+                                    <td>@p.S_Date.ToString("dd-MM-yyyy") To @p.E_Date.ToString("dd-MM-yyyy")</td>
+                                    <td style="text-transform: capitalize">@p.Requested_Amount</td>
+                                    <td style="text-transform: capitalize">@p.Granted_Amount</td>
+                                    <td>
+                                        @*@util._Status_ByNumber(p.Status)*@
+                                        @if (p.Status == 0)
+                                        {
+                                            <span class="badge badge-secondary-light">@util._Status_ByNumber(p.Status)</span>
+                                        }
+                                        else if (p.Status == 1)
+                                        {
+                                            <span class="badge badge-success">@util._Status_ByNumber(p.Status)</span>
+                                        }
+                                        else if (p.Status == 2)
+                                        {
+                                            <span class="badge badge-danger-light">@util._Status_ByNumber(p.Status)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-primary-light">@util._Status_ByNumber(p.Status)</span>
+                                        }
+                                    </td>
+                                   
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+<div class="row">
+    @if (UserMenuRights.Vouchers == true && MenuRights.Vouchers == true)
+    {
+        <div class="col-xl-12 col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h3 class="card-title">Voucher Request</h3>
+                    <div class="card-options ">
+                        <a href="~/Access/VoucherReq_List" class="btn btn-info"> View All <i class="fa fa-plus fa-spin ml-2"></i> </a>
+
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="sortable table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="border-bottom-0">Date</th>
+                                <th class="border-bottom-0">Pay To</th>
+                                <th class="border-bottom-0">Total Amount</th>
+                                <th class="border-bottom-0">Payable/Receivable Amount</th>
+                                <th class="border-bottom-0">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (voucher != null)
+                            {
+                                foreach (Voucher_Master p in voucher)
+                                {
+                                    <tr>
+
+                                      
+                                        <td>@p.Voucher_Date.ToString("dd MMMM yyyy")</td>
+                                        <td style="text-transform: capitalize">@p.UserMaster.User_Name</td>
+                                        <td>@p.Total_Amount</td>
+                                        <td>@p.Payable_Amount</td>
+                                        <td>
+                                            @*@util._Status_ByNumber(p.Status)*@
+                                            @if (p.Status == 0)
+                                            {
+                                                <span class="badge badge-secondary-light"><b>@util._Status_ByNumber(p.Status)</b></span>
+                                            }
+                                            else if (p.Status == 1)
+                                            {
+                                                <span class="badge badge-success"><b>@util._Status_ByNumber(p.Status)</b></span>
+                                            }
+                                            else if (p.Status == 2)
+                                            {
+                                                <span class="badge badge-danger-light"><b>@util._Status_ByNumber(p.Status)</b></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-primary-light"><b>@util._Status_ByNumber(p.Status)</b></span>
+                                            }
+                                        </td>
+                                       
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="row">
+    @*<div class="col-xl-5 col-md-12 col-lg-12">
+            <div class="card">
+                <canvas id="chartLine" style="display:none;">
+                </canvas>
+                <div class="card-header border-0">
+                    <h4 class="card-title">Attendance Report-Weekly</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mt-5">
+                        <canvas id="sales-summary" class=""></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    @if (UserMenuRights.NoticeBoard == true && MenuRights.NoticeBoard == true)
+    {
+        <div class="col-xl-6 col-md-12 col-lg-6">
+            <div class="card overflow-hidden" style="height:374px;">
+                <div class="card-header border-0">
+                    <h4 class="card-title">Notice Board</h4>
+                </div>
+                <div class="pt-2">
+                    @if (Allnotice != null)
+                    {
+                        foreach (NoticeBoard_Master n in Allnotice.Take(4))
+                        {
+                            <div class="list-group">
+                                <div class="list-group-item d-flex pt-3 pb-3 align-items-center border-0">
+                                    <div class="mr-3 mr-xs-0">
+                                        <div class="calendar-icon icons">
+                                            <div class="date_time bg-purple-transparent">
+                                                <span class="date fs-15">@n.Date.Value.ToString("dd")</span>
+                                                <span class="month">@n.Date.Value.ToString("MMM")</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+                                    <div class="ml-1">
+                                        <div class="h5 fs-14 mb-1" style="text-transform:capitalize">@n.Title</div> <small class="text-muted fs-13" style="text-transform:capitalize">@n.Description</small>
+                                    </div>
+                                    <br /> <br />
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="hpanel" style="">
+                                    <div class="col-lg-8 center-align" style="margin: auto;">
+                                        @*<img src="~/AdminTemplate/assets/images/data_not_found.png" style="width:100%;height:100%; " />*@
+                                        <img src="~/img/2803.png" style="width:100%;height:100%; " />
+                                        &ensp;  &ensp;
+                                        <h4 style="text-align:center;color:dodgerblue">No Data Found</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-md-12 col-lg-6">
+            <div class="card overflow-hidden" style="height:374px;">
+                <div class="card-header border-0">
+                    <h4 class="card-title">Upcoming Events</h4>
+                </div>
+
+                <ul class="vertical-scroll pt-4 ">
+                    @if (Allevent != null)
+                    {
+                        foreach (Event_Master u in Allevent.Take(5))
+                        {
+
+                            <li class="item">
+                                <div class="card p-3 ">
+                                    <div class="d-flex comming_events calendar-icon icons">
+                                        <span class="date_time bg-pink-transparent bradius mr-3">
+                                            <span class="date fs-15">@u.Date.Value.ToString("dd")</span>
+                                            <span class="month">@u.Date.Value.ToString("MMM")</span>
+                                        </span>
+                                        <div class="mr-3 mt-0 mt-sm-1 d-block">
+                                            <div class="h5 fs-14 mb-1" style="text-transform:capitalize">
+                                                @u.UserMaster.User_Name
+                                            </div>
+                                            <div class="fs-12"><span class="badge badge-info-light" style="text-transform:capitalize">@u.Title</span></div>
+                                            <small class="text-muted fs-13" style="text-transform:capitalize">@u.Description</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="item">
+                            <div class="card p-4 ">
+                                <div class="d-flex comming_events calendar-icon icons">
+                                    <div class="col-lg-6 center-align" style="margin: auto;">
+                                        <img src="~/img/2803.png" style="width:100%;height:100%; " />
+                                        &ensp;
+                                        <h4 style="text-align:center;color:dodgerblue">No Data Found</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    }
+</div>
+<div class="row">
+    @if (UserMenuRights.Employees == true && MenuRights.Employees == true)
+    {
+        <div class="col-xl-6 col-md-12 col-lg-6">
+            <div class="card">
+                <div class="card-header border-bottom-0">
+                    <h3 class="card-title">Recent Employees</h3>
+                    <div class="card-options">
+                       
+                            <a href="~/Access/Employee_All" class="btn btn-info"> View All <i class="fa fa-plus fa-spin ml-2"></i> </a>
+                      
+                    </div>
+                </div>
+                <!--<div class="tab-menu-heading table_tabs mt-2 p-0 ">
+                    <div class="tabs-menu1">-->
+                        <!-- Tabs -->
+                        <!--<ul class="nav panel-tabs">
+                            <li class="ml-4"><a href="#tab5" data-toggle="tab">Trainee</a></li>
+                            <li><a href="#tab6" class="active" data-toggle="tab">Recently Hired Employees</a></li>
+                        </ul>
+                    </div>
+                </div>-->
+                <div class="table-responsive">
+                    <table class="sortable table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Employee</th>
+                                <th class="text-center">Time</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (rEmp != null)
+                            {
+                                foreach (UserMaster t in rEmp.Take(10).OrderByDescending(x => x.User_ID))
+                                {
+                                    string result = "";
+                                    double TotalDays = (int)(DateTime.Now - t.Date_of_join).TotalDays;
+
+                                    if (TotalDays < 30)
+                                    {
+                                        result = (DateTime.Now - t.Date_of_join).TotalDays.ToString() + " Days";
+                                    }
+                                    else if (TotalDays < 365)
+                                    {
+                                        result = ((DateTime.Now - t.Date_of_join).TotalDays / 30).ToString() + " Months";
+                                    }
+                                    else
+                                    {
+                                        result = ((DateTime.Now - t.Date_of_join).TotalDays / 365).ToString() + " Years";
+                                    }
+                                    int fresult = (int)float.Parse(result);
+                                    <tr class="border-bottom">
+                                        <td class="font-weight-semibold fs-14" style="text-transform:capitalize">@t.User_Name</td>
+                                        <td class="text-center"><span class="badge bg-success-transparent">@fresult</span></td>
+                                       
+                                    </tr>
+                                }
+                            }
+                                </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    } @if (UserMenuRights.Attendance == true && MenuRights.Attendance == true)
+    {
+        <div class="col-xl-6 col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h3 class="card-title">Attendance</h3>
+                    <div class="card-options ">
+                        <a href="~/Access/Employee_Punch_List" class="btn btn-info"> View All <i class="fa fa-plus fa-spin ml-2"></i> </a>
+
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="sortable table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Employee</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">CheckIn</th>
+                                <th class="text-center">CheckOut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (AllEmp != null)
+                            {
+                                foreach (UserMaster u in AllEmp.Take(10).OrderByDescending(x=>x.User_ID))
+                                {
+
+                                    <tr class="border-bottom">
+                                        <td class="font-weight-semibold fs-14" style="text-transform:capitalize">@u.User_Name</td>
+                                        <td class="text-center"><span class="badge bg-success-transparent">Present</span></td>
+                                        <td class="text-center">@DateTime.Now.ToString("hh:mm tt")</td>
+                                    </tr>
+
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+<!--Clock-IN Modal -->
+<div class="modal fade" id="clockinmodal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><span class="feather feather-clock  mr-1"></span>Clock In</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="countdowntimer"><span id="clocktimer" class="border-0"></span></div>
+                <div class="form-group">
+                    <label class="form-label">Note:</label>
+                    <textarea class="form-control" rows="3">Some text here...</textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary">Clock In</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Clock-IN Modal  -->
+<!--contact Modal -->
+<div class="modal fade" id="contactmodal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><span class="feather feather-phone-call  mr-1"></span>&nbsp;&nbsp;@_LogedUser.Company_Master.Contact_NO</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End contact Modal  -->
+<!--mail Modal -->
+<div class="modal fade" id="mailmodal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><span class="feather feather-mail  mr-1"></span>&nbsp;&nbsp;@_LogedUser.Company_Master.Company_Email</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End mail Modal  -->
+<!--infomodal Modal -->
+<div class="modal fade" id="infomodal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    @if (_LogedUser.Company_Master.Logo_URL == null || _LogedUser.Company_Master.Logo_URL == "")
+                    {
+                        <img src="~/Uploads/User_Image/profile.jpg" alt="logo" class="avatar avatar-xxl bradius" height="80" width="80" />
+                    }
+                    else
+                    {
+                        <img src="~/Uploads/User_Image/@_LogedUser.Company_Master.Logo_URL" onerror="this.src='~/Uploads/User_Image/profile.jpg';" alt="logo" class="avatar avatar-xxl bradius" height="80" width="80" />
+                    }
+                </h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <table class="table mb-0 text-nowrap">
+                        <tbody>
+                            <tr>
+                                <td class="text-left"><b>Company Name:</b></td>
+                                <td class="text-left">@_LogedUser.Company_Master.Company_Name</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Admin Name:</b></td>
+                                <td class="text-left">@_LogedUser.User_Name</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Contact Number:</b></td>
+                                <td class="text-left">@_LogedUser.Company_Master.Contact_NO</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>E-Mail :</b></td>
+                                <td class="text-left">@_LogedUser.Company_Master.Company_Email</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Address:</b></td>
+                                <td class="text-left">@Html.Raw(util.GetTextStringTable(_LogedUser.Company_Master.Company_Address))</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End info Modal  -->
+<!--<script type="text/javascript">
+
+
+
+    var Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday;
+    Sunday = document.getElementById("Sunday").value;
+    Monday = document.getElementById("Monday").value;
+    Tuesday = document.getElementById("Tuesday").value;
+    Wednesday = document.getElementById("Wednesday").value;
+    Thursday = document.getElementById("Thursday").value;
+    Friday = document.getElementById("Friday").value;
+    Saturday = document.getElementById("Saturday").value;
+
+    /**
+      * Options for Bar chart
+      */
+    var singleBarOptions = {
+        scaleBeginAtZero: true,
+        scaleShowGridLines: true,
+        scaleGridLineColor: "rgba(0,0,0,.05)",
+        scaleGridLineWidth: 1,
+        barShowStroke: true,
+        barStrokeWidth: 1,
+        barValueSpacing: 10,
+        barDatasetSpacing: 1,
+        responsive: true
+    };
+
+    /**
+     * Data for Bar chart
+     */
+    var singleBarData = {
+        labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        datasets: [
+            {
+                label: "My Second dataset",
+                fillColor: "rgba(98,203,49,0.5)",
+                strokeColor: "rgba(98,203,49,0.8)",
+                highlightFill: "rgba(98,203,49,0.75)",
+                highlightStroke: "rgba(98,203,49,1)",
+                data: [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
+            }
+        ]
+    };
+
+    var ctx = document.getElementById("singleBarOptions").getContext("2d");
+    var myNewChart = new Chart(ctx).Bar(singleBarData, singleBarOptions);
+
+    var jan, feb, mar, april, may, jun, july, aug, sep, oct, nov, dec;
+    jan = document.getElementById("jan").value;
+    feb = document.getElementById("feb").value;
+    mar = document.getElementById("mar").value;
+    april = document.getElementById("april").value;
+    may = document.getElementById("may").value;
+    jun = document.getElementById("jun").value;
+    july = document.getElementById("july").value;
+    aug = document.getElementById("aug").value;
+    sep = document.getElementById("sep").value;
+    oct = document.getElementById("oct").value;
+    nov = document.getElementById("nov").value;
+    dec = document.getElementById("dec").value;
+
+    var lineData = {
+        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        datasets: [
+            {
+                label: "Example dataset",
+                fillColor: "rgba(220,220,220,0.5)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: [jan, feb, mar, april, may, jun, july, aug, sep, oct, nov, dec]
+            }
+
+        ]
+    };
+
+    var lineOptions = {
+        scaleShowGridLines: true,
+        scaleGridLineColor: "rgba(0,0,0,.05)",
+        scaleGridLineWidth: 1,
+        bezierCurve: true,
+        bezierCurveTension: 0.4,
+        pointDot: true,
+        pointDotRadius: 4,
+        pointDotStrokeWidth: 1,
+        pointHitDetectionRadius: 20,
+        datasetStroke: true,
+        datasetStrokeWidth: 1,
+        datasetFill: true,
+        responsive: true
+    };
+
+
+    var ctx = document.getElementById("lineOptions").getContext("2d");
+    var myNewChart = new Chart(ctx).Line(lineData, lineOptions);
+</script>-->

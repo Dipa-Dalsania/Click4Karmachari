@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="7464c60b85cb4abeab87cb71895ec7a7" Name="Diagram1" ZoomLevel="100">
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Address_Master" Width="1.5" PointX="7.5" PointY="156.375" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Asset_Master" Width="1.5" PointX="8" PointY="82" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Asset_Movement" Width="1.5" PointX="16.25" PointY="82" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Asset_type" Width="1.5" PointX="5.75" PointY="102.875" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Attendance_Master" Width="1.5" PointX="7.5" PointY="162.25" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.City_Master" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Comment_Master" Width="1.5" PointX="13.5" PointY="83.75" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Company_Doc_Heads" Width="1.5" PointX="3" PointY="94.625" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Company_Doc_Heads2" Width="1.5" PointX="5.25" PointY="94.625" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Company_Doc_Master" Width="1.5" PointX="3" PointY="63.625" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Company_ImportantDocuments" Width="1.5" PointX="7.5" PointY="94.125" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Company_Master" Width="1.5" PointX="0.75" PointY="81.75" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Company_Menu_Rights" Width="1.5" PointX="3" PointY="106.875" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Custom_Document" Width="1.5" PointX="3" PointY="69.5" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Department_Master" Width="1.5" PointX="3" PointY="72.375" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Designation_Master" Width="1.5" PointX="3" PointY="103.875" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Document_Master" Width="1.5" PointX="10.5" PointY="76" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Education_Master" Width="1.5" PointX="7.5" PointY="62.875" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Employee_Task_Master" Width="1.5" PointX="7.5" PointY="153.5" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Event_Master" Width="1.5" PointX="7.5" PointY="73" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Experience_Master" Width="1.5" PointX="7.5" PointY="144.875" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Festival_Master" Width="1.5" PointX="8.25" PointY="69.375" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.FollowUp_Master" Width="1.5" PointX="10.5" PointY="87.5" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Generated_Documents" Width="1.5" PointX="7.5" PointY="159.25" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Gift_Master" Width="1.5" PointX="10.5" PointY="83.875" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Head_Master" Width="1.5" PointX="11.25" PointY="104.5" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Holiday_Master" Width="1.5" PointX="3" PointY="79.25" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Imp_Doc_Master" Width="1.5" PointX="10.5" PointY="80" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Inquiry_Master" Width="1.5" PointX="3" PointY="86.25" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Leave_Master" Width="1.5" PointX="7.5" PointY="148" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Master_Token" Width="1.5" PointX="7.5" PointY="140.5" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.NoticeBoard_Master" Width="1.5" PointX="3" PointY="75.75" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Project_Assign_Master" Width="1.5" PointX="12.5" PointY="93.625" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Project_Master" Width="1.5" PointX="3" PointY="97.875" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Project_Task_Master" Width="1.5" PointX="16.5" PointY="85.75" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.ProjectSalary" Width="1.5" PointX="9.75" PointY="94.75" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.ProjectSalaryGroup" Width="1.5" PointX="3" PointY="66.625" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.ProjectSalaryHead" Width="1.5" PointX="7.5" PointY="114.875" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Punch_Type" Width="1.5" PointX="5.25" PointY="73.375" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Relation_Master" Width="1.5" PointX="7.5" PointY="66.125" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Religion_Master" Width="1.5" PointX="6" PointY="69.5" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Request_Master" Width="1.5" PointX="15.5" PointY="93.25" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Resignation_Master" Width="1.5" PointX="7.5" PointY="86.75" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Shift_Master" Width="1.5" PointX="3" PointY="91.25" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.TaskType" Width="1.5" PointX="3" PointY="101.125" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Transaction_Master" Width="1.5" PointX="13.5" PointY="88.5" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.User_Menu_Rights" Width="1.5" PointX="7.5" PointY="97.875" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.User_Punch" Width="1.5" PointX="7.5" PointY="77.5" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.User_Visits" Width="1.5" PointX="13.5" PointY="78.5" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.UserMaster" Width="1.5" PointX="5.25" PointY="76.875" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.UserType" Width="1.5" PointX="3" PointY="83.5" />
+        <EntityTypeShape EntityType="Prod_Satyamgroup_V1Model.Voucher_Master" Width="1.5" PointX="18.75" PointY="86.5" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Address_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Asset_Master_Asset_type" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Asset_Master_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Asset_Movement_Asset_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Asset_Movement_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Asset_Movement_UserMaster1" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Attendance_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Comment_Master_Project_Task_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Comment_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Comment_Master_UserMaster1" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Company_Doc_Heads_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Company_Doc_Heads2_Company_Doc_Heads" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Company_ImportantDocuments_Company_Doc_Heads2" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Company_Doc_Master_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Company_Menu_Rights_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Custom_Document_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Department_Master_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Designation_Master_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Document_Master_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Gift_Master_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Holiday_Master_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Imp_Doc_Master_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Inquiry_Master_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_NoticeBoard_Master_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Project_Master_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_ProjectSalaryGroups_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Shift_Master_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_TaskType_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_UserMaster_Company_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Department_Master_Department_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Resignation_Master_Department_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_UserMaster_Department_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Resignation_Master_Designation_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_UserMaster_Designation_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Document_Master_UserMaster1" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Education_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Employee_Task_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Event_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Experience_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Festival_Master_Religion_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Gift_Master_Festival_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_FollowUp_Inquiry_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_FollowUp_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Generated_Documents_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Gift_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Transaction_Master_Head_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Imp_Doc_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Leave_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Leave_Master_UserMaster1" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Leave_Master_UserMaster2" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Master_Token_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Project_Assign_Master_Project_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Project_Assign_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Project_Task_Master_Project_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Request_Master_Project_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Voucher_Master_Project_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Project_Task_Master_TaskType" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Project_Task_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_ProjectSalary_ProjectSalaryHead" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_ProjectSalary_UserMaster1" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_UserMaster_ProjectSalaryGroups" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_ProjectSalaryHead_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_User_Punch_Punch_Type" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_User_Visits_Punch_Type" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Relation_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Request_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Voucher_Master_Request_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Resignation_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Resignation_Master_UserMaster1" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Resignation_Master_UserMaster2" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Transaction_Master_Transaction_Master" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Transaction_Master_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_User_Menu_Rights_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_User_Punch_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_User_Visits_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_UserMaster_UserMaster" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_UserMaster_UserType" />
+        <AssociationConnector Association="Prod_Satyamgroup_V1Model.FK_Voucher_Master_UserMaster" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
