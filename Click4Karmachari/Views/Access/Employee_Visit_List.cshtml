@@ -2,8 +2,9 @@
 @{
     ViewBag.Title = "Employee_Visit_List";
     Layout = "~/Views/Access/Access_Layout.cshtml";
-    List<User_Visits> visit = ViewBag.v;
-    List<UserMaster> user = ViewBag.user;
+    List<User_Visits> visit = ViewBag.v ?? new List<User_Visits>();
+
+    List<UserMaster> user = ViewBag.user ?? new List<UserMaster>();
 
     DateTime dt = DateTime.Now;
     List<string> vstr = ViewBag.Visited_Str;
@@ -13,6 +14,25 @@
 }
 @*AIzaSyDyQus3O5qcFbJMPPScNtdmUglz9X2-XrA*@
 
+
+
+@*<style>
+/*    .form-control,
+    .form-select {
+        height: 45px;
+        border-radius: 6px;
+    }*/
+
+    .select2-container .select2-selection--single {
+        height: 45px !important;
+        padding: 6px 12px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 32px;
+    }
+
+</style>*@
 <!--Page header-->
 <div class="page-header d-xl-flex d-block">
     <div class="page-leftheader">
@@ -24,66 +44,72 @@
 <div class="row">
     <div class="col-xl-12 col-md-12 col-lg-12">
         <div class="card">
-            <div class="card-header  border-0">
-                <h4 class="card-title">@*Visit List*@</h4>
-            </div>
+            <!--<div class="card-header  border-0">
+        <h4 class="card-title">-->
+            @*Visit List*@
+            <!--</h4>
+    </div>-->
+            <div class="card shadow-sm border-1 mb-4" style="border-color: #e9ecef;">
 
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-10 col-md-12">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">Select Employee<span class="text-danger">&ensp;*</span></label>
-                                    <select name="Emp_Id" id="Emp_Id" class="form-control select2-show-search custom-select"  data-placeholder="Select Employee" required>
-                                        @*<option value="@ViewBag.user_id">@ViewBag.u_name</option>*@
-                                        @if (name == "" || name == null)
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h5 class="mb-0 fw-bold text-primary">
+                        <i class="bi bi-funnel-fill me-2"></i>Filter Data
+                    </h5>
+                </div>
+
+                <div class="card-body p-4">
+                    <form>
+                        <div class="row g-3 align-items-end">
+
+                            <div class="col-md-4">
+                                <label for="Emp_Id" class="form-label text-muted small text-uppercase fw-bold">
+                                    Select Employee <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary"><i class="bi bi-person-fill"></i></span>
+                                    <select name="Emp_Id" id="Emp_Id" class="form-select select2-show-search" required>
+                                        <option value="" selected disabled>-- Choose Employee --</option>
+                                        @foreach (UserMaster _c in user)
                                         {
-                                            @*<option selected value="">Select Employee</option>*@
-                                            foreach (UserMaster _c in user)
-                                            {
-                                                <option value=@_c.User_ID>@_c.User_Name</option>
-                                            }
+                                            <option value="@_c.User_ID">@_c.User_Name</option>
                                         }
-                                        else
-                                        {
-                                            @*<option value="">Select Employee</option>*@
-                                            foreach (UserMaster _c in user)
-                                            {
-                                                if (name == _c.User_Name)
-                                                {
-                                                    <option selected value=@_c.User_ID>@_c.User_Name</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value=@_c.User_ID> @_c.User_Name </option>
-
-                                                }
-                                            }
-                                        }
-
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">Select Date Visited<span class="text-danger">&ensp;*</span></label>
-                                    <div class="input-group">
-                                        <input type="text" name="Date" id="Date" class="form-control fc-datepicker" value="@visited_dt" max="@visited_dt" data-single-mode="true" placeholder="01 January 2022" required />
-                                    </div>
+
+                            <div class="col-md-3">
+                                <label for="FromDate" class="form-label text-muted small text-uppercase fw-bold">
+                                    From Date <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary"><i class="bi bi-calendar-event"></i></span>
+                                    <input type="date" name="FromDate" id="FromDate" class="form-control" required />
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="col-md-12">
-                        <div>
-                            <button class="btn btn btn-primary" onclick="get_data();"><strong>Submit</strong></button>
+                            <div class="col-md-3">
+                                <label for="ToDate" class="form-label text-muted small text-uppercase fw-bold">
+                                    To Date <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary"><i class="bi bi-calendar-event-fill"></i></span>
+                                    <input type="date" name="ToDate" id="ToDate" class="form-control" required />
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label d-block">&nbsp;</label>
+                                <button type="button" class="btn btn-primary w-100 fw-semibold shadow-sm" onclick="get_data();">
+                                    <i class="bi bi-search me-2"></i>Submit
+                                </button>
+                            </div>
+
                         </div>
-                    </div>
+                    </form>
                 </div>
-                <br />
             </div>
+
+
             <div class="card-body">
                 <div class="table-responsive">
                     <table id="visit_data" class="table table-bordered table-hover">
@@ -97,23 +123,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @*@foreach (User_Visits _newobj in visit)
-                    {
+                            @foreach (User_Visits _newobj in visit)
+                            {
 
-                        <tr>
-                            <td>@_newobj.Punch_Type.Puch_Name</td>
-                            <td>@_newobj.Time.ToString("dd/MM/yyyy hh:mm tt")</td>
-                            <td>@_newobj.Location</td>
-                            <td>@_newobj.LocationName</td>
-                            <td>@_newobj.IP_Address</td>
-                        </tr>
-                    }*@
+                                <tr>
+                                    <td>@_newobj.Punch_Type.Puch_Name</td>
+                                    <td>@_newobj.Time.ToString("dd/MM/yyyy hh:mm tt")</td>
+                                    <td>@_newobj.Location</td>
+                                    <td>@_newobj.LocationName</td>
+                                    <td>@_newobj.IP_Address</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
-                    </div>
-
                 </div>
+
             </div>
+        </div>
     </div>
 </div>
 
@@ -187,7 +213,9 @@
         var markers = [];
 
         var Emp_Id = document.getElementById("Emp_Id").value;
-        var Date = document.getElementById("Date").value;
+        var fromDate = document.getElementById("FromDate").value;
+        var toDate = document.getElementById("ToDate").value;
+
         $.ajax({
             type: "POST",
             url: "/Access/GetMap?Emp_Id=" + Emp_Id + "&date=" + Date,
@@ -257,16 +285,16 @@
     //}
     function get_data() {
         var eid = document.getElementById("Emp_Id").value;
-        var dt = document.getElementById("Date").value;
+        var fromDate = document.getElementById("FromDate").value;
+        var toDate = document.getElementById("ToDate").value;
         $.ajax({
             type: "POST",
-            url: "/Access/Get_map_data?eid=" + eid + "&dt=" + dt,
+            url: "/Access/Get_map_data?eid=" + eid + "&fromDate=" + fromDate + "&toDate=" + toDate,
             data: "{}",
             success: function (data) {
                 $("#visit_data tbody").empty();
-                content = '';
+                var content = '';
                 if (data.ErrorTitle == "S") {
-                    content = '';
                     var lat = data.lati;
                     var lon = data.longi;
                     var pname = data.punchname;

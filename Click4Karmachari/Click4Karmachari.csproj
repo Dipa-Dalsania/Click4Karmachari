@@ -2327,6 +2327,7 @@
     <Folder Include="Uploads\img\" />
     <Folder Include="Uploads\Marketing\" />
     <Folder Include="Uploads\User_Document\" />
+    <Folder Include="Uploads\User_Voucher\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

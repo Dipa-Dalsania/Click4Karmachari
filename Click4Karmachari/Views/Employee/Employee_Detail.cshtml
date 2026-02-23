@@ -374,17 +374,35 @@ else
                                         <input type="number" value="@user.Adharcard_No" pattern="[2-9]{1}[0-9]{11}" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                                maxlength="12" minlength="12" onblur="AadharValidate();" placeholder="Aadhar Card Number" name="Adharcard_No" id="Adharcard_No" class="form-control" required>
 
-                                     </div>
+                                    </div>
                                 </div>
+                                @* <div class="col-12 col-md-4">
+            <div class="form-group">
+                <label class="form-label mb-0 mt-2">PAN Card Number </label>
+                <input type="text" id="PanCard_No" oninput="PanLiveValidate()" maxlength="10" minlength="10" value="@user.PanCard_No" onblur="PancardValidate();" placeholder="PAN Card Number" name="PanCard_No" id="PanCard_No" class="form-control">
+
+
+
+            </div>
+        </div>*@
+
                                 <div class="col-12 col-md-4">
                                     <div class="form-group">
-                                        <label class="form-label mb-0 mt-2">PAN Card Number </label>
-                                        <input type="text" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" maxlength="10"
-                                               minlength="10" value="@user.PanCard_No" onblur="PancardValidate();" placeholder="PAN Card Number" name="PanCard_No" id="PanCard_No" class="form-control">
+                                        <label class="form-label mb-0 mt-2">PAN Card Number</label>
 
+                                        <input type="text"
+                                               id="PanCard_No"
+                                               name="PanCard_No"
+                                               maxlength="10"
+                                               value="@user.PanCard_No"
+                                               oninput="PanValidate()"
+                                               class="form-control">
 
-                                     </div>
+                                        <span id="panError" style="color:red;"></span>
+                                    </div>
                                 </div>
+
+
                                 <div class="col-12 col-md-4">
                                     <div class="form-group">
                                         <label class="form-label mb-0 mt-2">City </label>
@@ -691,7 +709,7 @@ else
                             <table id="basic-datatable5" class="table table-striped table-bordered border-bottom table-hover">
                                 <thead>
                                     <tr>
-                                        
+                                        <th>Document</th>
                                         <th>Document Name</th>
                                         <th>Status</th>
                                         <th>Operation</th>
@@ -701,7 +719,12 @@ else
                                     @foreach (Document_Master _newobj in user.Document_Master.Where(X => X.Status != 6))
                                     {
                                         <tr>
-                                            
+                                            <td>
+                                                <img src="~/Uploads/User_Document/@_newobj.Doc_Type"
+                                                     onerror="this.src='@Url.Content("~/Uploads/User_Image/profile.jpg")';"
+                                                     style="width:30%;height:30%" />
+
+                                            </td>
                                             <td style="text-transform:capitalize">@_newobj.Doc_Name</td>
 
                                             <td>
@@ -1407,7 +1430,7 @@ else
 
         return isSubmitted;
     }
-    function AadharValidate() {
+   /* function AadharValidate() {
 
         var aadhar = document.getElementById("Adharcard_No").value;
         var adharcardTwelveDigit = /^\d{12}$/;
@@ -1422,15 +1445,132 @@ else
                 return false;
             }
         }
+    }*/
+
+
+
+   /* function PanValidate() {
+
+        var pan = document.getElementById("PanCard_No");
+        var error = document.getElementById("panError");
+
+        // Convert to uppercase
+        pan.value = pan.value.toUpperCase();
+
+        var pattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+        // Show error only when 10 characters entered
+        if (pan.value.length == 10 && !pattern.test(pan.value)) {
+            error.innerText = "Invalid PAN Number";
+        } else {
+            error.innerText = "";
+        }
+    }*/
+    function PanValidate() {
+
+        var input = document.getElementById("PanCard_No");
+        var error = document.getElementById("panError");
+
+        input.value = input.value.toUpperCase();
+        var pan = input.value;
+
+        // Reset message every time
+        error.innerText = "";
+        error.style.color = "red";
+
+        // Step validation
+        for (let i = 0; i < pan.length; i++) {
+
+            if (i < 5 && !/[A-Z]/.test(pan[i])) {
+                error.innerText = "First 5 characters must be letters";
+                return false;
+            }
+
+            if (i >= 5 && i < 9 && !/[0-9]/.test(pan[i])) {
+                error.innerText = "Next 4 characters must be numbers";
+                return false;
+            }
+
+            if (i === 9 && !/[A-Z]/.test(pan[i])) {
+                error.innerText = "Last character must be a letter";
+                return false;
+            }
+        }
+
+        // Final full PAN check
+        var pattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+        if (pattern.test(pan)) {
+            error.style.color = "green";
+            error.innerText = "Valid PAN ✔";
+            return true;
+        }
+
+        return false;
     }
-    function PancardValidate() {
-        var pan = document.getElementById("PanCard_No").value;
+
+
+
+
+
+   /* function PancardValidate() {
+
+        var pan = document.getElementById("PanCard_No").value.trim();
         var panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+        if (pan === "") {
+            alert("Please enter PAN number");
+            return false;
+        }
+
+        if (!panPattern.test(pan)) {
+            alert("Invalid PAN number. Format: ABCDE1234F");
+            return false;
+        }
+
+        return true;
+    }
+*/
+
+
+
+    function AadharValidate() {
+
+        var aadhar = document.getElementById("Adharcard_No").value.trim();
+        var adharcardTwelveDigit = /^\d{12}$/;
+
+        if (aadhar === "") {
+            alert("Please enter Aadhaar number");
+            return false;
+        }
+
+        if (!adharcardTwelveDigit.test(aadhar)) {
+            alert("Enter valid Aadhaar Number");
+            return false;
+        }
+
+        return true;
+    }
+
+/*    function PancardValidate() {
+
+        var pan = document.getElementById("PanCard_No").value.trim();
+        var panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+        if (pan === "") {
+            alert("Please enter PAN number");
+            return false;
+        }
+
         if (!panPattern.test(pan)) {
             alert("Invalid PAN number. Format: ABCDE1234F");
             document.getElementById("PanCard_No").focus();
+            return false;
         }
-    }
+
+        return true;
+    }*/
+
 
     function validateIFSC() {
         const ifsc = document.getElementById("IFSC_No").value;

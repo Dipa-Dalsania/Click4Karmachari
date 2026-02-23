@@ -803,10 +803,7 @@ namespace ClickKarmachari.Controllers
                 return new { rescode = 0, resmsg = "Punch for the day!", Punchlist = PunchlistIO };
             }
         }
-       
-        
-        
-        
+
         [HttpPost]
         public async Task<object> GetCity()
         {
@@ -2790,6 +2787,144 @@ namespace ClickKarmachari.Controllers
 
             }
         }
+
+        [HttpPost]
+        public async Task<object> UploadVoucher()
+        {
+            var data = new object();
+            try
+            {
+                var httpRequest = HttpContext.Current.Request;
+                var Tokens = httpRequest.Form[0].ToString();
+                var User_UID = httpRequest.Form[1].ToString();
+                var Device_Address = httpRequest.Form[2].ToString();
+                var Voucher_Id = httpRequest.Form[3].ToString();
+                var Place = httpRequest.Form[4].ToString();
+                var Remark = httpRequest.Form[5].ToString();
+                var Petrol = httpRequest.Form[6].ToString();
+                var Travelling = httpRequest.Form[7].ToString();
+                var Mobile = httpRequest.Form[8].ToString();
+                var Other = httpRequest.Form[9].ToString();
+                var Conveyance = httpRequest.Form[10].ToString();
+                var Parent_Type = httpRequest.Form[11].ToString();
+                var Description = httpRequest.Form[12].ToString();
+                var Project_Id = httpRequest.Form[13].ToString();
+                var ReqNo = httpRequest.Form[14].ToString();
+
+                UserMaster _LogedUser = new UserMaster();
+                Master_Token _token = await Check_Token(Tokens, User_UID, Device_Address);
+                if (_token == null)
+                {
+                    return new { rescode = 1, resmsg = "UnAthorised Session !" };
+                }
+                _LogedUser = _token.UserMaster;
+
+                if (httpRequest.Files.Count == 0)
+                {
+                    return new { rescode = 1, resmsg = "No file uploaded!" };
+                }
+
+                var postedFile = httpRequest.Files[0];
+
+                // Only allow image types
+                string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".JPG", ".pdf", ".PDF" };
+                string fileExtension = Path.GetExtension(postedFile.FileName)?.ToLower();
+
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+                    return new { rescode = 1, resmsg = "Sorry, Invalid File!" };
+                }
+
+                var fileName = Path.GetFileName(postedFile.FileName);
+                string name = Path.GetFileNameWithoutExtension(fileName);
+                string myfile = name + "_" + DateTime.Now.ToString("ddMMyyyhhmmss") + fileExtension;
+                string filePath = HttpContext.Current.Server.MapPath("~/Uploads/User_Voucher/" + myfile);
+
+                // Ensure the directory exists
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                //save file
+                postedFile.SaveAs(filePath);
+
+                long vid = long.Parse(Voucher_Id);
+                Voucher_Master Voucher = db.Voucher_Master.Where(x =>  x.Voucher_Id == vid).FirstOrDefault();
+                if (Voucher == null)
+                {
+                    Voucher_Master v = new Voucher_Master();
+                    v.Status = 0;
+                    v.Voucher_Date = DateTime.Now;
+                    v.Payment_Mode = "Online";
+                    v.Place = Place;
+                    v.Remark = Remark;
+                    v.Petrol = decimal.Parse(Petrol);
+                    v.Travelling = decimal.Parse(Travelling);
+                    v.Mobile = decimal.Parse(Mobile);
+                    v.Other = decimal.Parse(Other);
+                    v.Conveyance = decimal.Parse(Conveyance);
+                    v.Parent_Type = Parent_Type;
+                    v.Description = Description;
+                    v.Total_Amount = decimal.Parse(Petrol) + decimal.Parse(Travelling) + decimal.Parse(Mobile) + decimal.Parse(Conveyance) + decimal.Parse(Other);
+                    v.Project_Id = long.Parse(Project_Id);
+                    v.User_Id = _LogedUser.User_ID;
+                    if (ReqNo=="" || ReqNo==null)
+                    {
+
+                    }
+                    else
+                    {
+                        v.Req_Id = long.Parse(ReqNo);
+                    }                       
+                    v.Image_Name = myfile;
+
+                    db.Voucher_Master.Add(v);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    if (Voucher.Status != 0) { return new { rescode = 0, resmsg = "Voucher Can't Update Once Approve / Reject !" }; }
+                    Voucher.Payment_Mode = "Online";
+                    Voucher.Place = Place;
+                    Voucher.Remark = Remark;
+                    Voucher.Petrol = decimal.Parse(Petrol);
+                    Voucher.Travelling = decimal.Parse(Travelling);
+                    Voucher.Mobile = decimal.Parse(Mobile);
+                    Voucher.Other = decimal.Parse(Other);
+                    Voucher.Conveyance = decimal.Parse(Conveyance);
+                    Voucher.Parent_Type = Parent_Type;
+                    Voucher.Description = Description;
+                    Voucher.Total_Amount = decimal.Parse(Petrol) + decimal.Parse(Travelling) + decimal.Parse(Mobile) + decimal.Parse(Conveyance) + decimal.Parse(Other);
+                    Voucher.Project_Id = long.Parse(Project_Id);
+                    if (ReqNo == "" || ReqNo == null)
+                    {
+
+                    }
+                    else
+                    {
+                        Voucher.Req_Id = long.Parse(ReqNo);
+                    }
+                    Voucher.Image_Name = myfile;
+
+                    db.SaveChanges();
+                }
+                List<VoucherListIO> _VoucherList = new List<VoucherListIO>();
+                foreach (Voucher_Master _v in db.Voucher_Master.Where(x => x.User_Id == _LogedUser.User_ID).OrderByDescending(x => x.Voucher_Id).ToList())
+                {
+                    _VoucherList.Add(new VoucherListIO(_v));
+                }
+                data = new { rescode = 0, resmsg = "Voucher uploaded successfully!", Get_VoucherList = _VoucherList };
+                return data;
+
+            }
+            catch (Exception ex)
+            {
+                data = new { rescode = 1, resmsg = "No file uploaded!" };
+                return data;
+
+            }
+        }
+
+
+
 
         [HttpPost]
         public async Task<object> SalarySlip(IO_getsalaryslip _UserTokenLive)

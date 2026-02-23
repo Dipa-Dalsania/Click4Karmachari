@@ -19,7 +19,7 @@
     List<Request_Master> Req=ViewBag.res;
     List<Voucher_Master> voucher = ViewBag.voucher;
 }
-}
+
 
 <div class="page-header d-lg-flex d-block">
     <div class="page-leftheader">
@@ -620,27 +620,73 @@
                 <div class="card-header border-bottom-0">
                     <h3 class="card-title">Recent Employees</h3>
                     <div class="card-options">
-                       
-                            <a href="~/Access/Employee_All" class="btn btn-info"> View All <i class="fa fa-plus fa-spin ml-2"></i> </a>
-                      
+
+                        <a href="~/Access/Employee_All" class="btn btn-info"> View All <i class="fa fa-plus fa-spin ml-2"></i> </a>
+
                     </div>
                 </div>
                 <!--<div class="tab-menu-heading table_tabs mt-2 p-0 ">
-                    <div class="tabs-menu1">-->
-                        <!-- Tabs -->
-                        <!--<ul class="nav panel-tabs">
-                            <li class="ml-4"><a href="#tab5" data-toggle="tab">Trainee</a></li>
-                            <li><a href="#tab6" class="active" data-toggle="tab">Recently Hired Employees</a></li>
-                        </ul>
-                    </div>
-                </div>-->
+        <div class="tabs-menu1">-->
+                <!-- Tabs -->
+                <!--<ul class="nav panel-tabs">
+                <li class="ml-4"><a href="#tab5" data-toggle="tab">Trainee</a></li>
+                <li><a href="#tab6" class="active" data-toggle="tab">Recently Hired Employees</a></li>
+            </ul>
+        </div>
+    </div>-->
+                @*<div class="table-responsive">
+            <table class="sortable table table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-left">Employee</th>
+                        <th class="text-center">Time</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (rEmp != null)
+                    {
+                        foreach (UserMaster t in rEmp.Take(10).OrderByDescending(x => x.User_ID))
+                        {
+                            string result = "";
+                            double TotalDays = (int)(DateTime.Now - t.Date_of_join).TotalDays;
+
+                            if (TotalDays < 30)
+                            {
+                                result = (DateTime.Now - t.Date_of_join).TotalDays.ToString() + " Days";
+                            }
+                            else if (TotalDays < 365)
+                            {
+                                result = ((DateTime.Now - t.Date_of_join).TotalDays / 30).ToString() + " Months";
+                            }
+                            else
+                            {
+                                result = ((DateTime.Now - t.Date_of_join).TotalDays / 365).ToString() + " Years";
+                            }
+                            int fresult = (int)float.Parse(result);
+                            <tr class="border-bottom">
+                                <td class="font-weight-semibold fs-14" style="text-transform:capitalize">@t.User_Name</td>
+                                <td class="text-center"><span class="badge bg-success-transparent">@fresult</span></td>
+
+                            </tr>
+                        }
+                    }
+                        </tbody>
+            </table>
+        </div>*@
+
+
+
+
+
+
+
                 <div class="table-responsive">
                     <table class="sortable table table-hover">
                         <thead>
                             <tr>
                                 <th class="text-left">Employee</th>
                                 <th class="text-center">Time</th>
-                               
                             </tr>
                         </thead>
                         <tbody>
@@ -649,31 +695,44 @@
                                 foreach (UserMaster t in rEmp.Take(10).OrderByDescending(x => x.User_ID))
                                 {
                                     string result = "";
-                                    double TotalDays = (int)(DateTime.Now - t.Date_of_join).TotalDays;
+                                    int fresult = 0;
 
-                                    if (TotalDays < 30)
+                                    double totalDays = (DateTime.Now - t.Date_of_join).TotalDays;
+
+                                    if (totalDays < 30)
                                     {
-                                        result = (DateTime.Now - t.Date_of_join).TotalDays.ToString() + " Days";
+                                        fresult = (int)totalDays;
+                                        result = fresult + " Days";
                                     }
-                                    else if (TotalDays < 365)
+                                    else if (totalDays < 365)
                                     {
-                                        result = ((DateTime.Now - t.Date_of_join).TotalDays / 30).ToString() + " Months";
+                                        fresult = (int)(totalDays / 30);
+                                        result = fresult + " Months";
                                     }
                                     else
                                     {
-                                        result = ((DateTime.Now - t.Date_of_join).TotalDays / 365).ToString() + " Years";
+                                        fresult = (int)(totalDays / 365);
+                                        result = fresult + " Years";
                                     }
-                                    int fresult = (int)float.Parse(result);
+
                                     <tr class="border-bottom">
-                                        <td class="font-weight-semibold fs-14" style="text-transform:capitalize">@t.User_Name</td>
-                                        <td class="text-center"><span class="badge bg-success-transparent">@fresult</span></td>
-                                       
+                                        <td class="font-weight-semibold fs-14" style="text-transform:capitalize">
+                                            @t.User_Name
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-success-transparent">@result</span>
+                                        </td>
                                     </tr>
                                 }
                             }
-                                </tbody>
+                        </tbody>
                     </table>
                 </div>
+
+
+
+
+
             </div>
         </div>
     } @if (UserMenuRights.Attendance == true && MenuRights.Attendance == true)

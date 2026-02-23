@@ -63,7 +63,13 @@
                         <select id="Sts" name="Sts" class="form-control select2">
                             @foreach (var status in statuses)
                             {
-                                <option value="@status.Value" @(ViewBag.Sts == status.Value ? "selected" : "")>@status.Text</option>
+                                @*<option value="@status.Value" @(ViewBag.Sts == status.Value ? "selected" : "")>@status.Text</option>*@
+
+                                <option value="@status.Value"
+                                        @(ViewBag.Sts == status.Value ? "selected" : "")>
+                                    @status.Text
+                                </option>
+
                             }
                         </select>
                     </div>

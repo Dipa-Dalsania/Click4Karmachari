@@ -19,13 +19,26 @@
         <h4 class="page-title">All Leave Request</h4>
     </div>
     <div class="page-rightheader ml-md-auto">
-        <div class="align-items-end flex-wrap my-auto right-content breadcrumb-right">
-            <div class="btn-list" onclick="myfunctionLeaveA()">
-                <button class="btn btn-primary" onclick="return Add_Emp_Leave(0,'',0,'@str1','@str1','','','',0,0)" type="submit"><i class="feather feather-plus fs-15 my-auto mr-2"></i><strong>Add Leave</strong></button>
+        <div class="btn-list">
 
-            </div>
-            <button id="approvebtn" type="button" onclick="return Getleavereqdata()" class="btn btn-success"><i class="fa fa-check"></i>Approved</button>
-            <button id="Rejectbtn" type="button" onclick="return Getleavereqdatareject()" class="btn btn-danger"><i class="fa fa-warning"></i>Rejected</button>
+            <button class="btn btn-primary"
+                    onclick="return Add_Emp_Leave(0,'',0,'@str1','@str1','','','',0,0)">
+                <i class="feather feather-plus fs-15 my-auto mr-2"></i>
+                <strong>Add Leave</strong>
+            </button>
+
+            <button id="approvebtn" type="button"
+                    onclick="return Getleavereqdata()"
+                    class="btn btn-success">
+                <i class="fa fa-check"></i> Approved
+            </button>
+
+            <button id="Rejectbtn" type="button"
+                    onclick="return Getleavereqdatareject()"
+                    class="btn btn-danger">
+                <i class="fa fa-warning"></i> Rejected
+            </button>
+
         </div>
     </div>
 </div>
@@ -91,7 +104,9 @@
                     <table class="table  table-hover table-vcenter text-nowrap table-bordered border-bottom" id="basic-datatable1">
                         <thead>
                             <tr>
-                                <th></th>
+                                <th>
+                                    <input type="checkbox" id="selectAllLeaves" onclick="toggleAllLeaves(this)" />
+                                </th>
                                 <th class="border-bottom-0 w-5">Employee Name</th>
                                 <th class="border-bottom-0">Leave Type</th>
                                 <th class="border-bottom-0">Reason</th>
@@ -371,6 +386,21 @@
             }
         });
     }
+
+
+
+
+    function toggleAllLeaves(source) {
+
+        let checkboxes = document.getElementsByName('leavereqchk');
+
+        for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+
+
+
 
     function Getleavereqdatareject() {
         let leavemyListreject = [];

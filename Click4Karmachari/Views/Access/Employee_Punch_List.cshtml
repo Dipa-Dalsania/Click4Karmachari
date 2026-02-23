@@ -6,7 +6,10 @@
     List<UserMaster> user = ViewBag.user;
     DateTime dtoday = DateTime.Now;
     string st = dtoday.ToString("dd MMMM yyyy");
-    DateTime dt = Convert.ToDateTime(ViewBag.dt);
+    DateTime dt = ViewBag.dt != null
+    ? Convert.ToDateTime(ViewBag.dt)
+    : DateTime.Now;
+
     string str = dt.ToString("dd-MM-yyyy");
     string fst = dt.ToString("dd MMMM yyyy");
     string imagepath = "";
@@ -15,6 +18,19 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+
+
+
+<style>
+    .avatar-9-16 {
+        width: 40px;
+        height: 71px;
+        object-fit: cover; /* keeps image properly cropped */
+        border-radius: 8px; /* optional, remove if not needed */
+    }
+</style>
+
+
 
 <!--Page header-->
 <div class="page-header d-xl-flex d-block">
@@ -34,143 +50,77 @@
             <div class="card-body">
                 @using (Html.BeginForm("Employee_Punch_List", "Access", FormMethod.Post, new { @enctype = "multipart/form-data" }))
                 {
-                    <div class="row">
-                        <div class="col-xl-10 col-md-12">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Date<span class="text-danger">&ensp;*</span></label>
-                                        <div class="input-group">
-                                            @if (str == "01-01-0001")
-                                            {
-                                                <input id="Punch_date" type="text" name="Punch_date" class="form-control fc-datepicker" max="@st" placeholder="Please Enter Date" required>
-                                            }
-                                            else
-                                            {
-                                                <input id="Punch_date" type="text" name="Punch_date" class="form-control fc-datepicker" value="@fst" max="@st" placeholder="Please Enter Date" required>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Select Employee<span class="text-danger">&ensp;*</span></label>
-                                        <select name="Emp_Id" id="Emp_Id" class="form-control select2-show-search custom-select" data-placeholder="Select Employee" required>
-                                            @if (ViewBag.user_id != null && ViewBag.user_id != 0)
-                                            {
-                                                if (ViewBag.user_id == -1)
-                                                {
+                    <div class="row align-items-end">
 
-                                                    <option value="-1" selected>All</option>
-                                                    foreach (UserMaster _c in user)
-                                                    {
-                                                        <option value=@_c.User_ID data-img="~/Uploads/User_Image/@_c.image_name">@_c.User_Name</option>
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <option value="-1">All</option>
-                                                    <option value="@ViewBag.user_id" selected>@ViewBag.u_name</option>
-                                                    foreach (UserMaster _c in user)
-                                                    {
-                                                        if (ViewBag.user_id == _c.User_ID)
-                                                        {
+                        <!-- Select Employee -->
+                        <div class="col-md-4">
+                            <label class="form-label">Select Employee <span class="text-danger">*</span></label>
+                            <select name="Emp_Id" id="Emp_Id"
+                                    class="form-control select2-show-search custom-select"
+                                    required>
+                                <option value="-1" selected>All</option>
 
-                                                        }
-                                                        else
-                                                        {
-                                                            <option value=@_c.User_ID data-img="~/Uploads/User_Image/@_c.image_name">@_c.User_Name</option>
-                                                        }
-
-                                                    }
-                                                }
-                                            }
-                                            else
-                                            {
-                                                <option value="-1">All</option>
-                                                foreach (UserMaster _c in user)
-                                                {
-                                                    <option value=@_c.User_ID data-img="~/Uploads/User_Image/@_c.image_name">@_c.User_Name</option>
-                                                }
-                                            }
-
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                                @foreach (UserMaster _c in user)
+                                {
+                                    <option value="@_c.User_ID">@_c.User_Name</option>
+                                }
+                            </select>
                         </div>
 
+                        <!-- From Date -->
+                        <div class="col-md-3">
+                            <label class="form-label">From</label>
+                            <input type="date"
+                                   name="FromDate"
+                                   class="form-control"
+                                   value="@(ViewBag.FromDate != null
+               ? Convert.ToDateTime(ViewBag.FromDate).ToString("yyyy-MM-dd")
+               : DateTime.Now.ToString("yyyy-MM-dd"))"
+                                   max="@DateTime.Now.ToString("yyyy-MM-dd")">
+                        </div>
 
+                        <!-- To Date -->
+                        <div class="col-md-3">
+                            <label class="form-label">To</label>
+                            <input type="date"
+                                   name="ToDate"
+                                   class="form-control"
+                                   value="@(ViewBag.ToDate != null
+               ? Convert.ToDateTime(ViewBag.ToDate).ToString("yyyy-MM-dd")
+               : DateTime.Now.ToString("yyyy-MM-dd"))"
+                                   max="@DateTime.Now.ToString("yyyy-MM-dd")">
+                        </div>
 
-
-
-                        <div class="col-md-12">
-                            <div>
-                                <button class="btn  btn-primary" type="submit"><strong>Submit</strong></button>
-                            </div>
+                        <!-- Submit Button -->
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                Submit
+                            </button>
                         </div>
 
                     </div>
 
+
+
                 }
-
-
                 @if (user_punch != null)
                 {
                     <br /> <br />
-
-
-
                     if (ViewBag.user_id != -1)
                     {
-                        var usersGroupedByCountry = user_punch.OrderBy(x => x.Punch_Id).GroupBy(x => x.Time.Date);
-                        <div class="table-responsive" style="overflow-x:unset !important;">
-                            <table id="basic-datatable" class="table table-hover text-nowrap table-striped table-bordered border-bottom ">
-                                <thead>
-                                    <tr>
-                                        <th class="punch-style"><span class="badge badge-info m">Punch Date</span></th>
-                                        <th><span class="badge badge-info">Punch Time</span></th>
-                                        <th><span class="badge badge-info m user-punch  ">Total Time</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var _newobj in usersGroupedByCountry.OrderByDescending(x => x.Key))
-                                    {
-                                        <tr>
-                                            <td>@_newobj.Key.ToString("dd MMMM yyyy")</td>
-                                            @foreach (var punch in _newobj)
-                                            {
-                                                imagepath = "~/Uploads/Punch_Image/" + punch.image_name;
-                                                <td>
-                                                    <div class="popover-example">
-                                                        <a href="@Url.Content(imagepath)" target="_blank">
-                                                            <img src="~/Uploads/Punch_Image/@punch.image_name"
-                                                                 onerror="this.src='@Url.Content("~/Uploads/User_Image/profile.jpg")';"
-                                                                 class="avatar avatar-md brround me-3" />
-                                                        </a>
-                                                        @*<a data-original-title="Location" data-animation="false" data-easein="slideLeftIn" rel="popover" data-placement="right" data-content="@punch.Location"><i class="pe-7s-map-marker fa-2x" style="color:blue"></i></a>*@
-                                                    </div>@punch.Punch_Type.Puch_Name , <br /><a onclick="Punch_Update(@punch.Punch_Id,'@punch.Time.ToString("yyy-MM-ddThh:mm")')" style="color:blue">@punch.Time.ToString("hh:mm:ss:tt")</a><br />
-                                                    <b> @punch.IP_Address</b>
-                                                </td>
+                        var usersGroupedByCountry = user_punch
+                            .OrderBy(x => x.Punch_Id)
+                            .GroupBy(x => x.Time.Date);
 
-                                            }
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        var usersGroupedByCountry = user_punch.OrderBy(x => x.Punch_Id).GroupBy(x => x.User_Id);
-                        <div class="table-responsive">
-                            <table id="basic-datatable" class="table table-hover text-nowrap">
+                        <div class="table-responsive" style="overflow-x:unset !important;">
+                            <table class="table table-hover text-nowrap table-striped table-bordered border-bottom">
+
                                 <thead>
                                     <tr>
-                                        <th><span class="badge badge-info m user-punch">User Name</span></th>
-                                        <th><span class="badge badge-info m user-punch">Punch Date</span></th>
-                                        <th colspan="4"><span class="badge badge-info m user-punch  ">Punch Time</span></th>
-                                        <th><span class="badge badge-info m user-punch  ">Total Time</span></th>
+                                        <th>User Name</th>
+                                        <th>Punch Date</th>
+                                        <th>Total Time</th>
+                                        <th>Punch Time</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -178,45 +128,174 @@
                                     {
                                         double hours = 0;
                                         double rounded = 0;
+
+                                        // ✅ Calculate total time BEFORE row print
+                                        var time1 = _newobj
+                                            .Where(x => x.PunchType_Id == 1)
+                                            .OrderBy(x => x.Time)
+                                            .FirstOrDefault();
+
+                                        var time2 = _newobj
+                                            .Where(x => x.PunchType_Id == 2)
+                                            .OrderByDescending(x => x.Time)
+                                            .FirstOrDefault();
+
+                                        if (time1 != null && time2 != null)
+                                        {
+                                            TimeSpan diff = time2.Time - time1.Time;
+                                            hours = diff.TotalHours;
+                                            rounded = Math.Floor(hours);
+                                        }
+
                                         <tr>
-                                            <td class="form-label" style="text-transform:capitalize">@_newobj.FirstOrDefault().UserMaster.User_Name</td>
-                                            <td>@_newobj.FirstOrDefault().Time.ToString("dd MMMM yyyy")</td>
+
+                                            <td class="form-label" style="text-transform:capitalize">
+                                                @_newobj.FirstOrDefault().UserMaster.User_Name
+                                            </td>
+
+                                            <!-- Punch Date -->
+                                            <td>
+                                                @_newobj.FirstOrDefault().Time.ToString("dd MMMM yyyy")
+                                            </td>
+
+                                            <!-- ✅ Total Time AFTER Date -->
+                                            <td>
+                                                @rounded
+                                            </td>
+
+                                            <!-- Punch Time -->
                                             @foreach (var punch in _newobj)
                                             {
-                                                var time1 = _newobj.Where(x => x.User_Id == punch.User_Id && x.PunchType_Id == 1 && x.Time.Date == dt).FirstOrDefault();
-                                                var time2 = _newobj.Where(x => x.User_Id == punch.User_Id && x.PunchType_Id == 2 && x.Time.Date == dt).FirstOrDefault();
-
-                                                if (time1 != null && time2 != null)
-                                                {
-                                                    DateTime ftime1 = DateTime.Parse(time1.Time.ToString());
-                                                    DateTime ftime2 = DateTime.Parse(time2.Time.ToString());
-
-                                                    TimeSpan diff = ftime2 - ftime1;
-
-                                                    hours = diff.TotalHours;
-                                                    rounded = Math.Floor(hours);
-                                                }
                                                 imagepath = "~/Uploads/Punch_Image/" + punch.image_name;
 
                                                 <td colspan="4">
                                                     <div class="popover-example">
                                                         <a href="@Url.Content(imagepath)" target="_blank">
+                                                            @*<img src="~/Uploads/Punch_Image/@punch.image_name"
+                                                    onerror="this.src='@Url.Content("~/Uploads/User_Image/profile.jpg")';"
+                                                    class="avatar avatar-md brround me-3" />*@
                                                             <img src="~/Uploads/Punch_Image/@punch.image_name"
                                                                  onerror="this.src='@Url.Content("~/Uploads/User_Image/profile.jpg")';"
-                                                                 class="avatar avatar-md brround me-3" />
+                                                                 class="avatar-9-16 me-3" />
                                                         </a>
-                                                        @*<a data-original-title="Location" data-animation="false" data-easein="slideLeftIn" rel="popover" data-placement="right" data-content="@punch.Location"><i class="pe-7s-map-marker fa-2x" style="color:blue"></i></a>*@@*pe-7s-map-marker fa-2x*@
-                                                    </div>@punch.Punch_Type.Puch_Name , <br /><a onclick="Punch_Update(@punch.Punch_Id,'@punch.Time.ToString("yyy-MM-ddThh:mm")')" style="color:blue">@punch.Time.ToString("hh:mm:ss:tt")</a><br />
-                                                    <b> @punch.IP_Address</b>
+                                                    </div>
+
+                                                    @punch.Punch_Type.Puch_Name ,
+                                                    <br />
+
+                                                    <a onclick="Punch_Update(@punch.Punch_Id,'@punch.Time.ToString("yyyy-MM-ddTHH:mm")')" style="color:blue">
+                                                        @punch.Time.ToString("hh:mm:ss tt")
+                                                    </a>
+
+                                                    <br />
+                                                    <b>@punch.IP_Address</b>
                                                 </td>
                                             }
-                                            <td>@rounded</td>
+
                                         </tr>
                                     }
                                 </tbody>
                             </table>
                         </div>
                     }
+
+                    else
+                    {
+                        var usersGroupedByCountry = user_punch
+                            .OrderBy(x => x.Punch_Id)
+                            .GroupBy(x => new { x.User_Id, Date = x.Time.Date });
+
+                        <div class="table-responsive">
+                            <table class="table table-hover text-nowrap">
+
+                                <thead>
+                                    <tr>
+                                        <th>User Name</th>
+                                        <th>Punch Date</th>
+                                        <th>Total Time</th>
+                                        <th>Punch Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var _newobj in usersGroupedByCountry
+.OrderByDescending(x => x.Key.Date)
+.ThenBy(x => x.Key.User_Id))
+
+                                    {
+                                        double hours = 0;
+                                        double rounded = 0;
+
+                                        // ✅ Calculate total time BEFORE row print
+                                        var time1 = _newobj
+                                            .Where(x => x.PunchType_Id == 1)
+                                            .OrderBy(x => x.Time)
+                                            .FirstOrDefault();
+
+                                        var time2 = _newobj
+                                            .Where(x => x.PunchType_Id == 2)
+                                            .OrderByDescending(x => x.Time)
+                                            .FirstOrDefault();
+
+                                        if (time1 != null && time2 != null)
+                                        {
+                                            TimeSpan diff = time2.Time - time1.Time;
+                                            hours = diff.TotalHours;
+                                            rounded = Math.Floor(hours);
+                                        }
+
+                                        <tr>
+
+                                            <td class="form-label" style="text-transform:capitalize">
+                                                @_newobj.FirstOrDefault().UserMaster.User_Name
+                                            </td>
+
+                                            <!-- Punch Date -->
+                                            <td>
+                                                @_newobj.FirstOrDefault().Time.ToString("dd MMMM yyyy")
+                                            </td>
+
+                                            <!-- ✅ Total Time AFTER Date -->
+                                            <td>
+                                                @rounded
+                                            </td>
+
+                                            <!-- Punch Time -->
+                                            @foreach (var punch in _newobj)
+                                            {
+                                                imagepath = "~/Uploads/Punch_Image/" + punch.image_name;
+
+                                                <td colspan="4">
+                                                    <div class="popover-example">
+                                                        <a href="@Url.Content(imagepath)" target="_blank">
+                                                            @* <img src="~/Uploads/Punch_Image/@punch.image_name"
+                                                             onerror="this.src='@Url.Content("~/Uploads/User_Image/profile.jpg")';"
+                                                             class="avatar avatar-md brround me-3" />
+                                                    </a>*@
+                                                            <img src="~/Uploads/Punch_Image/@punch.image_name"
+                                                                 onerror="this.src='@Url.Content("~/Uploads/User_Image/profile.jpg")';"
+                                                                 class="avatar-9-16 me-3" />
+                                                    </div>
+
+                                                    @punch.Punch_Type.Puch_Name ,
+                                                    <br />
+
+                                                    <a onclick="Punch_Update(@punch.Punch_Id,'@punch.Time.ToString("yyyy-MM-ddTHH:mm")')" style="color:blue">
+                                                        @punch.Time.ToString("hh:mm:ss tt")
+                                                    </a>
+
+                                                    <br />
+                                                    <b>@punch.IP_Address</b>
+                                                </td>
+                                            }
+
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    }
+
                 }
 
             </div>
@@ -262,4 +341,38 @@
         </div>
     }
 
-</div>
+    <script>
+        $(document).ready(function () {
+
+            function toggleDateFields() {
+
+                var empId = $("#Emp_Id").val();
+
+                console.log("Selected Value:", empId); // Debug
+
+                /*    if (empId == "-1") {
+                        // All selected
+                        $("#singleDateDiv").show();
+                        $("#dateRangeDiv").hide();
+                    } else {
+                        // User selected
+                        $("#singleDateDiv").hide();
+                        $("#dateRangeDiv").show();
+                    }*/
+            }
+
+            // Trigger on normal change
+            $("#Emp_Id").on("change", function () {
+                toggleDateFields();
+            });
+
+            // Trigger on select2 change also (IMPORTANT)
+            $("#Emp_Id").on("select2:select", function () {
+                toggleDateFields();
+            });
+
+
+
+        });
+    </script>
+

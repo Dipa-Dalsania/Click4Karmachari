@@ -52,17 +52,49 @@
                                 foreach (Voucher_Master p in voucher)
                                 {
                                     <tr>
-                                       
-                                        <td><input type="checkbox" id="vouchercheckAll_@p.Voucher_Id" name="voucherreqchk" value="@p.Voucher_Id" /></td>
+
+                                        @*<td><input type="checkbox" id="vouchercheckAll_@p.Voucher_Id" name="voucherreqchk" value="@p.Voucher_Id" /></td>
+        @if (p.Image_Name == null)
+        {
+            <td><img class="avatar avatar-md brround mr-3" src="~/Uploads/User_Image/profile.jpg" target="_blank" alt="No Preview" height="40" width="60" /></td>
+        }
+        else
+        {
+            imagepath = imagerootpath + "/Voucher_Image/" + p.Image_Name;
+            <td><a href="@imagepath" target="_blank"><img class="avatar avatar-md brround mr-3" src="@imagepath" target="_blank" alt="No Preview" height="40" width="60" onerror="this.src='@Url.Content("~/Uploads/User_Image/profile.jpg")';"/></a></td>
+        }*@
+
+
+
+                                        <td>
+                                            <input type="checkbox" id="vouchercheckAll_@p.Voucher_Id"
+                                                   name="voucherreqchk" value="@p.Voucher_Id" />
+                                        </td>
+
                                         @if (p.Image_Name == null)
                                         {
-                                            <td><img class="avatar avatar-md brround mr-3" src="~/Uploads/User_Image/profile.jpg" target="_blank" alt="No Preview" height="40" width="60" /></td>
+                                            <td>
+                                                <img src="~/Uploads/User_Image/bill.png"
+                                                     alt="No Preview"
+                                                     style="width:60px; height:auto; object-fit:cover; border-radius:6px;" />
+                                            </td>
                                         }
                                         else
                                         {
                                             imagepath = imagerootpath + "/Voucher_Image/" + p.Image_Name;
-                                            <td><a href="@imagepath" target="_blank"><img class="avatar avatar-md brround mr-3" src="@imagepath" target="_blank" alt="No Preview" height="40" width="60" onerror="this.src='@Url.Content("~/Uploads/User_Image/profile.jpg")';"/></a></td>
+                                            <td>
+                                                <a href="@imagepath" target="_blank">
+                                                    <img src="@imagepath"
+                                                         alt="No Preview"
+                                                         style="width:80px; height:60px; object-fit:cover; border-radius:6px;"
+                                                         onerror="this.src='@Url.Content("~/Uploads/User_Image/bill.png")';" />
+                                                </a>
+                                            </td>
                                         }
+
+
+
+
                                         <td>@p.Voucher_Date.ToString("dd MMMM yyyy")</td>
                                         <td style="text-transform: capitalize">@p.UserMaster.User_Name</td>
                                         <td>@p.Total_Amount</td>
